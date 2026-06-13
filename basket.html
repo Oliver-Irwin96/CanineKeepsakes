@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Basket — Canine Keepsakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <h1 class="page-title">Your basket</h1>
+  <div class="two-col">
+    <div id="basket-area"></div>
+    <div class="summary" id="summary-box"></div>
+  </div>
+</div>
+
+<script src="js/store.js"></script>
+<script>
+(() => {
+  CK.mountChrome();
+  const area = document.getElementById('basket-area');
+  const box = document.getElementById('summary-box');
+
+  function render() {
+    const b = CK.getBasket();
+    if (!b.length) {
+      area.innerHTML = `<div class="empty-state"><div class="big">🐾</div><p>Your basket is empty.</p><p style="margin-top:18px"><a class="btn-gold" href="index.html#collections">Browse the collections</a></p></div>`;
+      box.style.display = 'none';
+      return;
+    }
+    box.style.display = '';
+    area.innerHTML = '<div class="basket-list"></div>';
+    const list = area.querySelector('.basket-list');
+    b.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'basket-item';
+      const thumb = document.createElement('div');
+      thumb.className = 'bi-thumb';
+      thumb.appendChild(CK.designImg({ thumb: item.thumb }, '🐾'));
+      row.appendChild(thumb);
+      row.insertAdjacentHTML('beforeend', `
+        <div>
+          <div class="bi-name">${item.collectionName} — ${item.productName}</div>
+          <div class="bi-meta">${item.designLabel} · ${item.colour} · ${item.size} · qty ${item.qty}</div>
+          <button class="rm" data-i="${i}">Remove</button>
+        </div>
+        <div class="bi-price">${CK.gbp(item.price * item.qty)}</div>`);
+      list.appendChild(row);
+    });
+    list.querySelectorAll('.rm').forEach(btn => btn.onclick = () => { CK.removeFromBasket(+btn.dataset.i); render(); });
+
+    const sub = CK.basketTotal();
+    box.innerHTML = `
+      <div class="row"><span>Subtotal</span><span>${CK.gbp(sub)}</span></div>
+      <div class="row"><span>Shipping</span><span>calculated at checkout</span></div>
+      <div class="row total"><span>Total</span><span>${CK.gbp(sub)}</span></div>
+      <a class="btn-gold" style="display:block;text-align:center;margin-top:18px" href="checkout.html">Checkout</a>
+      <div class="notice" style="margin-bottom:0">UK delivery only at launch. Made to order — please allow 2–5 working days for printing.</div>`;
+  }
+  render();
+})();
+</script>
+</body>
+</html>

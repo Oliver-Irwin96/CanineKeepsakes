@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canine Keepsakes — Premium Gifts for Dog People</title>
+  <meta name="description" content="21 original dog design collections across tees, hoodies, mugs and more. Pick your breed, pick your style — printed and delivered in the UK.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<section class="hero">
+  <span class="float-paw" style="top:14%;left:8%;animation-delay:0s">🐾</span>
+  <span class="float-paw" style="top:30%;right:10%;animation-delay:1.4s;font-size:2.8rem">🐾</span>
+  <span class="float-paw" style="bottom:24%;left:18%;animation-delay:2.6s;font-size:1.6rem">🐾</span>
+  <span class="float-paw" style="bottom:30%;right:22%;animation-delay:.8s">🐾</span>
+  <div class="wrap">
+    <h1>Your dog, but <em>cooler</em>.</h1>
+    <p class="lead">21 original collections of character-packed dog art — your breed, your style, on tees, hoodies, mugs and more. Printed &amp; shipped in the UK.</p>
+    <div class="cta-row">
+      <a class="btn-gold" href="#collections">Shop the collections</a>
+      <a class="btn-ghost" href="#how">How it works</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="collections">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">The Collections</div>
+      <h2>Every dog has a personality. We drew them all.</h2>
+      <p>From the Snorefather to Dog Eastwood — find the design that's unmistakably your dog.</p>
+    </div>
+    <div class="grid cols-3" id="collection-grid"></div>
+  </div>
+</section>
+
+<section class="section" id="how" style="background:var(--cream-deep)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">How it works</div>
+      <h2>Three steps to the perfect dog-person gift</h2>
+    </div>
+    <div class="grid cols-3">
+      <div class="card reveal"><div class="body" style="padding:30px">
+        <div style="font-size:2rem">🎨</div>
+        <div class="title">1. Pick a collection</div>
+        <div class="meta">21 original art styles, each drawn with 20 breeds.</div>
+      </div></div>
+      <div class="card reveal"><div class="body" style="padding:30px">
+        <div style="font-size:2rem">🐕</div>
+        <div class="title">2. Pick your breed &amp; product</div>
+        <div class="meta">Tees, hoodies, sweatshirts, mugs, blankets and more — in your colour and size.</div>
+      </div></div>
+      <div class="card reveal"><div class="body" style="padding:30px">
+        <div style="font-size:2rem">📦</div>
+        <div class="title">3. We print &amp; deliver</div>
+        <div class="meta">Made to order and shipped to your door, anywhere in the UK.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<script src="js/store.js"></script>
+<script>
+(async () => {
+  CK.mountChrome('collections');
+  const cat = await CK.load();
+  const grid = document.getElementById('collection-grid');
+  cat.collections.forEach(c => {
+    const a = document.createElement('a');
+    a.className = 'card reveal';
+    a.href = `collection.html?c=${c.slug}`;
+    const thumb = document.createElement('div');
+    thumb.className = 'thumb';
+    thumb.appendChild(CK.designImg(c.designs[0], c.name.split(' ')[0]));
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = `${c.designCount} breeds`;
+    thumb.appendChild(badge);
+    a.appendChild(thumb);
+    a.insertAdjacentHTML('beforeend', `
+      <div class="body">
+        <div class="title">${c.name}</div>
+        <div class="meta">13 products · from £4.99</div>
+        <div class="price">Shop ${c.name} →</div>
+      </div>`);
+    grid.appendChild(a);
+  });
+  CK.reveals();
+})();
+</script>
+</body>
+</html>

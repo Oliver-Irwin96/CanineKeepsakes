@@ -1,0 +1,11 @@
+﻿# Secrets & env
+*.env
+ck-secrets.env
+.github-token
+
+# Dependencies
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db

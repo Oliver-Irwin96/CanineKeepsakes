@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — Canine Keepsakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- PayPal SDK loaded dynamically via /api/paypal-config -->
+</head>
+<body>
+
+<div class="wrap">
+  <h1 class="page-title">Checkout</h1>
+  <div class="two-col">
+    <div>
+      <h3 style="margin-bottom:18px;font-family:var(--font-display)">Delivery details</h3>
+      <form id="ship-form">
+        <div class="field-row">
+          <div class="field"><label>First name</label><input required name="first_name" autocomplete="given-name"></div>
+          <div class="field"><label>Last name</label><input required name="last_name" autocomplete="family-name"></div>
+        </div>
+        <div class="field"><label>Email</label><input required type="email" name="email" autocomplete="email"></div>
+        <div class="field"><label>Address line 1</label><input required name="address1" autocomplete="address-line1"></div>
+        <div class="field"><label>Address line 2 <small>(optional)</small></label><input name="address2" autocomplete="address-line2"></div>
+        <div class="field-row">
+          <div class="field"><label>Town / City</label><input required name="city" autocomplete="address-level2"></div>
+          <div class="field"><label>Postcode</label><input required name="zip" autocomplete="postal-code"></div>
+        </div>
+        <div class="field"><label>Country</label><select name="country_code" disabled><option value="GB" selected>United Kingdom</option></select></div>
+      </form>
+
+      <button class="btn-add" id="btn-rates" style="margin-top:8px">Get shipping rates</button>
+      <div id="rates-area"></div>
+
+      <div id="paypal-area" style="margin-top:24px">
+        <div id="paypal-button-container"></div>
+        <div class="notice" id="paypal-notice">Loading payment options…</div>
+      </div>
+    </div>
+
+    <div class="summary" id="summary-box"></div>
+  </div>
+</div>
+
+<script src="js/store.js"></script>
+<script>
+(() => {
+  CK.mountChrome();
+  const box = document.getElementById('summary-box');
+  let shipping = null;
+
+  function renderSummary() {
+    const b = CK.getBasket();
+    if (!b.length) { box.innerHTML = '<p>Your basket is empty.</p>'; return; }
+    const sub = CK.basketTotal();
+    const total = sub + (shipping ? shipping.rate : 0);
+    box.innerHTML = `
+      ${b.map(i => `<div class="row"><span>${i.collectionName} ${i.productName} ×${i.qty}</span><span>${CK.gbp(i.price * i.qty)}</span></div>`).join('')}
+      <div class="row"><span>Shipping</span><span>${shipping ? CK.gbp(shipping.rate) + ' · ' + shipping.name : 'select rate'}</span></div>
+      <div class="row total"><span>Total</span><span>${CK.gbp(total)}</span></div>`;
+  }
+  renderSummary();
+
+  /* shipping rates via Netlify function (Printful shipping API) */
+  document.getElementById('btn-rates').onclick = async () => {
+    const form = document.getElementById('ship-form');
+    if (!form.reportValidity()) return;
+    const fd = Object.fromEntries(new FormData(form));
+    const area = document.getElementById('rates-area');
+    area.innerHTML = '<div class="notice">Fetching live rates from Printful…</div>';
+    try {
+      const res = await fetch('/api/shipping-rates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient: { ...fd, country_code: 'GB' }, items: CK.getBasket() })
+      });
+      if (!res.ok) throw new Error('rates unavailable');
+      const rates = await res.json();
+      area.innerHTML = '<div class="swatches" style="margin-top:14px">' + rates.map((r, i) =>
+        `<button type="button" class="swatch" data-i="${i}">${r.name} — ${CK.gbp(parseFloat(r.rate))}</button>`).join('') + '</div>';
+      area.querySelectorAll('.swatch').forEach(btn => btn.onclick = () => {
+        area.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
+        btn.classList.add('sel');
+        const r = rates[+btn.dataset.i];
+        shipping = { id: r.id, name: r.name, rate: parseFloat(r.rate) };
+        renderSummary();
+      });
+    } catch {
+      area.innerHTML = '<div class="notice">⚠️ Could not fetch live shipping rates. Using flat-rate placeholder: Standard UK £3.99.</div>';
+      shipping = { id: 'STANDARD', name: 'Standard UK (placeholder)', rate: 3.99 };
+      renderSummary();
+    }
+  };
+
+  /* Load PayPal SDK dynamically — client ID fetched from server to avoid secret scanner */
+  function mountPayPal(clientId) {
+    const script = document.createElement('script');
+    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=GBP`;
+    script.onload = () => {
+      document.getElementById('paypal-notice').style.display = 'none';
+      paypal.Buttons({
+        createOrder: () => fetch('/api/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ items: CK.getBasket(), shipping })
+        }).then(r => r.json()).then(d => d.id),
+        onApprove: data => fetch('/api/capture-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderID: data.orderID,
+            items: CK.getBasket(),
+            shipping,
+            recipient: Object.fromEntries(new FormData(document.getElementById('ship-form')))
+          })
+        }).then(r => r.json()).then(d => {
+          if (d.status === 'COMPLETED') {
+            CK.saveBasket([]);
+            document.querySelector('.two-col').innerHTML =
+              '<div class="empty-state" style="grid-column:1/-1"><div class="big">🎉</div><h2>Order confirmed!</h2><p>Thanks — your keepsake is heading to print. Confirmation email on its way.</p></div>';
+          } else alert('Payment could not be completed. You have not been charged.');
+        })
+      }).render('#paypal-button-container');
+    };
+    document.head.appendChild(script);
+  }
+
+  fetch('/api/paypal-config')
+    .then(r => r.json())
+    .then(d => {
+      if (d.clientId) mountPayPal(d.clientId);
+      else document.getElementById('paypal-notice').textContent = '⚠️ Payment unavailable — config missing.';
+    })
+    .catch(() => {
+      document.getElementById('paypal-notice').textContent = '⚠️ Could not load payment options. Please refresh.';
+    });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collection — Canine Keepsakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <div class="crumbs"><a href="index.html">Home</a> / <a href="index.html#collections">Collections</a> / <span id="crumb-name"></span></div>
+</div>
+
+<section class="section" style="padding-top:36px">
+  <div class="wrap">
+    <div class="section-head reveal" style="text-align:left;margin-bottom:30px">
+      <div class="kicker">Collection</div>
+      <h2 id="col-name"></h2>
+      <p id="col-sub" style="margin-left:0"></p>
+    </div>
+
+    <div class="picker" style="max-width:100%">
+      <label>Browse the designs <small id="design-count"></small></label>
+      <div class="design-strip" id="design-strip" style="max-height:none;grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"></div>
+    </div>
+
+    <div class="section-head reveal" style="text-align:left;margin:48px 0 24px">
+      <h2 style="font-size:1.6rem">Choose a product</h2>
+    </div>
+    <div class="grid cols-4" id="product-grid"></div>
+  </div>
+</section>
+
+<script src="js/store.js"></script>
+<script>
+(async () => {
+  CK.mountChrome();
+  const cat = await CK.load();
+  const slug = CK.params.get('c') || cat.collections[0].slug;
+  const col = cat.collections.find(c => c.slug === slug) || cat.collections[0];
+
+  document.title = `${col.name} — Canine Keepsakes`;
+  document.getElementById('crumb-name').textContent = col.name;
+  document.getElementById('col-name').textContent = col.name;
+  document.getElementById('col-sub').textContent = `${col.designCount} breed designs · available on ${cat.products.length} products`;
+  document.getElementById('design-count').textContent = `(${col.designCount})`;
+
+  const strip = document.getElementById('design-strip');
+  col.designs.forEach(d => {
+    const cell = document.createElement('a');
+    cell.className = 'd';
+    cell.href = `product.html?c=${col.slug}&p=summer-tee&d=${d.id}`;
+    cell.title = d.label;
+    cell.appendChild(CK.designImg(d, '🐾'));
+    strip.appendChild(cell);
+  });
+
+  const grid = document.getElementById('product-grid');
+  cat.products.forEach(p => {
+    const a = document.createElement('a');
+    a.className = 'card reveal';
+    a.href = `product.html?c=${col.slug}&p=${p.slug}`;
+    const thumb = document.createElement('div');
+    thumb.className = 'thumb';
+    thumb.appendChild(CK.designImg(col.designs[0], p.shortName));
+    a.appendChild(thumb);
+    a.insertAdjacentHTML('beforeend', `
+      <div class="body">
+        <div class="title">${p.name}</div>
+        <div class="meta">${p.colours.length} colour${p.colours.length>1?'s':''} · ${p.sizes.length} size${p.sizes.length>1?'s':''}</div>
+        <div class="price">${CK.gbp(p.retailPrice)}</div>
+      </div>`);
+    grid.appendChild(a);
+  });
+  CK.reveals();
+})();
+</script>
+</body>
+</html>

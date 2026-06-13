@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — Canine Keepsakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="wrap">
+  <div class="crumbs">
+    <a href="index.html">Home</a> / <a id="crumb-col" href="#"></a> / <span id="crumb-prod"></span>
+  </div>
+  <div class="product-layout">
+    <div class="product-gallery">
+      <div class="main" id="main-img"></div>
+      <p class="notice" style="margin-top:14px">Product mockups are generated per design — final printed item shows your chosen design on the chosen garment colour.</p>
+    </div>
+    <div class="product-info">
+      <h1 id="p-name"></h1>
+      <div class="sub" id="p-desc"></div>
+      <div class="price" id="p-price"></div>
+
+      <div class="picker">
+        <label>1 · Choose your design <small id="d-label"></small></label>
+        <div class="design-strip" id="design-strip"></div>
+      </div>
+
+      <div class="picker" id="colour-picker">
+        <label>2 · Colour <small id="c-label"></small></label>
+        <div class="swatches" id="colour-swatches"></div>
+      </div>
+
+      <div class="picker" id="size-picker">
+        <label>3 · Size <small id="s-label"></small></label>
+        <div class="swatches" id="size-swatches"></div>
+      </div>
+
+      <div class="add-row">
+        <div class="qty">
+          <button id="qty-minus">−</button><span id="qty-val">1</span><button id="qty-plus">+</button>
+        </div>
+        <button class="btn-add" id="btn-add">Add to basket</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/store.js"></script>
+<script>
+(async () => {
+  CK.mountChrome();
+  const cat = await CK.load();
+  const col = cat.collections.find(c => c.slug === CK.params.get('c')) || cat.collections[0];
+  const prod = cat.products.find(p => p.slug === CK.params.get('p')) || cat.products[0];
+
+  let design = col.designs.find(d => d.id === CK.params.get('d')) || col.designs[0];
+  let colour = prod.colours[0];
+  let size = prod.sizes[0];
+  let qty = 1;
+
+  document.title = `${col.name} ${prod.name} — Canine Keepsakes`;
+  const crumbCol = document.getElementById('crumb-col');
+  crumbCol.textContent = col.name;
+  crumbCol.href = `collection.html?c=${col.slug}`;
+  document.getElementById('crumb-prod').textContent = prod.name;
+  document.getElementById('p-name').textContent = `${col.name} — ${prod.name}`;
+  document.getElementById('p-desc').textContent = prod.description;
+  document.getElementById('p-price').textContent = CK.gbp(prod.retailPrice);
+
+  const mainImg = document.getElementById('main-img');
+  function renderMain() {
+    mainImg.innerHTML = '';
+    mainImg.appendChild(CK.designImg(design, col.name));
+    document.getElementById('d-label').textContent = `— ${design.label}`;
+  }
+
+  const strip = document.getElementById('design-strip');
+  col.designs.forEach(d => {
+    const cell = document.createElement('button');
+    cell.type = 'button';
+    cell.className = 'd' + (d.id === design.id ? ' sel' : '');
+    cell.title = d.label;
+    cell.appendChild(CK.designImg(d, '🐾'));
+    cell.onclick = () => {
+      design = d;
+      strip.querySelectorAll('.d').forEach(x => x.classList.remove('sel'));
+      cell.classList.add('sel');
+      renderMain();
+    };
+    strip.appendChild(cell);
+  });
+
+  const cw = document.getElementById('colour-swatches');
+  prod.colours.forEach(c => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'swatch' + (c === colour ? ' sel' : '');
+    b.textContent = c;
+    b.onclick = () => {
+      colour = c;
+      cw.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      document.getElementById('c-label').textContent = `— ${c}`;
+    };
+    cw.appendChild(b);
+  });
+  document.getElementById('c-label').textContent = `— ${colour}`;
+
+  const sw = document.getElementById('size-swatches');
+  prod.sizes.forEach(s => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'swatch' + (s === size ? ' sel' : '');
+    b.textContent = s;
+    b.onclick = () => {
+      size = s;
+      sw.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+      document.getElementById('s-label').textContent = `— ${s}`;
+    };
+    sw.appendChild(b);
+  });
+  document.getElementById('s-label').textContent = `— ${size}`;
+
+  document.getElementById('qty-minus').onclick = () => { qty = Math.max(1, qty - 1); document.getElementById('qty-val').textContent = qty; };
+  document.getElementById('qty-plus').onclick = () => { qty++; document.getElementById('qty-val').textContent = qty; };
+
+  const btn = document.getElementById('btn-add');
+  btn.onclick = () => {
+    CK.addToBasket({
+      productSlug: prod.slug,
+      productName: prod.name,
+      catalogProductId: prod.catalogProductId,
+      collection: col.slug,
+      collectionName: col.name,
+      designId: design.id,
+      designLabel: design.label,
+      driveFileId: design.driveFileId,
+      printFileUrl: design.printFileUrl,
+      thumb: design.thumb,
+      colour, size, qty,
+      price: prod.retailPrice
+    });
+    btn.textContent = 'Added ✓';
+    btn.classList.add('flash');
+    setTimeout(() => { btn.textContent = 'Add to basket'; btn.classList.remove('flash'); }, 1400);
+  };
+
+  renderMain();
+})();
+</script>
+</body>
+</html>

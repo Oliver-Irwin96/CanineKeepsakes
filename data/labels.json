@@ -1,0 +1,27 @@
+{
+ "_meta": {
+  "note": "breed labels keyed by design id; null = image not available locally yet"
+ },
+ "dirty-dog": {
+  "dirty-dog-01": "Cocker Spaniel",
+  "dirty-dog-02": "Boxer",
+  "dirty-dog-03": "Afghan Hound",
+  "dirty-dog-04": "Rottweiler",
+  "dirty-dog-05": "American Bulldog",
+  "dirty-dog-06": "Golden Retriever",
+  "dirty-dog-07": "Beagle",
+  "dirty-dog-08": "Springer Spaniel",
+  "dirty-dog-09": "Border Collie",
+  "dirty-dog-10": "Labradoodle",
+  "dirty-dog-11": "Staffordshire Bull Terrier",
+  "dirty-dog-12": "French Bulldog (Blue)",
+  "dirty-dog-13": "Old English Sheepdog",
+  "dirty-dog-14": "French Bulldog (Cream)",
+  "dirty-dog-15": "Dachshund",
+  "dirty-dog-16": null,
+  "dirty-dog-17": "German Shepherd",
+  "dirty-dog-18": "Chocolate Labrador",
+  "dirty-dog-19": "Bearded Collie",
+  "dirty-dog-20": "Jack Russell Terrier"
+ }
+}
