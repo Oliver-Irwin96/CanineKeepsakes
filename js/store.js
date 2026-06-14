@@ -37,10 +37,10 @@ const CK = (() => {
     wrap.className = 'ph-art';
     wrap.innerHTML = `<span>${label || '🐾'}</span>`;
     const img = new Image();
-    img.loading = 'lazy';
     img.alt = label || 'design';
-    img.src = design.thumb;
     img.onload = () => { wrap.className = ''; wrap.innerHTML = ''; wrap.appendChild(img); };
+    img.onerror = () => {};
+    img.src = design.thumb;
     return wrap;
   }
 
@@ -60,6 +60,7 @@ const CK = (() => {
       <nav class="nav">
         <a href="index.html#collections" ${active==='collections'?'style="opacity:1"':''}>Collections</a>
         <a href="index.html#how">How it works</a>
+        <a href="account.html" ${active==='account'?'style="opacity:1"':''}>Account</a>
         <a class="basket-btn" href="basket.html">Basket <span class="basket-count">0</span></a>
       </nav>
     </div></header>`;

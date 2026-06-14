@@ -1,7 +1,7 @@
 /* Shared helpers for CK Netlify functions */
 const PF_BASE = 'https://api.printful.com';
 
-/* Canine Keepsakes store ID — general API key covers 19 stores, this scopes all
+/* Canine Keepsakes store ID - general API key covers 19 stores, this scopes all
    calls to the right one. Set PRINTFUL_STORE_ID env var to override. */
 const CK_STORE_ID = process.env.PRINTFUL_STORE_ID || '18269364';
 
@@ -37,7 +37,7 @@ async function paypalToken() {
   return (await res.json()).access_token;
 }
 
-/* Server-side price table — NEVER trust client prices.
+/* Server-side price table - NEVER trust client prices.
    Mirror of data/products.json retail prices. */
 const PRICES = {
   'summer-tee': 24.99, 'summer-long-sleeve': 29.99, 'winter-tee': 27.99,
@@ -54,10 +54,140 @@ function priceBasket(items) {
   }, 0);
 }
 
+/* -- Shipping (server-authoritative) --
+   The browser must NEVER decide shipping cost. We always re-fetch live rates
+   from Printful and use Printful's number. If Printful is unreachable we fall
+   back to a SERVER-defined flat rate - never to a client-supplied value. */
+const FLAT_SHIP_FALLBACK = { id: 'STANDARD', name: 'Standard UK', rate: 3.99 };
+
+async function resolveFirstVariant(catalogProductId) {
+  const res = await fetch(`${PF_BASE}/products/${catalogProductId}`, { headers: pfHeaders() });
+  if (!res.ok) throw new Error(`catalog lookup failed for ${catalogProductId}`);
+  const data = await res.json();
+  const v = data?.result?.variants?.[0];
+  if (!v) throw new Error(`no variants for product ${catalogProductId}`);
+  return v.id;
+}
+
+async function printfulShippingRates(recipient, items) {
+  const resolved = [];
+  for (const i of items) {
+    const variant_id = await resolveFirstVariant(i.catalogProductId);
+    resolved.push({ variant_id, quantity: Math.max(1, parseInt(i.qty) || 1) });
+  }
+  const res = await fetch(`${PF_BASE}/shipping/rates`, {
+    method: 'POST',
+    headers: pfHeaders(),
+    body: JSON.stringify({
+      recipient: {
+        address1: recipient.address1,
+        city: recipient.city,
+        country_code: 'GB',
+        zip: recipient.zip
+      },
+      items: resolved,
+      currency: 'GBP',
+      locale: 'en_GB'
+    })
+  });
+  if (!res.ok) throw new Error(`Printful rates error ${res.status}`);
+  const data = await res.json();
+  return data.result || [];
+}
+
+/* Returns authoritative { id, name, rate } for the chosen option.
+   chosenId only PICKS among server rates - its price is discarded.
+   Unknown id -> cheapest live rate. Printful down -> server flat fallback. */
+async function authoritativeShipping(recipient, items, chosenId) {
+  try {
+    const rates = await printfulShippingRates(recipient, items);
+    if (rates.length) {
+      const match = rates.find(r => String(r.id) === String(chosenId));
+      const pick = match || rates.reduce((a, b) => (parseFloat(a.rate) <= parseFloat(b.rate) ? a : b));
+      return { id: pick.id, name: pick.name, rate: parseFloat(pick.rate) };
+    }
+  } catch (_) { /* fall through to flat fallback */ }
+  return { ...FLAT_SHIP_FALLBACK };
+}
+
+/* ---------------------------------------------------------------------------
+   Supabase (server-side, zero-dependency REST)
+   - verifyUser: validates the caller's Supabase access token (login is required
+     at checkout, so the browser sends Authorization: Bearer <access_token>).
+   - The *_admin helpers use the SERVICE-ROLE key and bypass RLS. They are only
+     ever called from server functions - never exposed to the browser.
+--------------------------------------------------------------------------- */
+function supabaseEnv() {
+  return {
+    url: process.env.SUPABASE_URL,
+    anonKey: process.env.SUPABASE_ANON_KEY,
+    serviceKey: process.env.SUPABASE_SERVICE_ROLE_KEY
+  };
+}
+
+async function verifyUser(event) {
+  const { url, anonKey } = supabaseEnv();
+  if (!url || !anonKey) throw new Error('Supabase not configured');
+  const hdrs = event.headers || {};
+  const auth = hdrs.authorization || hdrs.Authorization || '';
+  const token = auth.replace(/^Bearer\s+/i, '').trim();
+  if (!token) return null;
+  const res = await fetch(`${url}/auth/v1/user`, {
+    headers: { apikey: anonKey, Authorization: `Bearer ${token}` }
+  });
+  if (!res.ok) return null;
+  const user = await res.json();
+  return user && user.id ? user : null;
+}
+
+function sbAdminHeaders() {
+  const { serviceKey } = supabaseEnv();
+  if (!serviceKey) throw new Error('SUPABASE_SERVICE_ROLE_KEY not configured');
+  return {
+    apikey: serviceKey,
+    Authorization: `Bearer ${serviceKey}`,
+    'Content-Type': 'application/json'
+  };
+}
+
+async function findOrderByPaypalId(paypalOrderId) {
+  const { url } = supabaseEnv();
+  const res = await fetch(
+    `${url}/rest/v1/orders?paypal_order_id=eq.${encodeURIComponent(paypalOrderId)}&select=*`,
+    { headers: sbAdminHeaders() }
+  );
+  if (!res.ok) throw new Error(`order lookup failed ${res.status}`);
+  const rows = await res.json();
+  return rows[0] || null;
+}
+
+/* Insert an order row. The UNIQUE(paypal_order_id) constraint is the real
+   idempotency guard: a duplicate insert returns 409, which we treat as
+   "already recorded" and swallow (returns null). Returns the stored row. */
+async function recordOrder(row) {
+  const { url } = supabaseEnv();
+  const res = await fetch(`${url}/rest/v1/orders`, {
+    method: 'POST',
+    headers: { ...sbAdminHeaders(), Prefer: 'return=representation' },
+    body: JSON.stringify(row)
+  });
+  if (res.status === 409) return null; // duplicate paypal_order_id
+  if (!res.ok) {
+    const detail = await res.text();
+    throw new Error(`order insert failed ${res.status}: ${detail}`);
+  }
+  const rows = await res.json();
+  return rows[0] || null;
+}
+
 const json = (status, body) => ({
   statusCode: status,
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(body)
 });
 
-module.exports = { PF_BASE, pfHeaders, paypalBase, paypalToken, priceBasket, json };
+module.exports = {
+  PF_BASE, pfHeaders, paypalBase, paypalToken, priceBasket, json,
+  printfulShippingRates, authoritativeShipping, FLAT_SHIP_FALLBACK,
+  supabaseEnv, verifyUser, findOrderByPaypalId, recordOrder
+};

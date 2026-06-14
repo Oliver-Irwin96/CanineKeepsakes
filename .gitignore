@@ -1,4 +1,4 @@
-﻿# Secrets & env
+# Secrets & env
 *.env
 ck-secrets.env
 .github-token
@@ -9,3 +9,11 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+# Internal session notes — must NOT be served publicly (publish = ".")
+Handoffs/
+Knowledge/
+
+# Backups / scratch
+*.bak
+ck_test.js

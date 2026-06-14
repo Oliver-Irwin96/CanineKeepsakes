@@ -44,12 +44,27 @@
   </div>
 </div>
 
-<script src="js/store.js"></script>
+<script src="js/store.js?v=3"></script>
+<script src="js/auth.js?v=1"></script>
 <script>
 (() => {
   CK.mountChrome();
   const box = document.getElementById('summary-box');
   let shipping = null;
+
+  /* Login is required to check out. Bounce anonymous visitors to the login
+     page, then prefill the form from their account. */
+  (async () => {
+    let session = null;
+    try { session = await CK.auth.session(); } catch (_) {}
+    if (!session) { location.href = 'login.html?redirect=checkout.html'; return; }
+    const form = document.getElementById('ship-form');
+    if (session.user?.email) form.email.value = session.user.email;
+    try {
+      const prof = await CK.auth.profile();
+      if (prof) ['first_name','last_name','address1','address2','city','zip'].forEach(k => { if (prof[k] && !form[k].value) form[k].value = prof[k]; });
+    } catch (_) {}
+  })();
 
   function renderSummary() {
     const b = CK.getBasket();
@@ -94,6 +109,20 @@
     }
   };
 
+  /* Authenticated POST helper — attaches the Supabase access token so the
+     create-order / capture-order functions can verify the customer. */
+  async function authPost(url, body) {
+    const token = await CK.auth.token();
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify(body)
+    });
+  }
+
   /* Load PayPal SDK dynamically — client ID fetched from server to avoid secret scanner */
   function mountPayPal(clientId) {
     const script = document.createElement('script');
@@ -101,25 +130,26 @@
     script.onload = () => {
       document.getElementById('paypal-notice').style.display = 'none';
       paypal.Buttons({
-        createOrder: () => fetch('/api/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: CK.getBasket(), shipping })
+        createOrder: () => authPost('/api/create-order', {
+          items: CK.getBasket(),
+          shipping,
+          recipient: Object.fromEntries(new FormData(document.getElementById('ship-form')))
         }).then(r => r.json()).then(d => d.id),
-        onApprove: data => fetch('/api/capture-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderID: data.orderID,
-            items: CK.getBasket(),
-            shipping,
-            recipient: Object.fromEntries(new FormData(document.getElementById('ship-form')))
-          })
+        onApprove: data => authPost('/api/capture-order', {
+          orderID: data.orderID,
+          items: CK.getBasket(),
+          shipping,
+          recipient: Object.fromEntries(new FormData(document.getElementById('ship-form')))
         }).then(r => r.json()).then(d => {
           if (d.status === 'COMPLETED') {
             CK.saveBasket([]);
+            const review = d.fulfilment === 'MANUAL_REVIEW_REQUIRED' || d.fulfilment === 'MANUAL_FOLLOWUP_REQUIRED';
             document.querySelector('.two-col').innerHTML =
-              '<div class="empty-state" style="grid-column:1/-1"><div class="big">🎉</div><h2>Order confirmed!</h2><p>Thanks — your keepsake is heading to print. Confirmation email on its way.</p></div>';
+              '<div class="empty-state" style="grid-column:1/-1"><div class="big">🎉</div><h2>Order confirmed!</h2><p>' +
+              (review
+                ? 'Thanks — your payment went through. We\'re giving this order a quick manual check and will email you shortly.'
+                : 'Thanks — your keepsake is heading to print. Confirmation email on its way.') +
+              ' <a href="account.html">View your orders →</a></p></div>';
           } else alert('Payment could not be completed. You have not been charged.');
         })
       }).render('#paypal-button-container');

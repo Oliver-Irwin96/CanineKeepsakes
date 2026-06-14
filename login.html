@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in — Canine Keepsakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap" style="max-width:460px">
+  <h1 class="page-title" id="title" style="margin-top:28px">Sign in</h1>
+  <p class="muted" id="subtitle" style="margin-top:-10px">Sign in to check out and track your orders.</p>
+
+  <form id="auth-form" style="margin-top:18px">
+    <div class="field"><label>Email</label><input required type="email" name="email" autocomplete="email"></div>
+    <div class="field"><label>Password</label><input required type="password" name="password" minlength="6" autocomplete="current-password"></div>
+    <button class="btn-add" id="submit" type="submit" style="width:100%;margin-top:6px">Sign in</button>
+  </form>
+
+  <div class="notice" id="msg" style="display:none;margin-top:14px"></div>
+
+  <p class="muted" style="margin-top:18px" id="toggle-line">
+    New here? <a href="#" id="toggle">Create an account</a>
+  </p>
+</div>
+
+<script src="js/store.js?v=3"></script>
+<script src="js/auth.js?v=1"></script>
+<script>
+(() => {
+  CK.mountChrome();
+  const params = new URLSearchParams(location.search);
+  const redirect = params.get('redirect') || 'account.html';
+  let mode = 'signin'; // or 'signup'
+
+  const title = document.getElementById('title');
+  const subtitle = document.getElementById('subtitle');
+  const submit = document.getElementById('submit');
+  const toggle = document.getElementById('toggle');
+  const toggleLine = document.getElementById('toggle-line');
+  const pw = document.querySelector('input[name=password]');
+  const msg = document.getElementById('msg');
+
+  function show(text, ok) {
+    msg.style.display = 'block';
+    msg.textContent = text;
+    msg.style.borderColor = ok ? '' : '';
+  }
+
+  function setMode(m) {
+    mode = m;
+    if (m === 'signup') {
+      title.textContent = 'Create account';
+      subtitle.textContent = 'Create an account to check out and track your orders.';
+      submit.textContent = 'Create account';
+      pw.setAttribute('autocomplete', 'new-password');
+      toggleLine.innerHTML = 'Already have an account? <a href="#" id="toggle">Sign in</a>';
+    } else {
+      title.textContent = 'Sign in';
+      subtitle.textContent = 'Sign in to check out and track your orders.';
+      submit.textContent = 'Sign in';
+      pw.setAttribute('autocomplete', 'current-password');
+      toggleLine.innerHTML = 'New here? <a href="#" id="toggle">Create an account</a>';
+    }
+    document.getElementById('toggle').onclick = (e) => { e.preventDefault(); setMode(mode === 'signin' ? 'signup' : 'signin'); };
+    msg.style.display = 'none';
+  }
+  setMode('signin');
+
+  // If already signed in, skip straight to the redirect target.
+  CK.auth.session().then(s => { if (s) location.href = redirect; }).catch(() => {});
+
+  document.getElementById('auth-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = e.target.email.value.trim();
+    const password = e.target.password.value;
+    submit.disabled = true;
+    const original = submit.textContent;
+    submit.textContent = 'Please wait…';
+    try {
+      if (mode === 'signup') {
+        const { data, error } = await CK.auth.signUp(email, password);
+        if (error) { show(error.message, false); }
+        else if (data.session) { location.href = redirect; }
+        else { show('Account created. Check your email for a confirmation link, then come back and sign in.', true); setMode('signin'); }
+      } else {
+        const { data, error } = await CK.auth.signIn(email, password);
+        if (error) { show(error.message === 'Email not confirmed' ? 'Please confirm your email first — check your inbox for the link.' : error.message, false); }
+        else if (data.session) { location.href = redirect; }
+      }
+    } catch (err) {
+      show('Something went wrong: ' + err.message, false);
+    } finally {
+      submit.disabled = false;
+      submit.textContent = original;
+    }
+  });
+})();
+</script>
+</body>
+</html>

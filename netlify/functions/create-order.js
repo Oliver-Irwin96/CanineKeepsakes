@@ -1,15 +1,24 @@
-/* POST /api/create-order  { items, shipping } → creates PayPal order, returns { id }
-   Total is computed SERVER-SIDE from the price table — client totals ignored. */
-const { paypalBase, paypalToken, priceBasket, json } = require('./_lib');
+/* POST /api/create-order  { items, shipping, recipient } -> creates PayPal order, returns { id }
+   Requires a signed-in customer (Authorization: Bearer <supabase access token>).
+   Total is computed SERVER-SIDE: prices from the table, shipping re-fetched live
+   from Printful. Client-supplied prices AND shipping rate are ignored. */
+const { paypalBase, paypalToken, priceBasket, authoritativeShipping, verifyUser, json } = require('./_lib');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') return json(405, { error: 'POST only' });
   try {
-    const { items, shipping } = JSON.parse(event.body || '{}');
+    /* Login required: reject anonymous callers before doing any work. */
+    const user = await verifyUser(event);
+    if (!user) return json(401, { error: 'login required' });
+
+    const { items, shipping, recipient } = JSON.parse(event.body || '{}');
     if (!items?.length) return json(400, { error: 'empty basket' });
+    if (!recipient?.address1 || !recipient?.zip) return json(400, { error: 'recipient address required' });
 
     const subtotal = priceBasket(items);
-    const shipCost = Math.max(0, parseFloat(shipping?.rate) || 0);
+    /* H1 fix - never trust shipping.rate from the browser; re-derive it. */
+    const ship = await authoritativeShipping(recipient, items, shipping?.id);
+    const shipCost = ship.rate;
     const total = (subtotal + shipCost).toFixed(2);
 
     const token = await paypalToken();

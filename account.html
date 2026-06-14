@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My account — Canine Keepsakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <h1 class="page-title" style="margin-bottom:0">My account</h1>
+    <button class="btn-add" id="signout" style="background:transparent;border:1px solid currentColor">Sign out</button>
+  </div>
+  <p class="muted" id="hello">Loading…</p>
+
+  <div class="two-col" style="margin-top:18px">
+    <div>
+      <h3 style="font-family:var(--font-display);margin-bottom:14px">Default delivery address</h3>
+      <form id="profile-form">
+        <div class="field-row">
+          <div class="field"><label>First name</label><input name="first_name" autocomplete="given-name"></div>
+          <div class="field"><label>Last name</label><input name="last_name" autocomplete="family-name"></div>
+        </div>
+        <div class="field"><label>Address line 1</label><input name="address1" autocomplete="address-line1"></div>
+        <div class="field"><label>Address line 2 <small>(optional)</small></label><input name="address2" autocomplete="address-line2"></div>
+        <div class="field-row">
+          <div class="field"><label>Town / City</label><input name="city" autocomplete="address-level2"></div>
+          <div class="field"><label>Postcode</label><input name="zip" autocomplete="postal-code"></div>
+        </div>
+        <button class="btn-add" id="save-profile" type="submit" style="margin-top:6px">Save address</button>
+        <span class="muted" id="save-msg" style="margin-left:10px"></span>
+      </form>
+    </div>
+
+    <div>
+      <h3 style="font-family:var(--font-display);margin-bottom:14px">Order history</h3>
+      <div id="orders-area"><p class="muted">Loading orders…</p></div>
+    </div>
+  </div>
+</div>
+
+<script src="js/store.js?v=3"></script>
+<script src="js/auth.js?v=1"></script>
+<script>
+(() => {
+  CK.mountChrome();
+
+  const fulfilLabel = {
+    DRAFT_CREATED: 'Confirmed — heading to print',
+    MANUAL_REVIEW_REQUIRED: 'Under review',
+    MANUAL_FOLLOWUP_REQUIRED: 'Processing',
+    PENDING: 'Pending'
+  };
+
+  (async () => {
+    const session = await CK.auth.session().catch(() => null);
+    if (!session) { location.href = 'login.html?redirect=account.html'; return; }
+    const user = session.user;
+    document.getElementById('hello').textContent = 'Signed in as ' + user.email;
+
+    // prefill profile
+    const prof = await CK.auth.profile().catch(() => null);
+    if (prof) {
+      const f = document.getElementById('profile-form');
+      ['first_name','last_name','address1','address2','city','zip'].forEach(k => { if (prof[k]) f[k].value = prof[k]; });
+    }
+
+    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = Object.fromEntries(new FormData(e.target));
+      const sm = document.getElementById('save-msg');
+      sm.textContent = 'Saving…';
+      try { await CK.auth.saveProfile(fd); sm.textContent = 'Saved ✓'; }
+      catch (err) { sm.textContent = 'Could not save: ' + err.message; }
+    });
+
+    // orders
+    const area = document.getElementById('orders-area');
+    try {
+      const orders = await CK.auth.orders();
+      if (!orders.length) { area.innerHTML = '<p class="muted">No orders yet. <a href="index.html#collections">Start shopping →</a></p>'; return; }
+      area.innerHTML = orders.map(o => {
+        const when = new Date(o.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+        const n = Array.isArray(o.items) ? o.items.reduce((s,i)=>s+(parseInt(i.qty)||1),0) : 0;
+        const paid = o.paid_amount != null ? CK.gbp(parseFloat(o.paid_amount)) : '—';
+        const state = fulfilLabel[o.fulfilment_status] || o.fulfilment_status;
+        return `<div class="row" style="display:block;border-bottom:1px solid rgba(0,0,0,.08);padding:12px 0">
+          <div style="display:flex;justify-content:space-between"><strong>${when}</strong><span>${paid}</span></div>
+          <div class="muted">${n} item${n===1?'':'s'} · ${state}</div>
+        </div>`;
+      }).join('');
+    } catch (err) {
+      area.innerHTML = '<p class="muted">Could not load orders: ' + err.message + '</p>';
+    }
+  })();
+
+  document.getElementById('signout').onclick = async () => {
+    await CK.auth.signOut();
+    location.href = 'index.html';
+  };
+})();
+</script>
+</body>
+</html>
