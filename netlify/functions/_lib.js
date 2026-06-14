@@ -180,14 +180,82 @@ async function recordOrder(row) {
   return rows[0] || null;
 }
 
-const json = (status, body) => ({
+/* ---------------------------------------------------------------------------
+   M2 - origin allowlist + best-effort rate limiting (CORS hardening)
+--------------------------------------------------------------------------- */
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS ||
+  'https://caninekeepsakes.co.uk,https://www.caninekeepsakes.co.uk')
+  .split(',').map(s => s.trim()).filter(Boolean);
+
+function originHeader(event) {
+  const h = event.headers || {};
+  return h.origin || h.Origin || '';
+}
+
+/* CORS headers for an allowed Origin (used on the OPTIONS preflight). */
+function corsHeaders(event) {
+  const origin = originHeader(event);
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    return {
+      'Access-Control-Allow-Origin': origin,
+      'Vary': 'Origin',
+      'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+    };
+  }
+  return {};
+}
+
+/* Reject requests that carry a *foreign* Origin (browser-driven cross-site
+   abuse / CSRF). An absent Origin (same-origin GET, server-to-server, direct
+   URL hit) is allowed so we don't break normal use or smoke tests. */
+function isOriginAllowed(event) {
+  const origin = originHeader(event);
+  return !origin || ALLOWED_ORIGINS.includes(origin);
+}
+
+/* Best-effort in-memory rate limit. NOTE: serverless instances are ephemeral
+   and not shared, so this throttles per warm instance only - it raises the bar
+   for casual abuse but is not a hard global limit. For a global limit, back it
+   with a store (e.g. Supabase) keyed by IP. */
+const _hits = new Map();
+function rateLimit(event, max = 30, windowMs = 60000) {
+  const h = event.headers || {};
+  const ip = (h['x-nf-client-connection-ip'] || h['x-forwarded-for'] || 'unknown')
+    .toString().split(',')[0].trim();
+  const now = Date.now();
+  const rec = _hits.get(ip);
+  if (!rec || now > rec.reset) { _hits.set(ip, { count: 1, reset: now + windowMs }); return true; }
+  rec.count += 1;
+  return rec.count <= max;
+}
+
+/* ---------------------------------------------------------------------------
+   M4 - print-file URL allowlist. capture-order sends files:[{url}] to Printful
+   with a client-supplied URL; restrict it to trusted hosts so a logged-in
+   attacker can't make Printful fetch/print an arbitrary URL.
+--------------------------------------------------------------------------- */
+const PRINT_FILE_HOSTS = (process.env.PRINT_FILE_ALLOWED_HOSTS ||
+  'drive.google.com,drive.usercontent.google.com,lh3.googleusercontent.com,caninekeepsakes.co.uk,www.caninekeepsakes.co.uk')
+  .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+
+function isAllowedPrintFile(url) {
+  if (!url || typeof url !== 'string') return false;
+  let u;
+  try { u = new URL(url); } catch { return false; }
+  if (u.protocol !== 'https:') return false;
+  return PRINT_FILE_HOSTS.includes(u.hostname.toLowerCase());
+}
+
+const json = (status, body, extraHeaders = {}) => ({
   statusCode: status,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json', ...extraHeaders },
   body: JSON.stringify(body)
 });
 
 module.exports = {
   PF_BASE, pfHeaders, paypalBase, paypalToken, priceBasket, json,
   printfulShippingRates, authoritativeShipping, FLAT_SHIP_FALLBACK,
-  supabaseEnv, verifyUser, findOrderByPaypalId, recordOrder
+  supabaseEnv, verifyUser, findOrderByPaypalId, recordOrder,
+  ALLOWED_ORIGINS, corsHeaders, isOriginAllowed, rateLimit, isAllowedPrintFile
 };

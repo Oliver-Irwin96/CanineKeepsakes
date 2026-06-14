@@ -17,3 +17,10 @@ Knowledge/
 # Backups / scratch
 *.bak
 ck_test.js
+
+# Netlify deploy build artifacts
+deploy-*.zip
+
+# Session notes saved to root (Knowledge/ & Handoffs/ dirs broken on mount)
+2026-*_CK_*_s2.md
+notes2/

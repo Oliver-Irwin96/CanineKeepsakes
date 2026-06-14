@@ -73,13 +73,27 @@ const CK = (() => {
         <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:8px">Canine Keepsakes</div>
         <div class="muted">Premium gifts for dog people. Printed &amp; shipped in the UK.</div>
       </div>
-      <div class="muted">© ${y} Canine Keepsakes · UK delivery only (for now)</div>
+      <div class="muted">© ${y} Canine Keepsakes · UK delivery only (for now) · <a href="privacy.html">Privacy Policy</a></div>
     </div></footer>`;
   }
+
+  /* ── cookie / essential-storage notice (no tracking, so a notice not a gate) ── */
+  function cookieNotice() {
+    try { if (localStorage.getItem('ck-cookie-ok')) return; } catch (_) {}
+    const bar = document.createElement('div');
+    bar.className = 'ck-cookie';
+    bar.setAttribute('role', 'note');
+    bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#1c1c1c;color:#fff;padding:14px 18px;display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:.92rem';
+    bar.innerHTML = 'We use only essential storage to run the shop (your basket and login) — no tracking or ads. <a href="privacy.html" style="color:#9fd3ff">Learn more</a> <button type="button" class="ck-cookie-ok" style="margin-left:8px;padding:8px 16px;border:0;border-radius:8px;background:#fff;color:#1c1c1c;font-weight:600;cursor:pointer">OK</button>';
+    document.body.appendChild(bar);
+    bar.querySelector('.ck-cookie-ok').onclick = () => { try { localStorage.setItem('ck-cookie-ok', '1'); } catch (_) {} bar.remove(); };
+  }
+
   function mountChrome(active) {
     document.body.insertAdjacentHTML('afterbegin', header(active));
     document.body.insertAdjacentHTML('beforeend', footer());
     renderCount();
+    cookieNotice();
   }
 
   return { load, params, gbp, getBasket, saveBasket, addToBasket, removeFromBasket, basketTotal, basketCount, renderCount, designImg, reveals, mountChrome };

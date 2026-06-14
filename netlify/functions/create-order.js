@@ -2,9 +2,14 @@
    Requires a signed-in customer (Authorization: Bearer <supabase access token>).
    Total is computed SERVER-SIDE: prices from the table, shipping re-fetched live
    from Printful. Client-supplied prices AND shipping rate are ignored. */
-const { paypalBase, paypalToken, priceBasket, authoritativeShipping, verifyUser, json } = require('./_lib');
+const { paypalBase, paypalToken, priceBasket, authoritativeShipping, verifyUser, json,
+  corsHeaders, isOriginAllowed, rateLimit } = require('./_lib');
 
 exports.handler = async (event) => {
+  /* M2 - CORS preflight, foreign-origin block, best-effort throttle */
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: corsHeaders(event), body: '' };
+  if (!isOriginAllowed(event)) return json(403, { error: 'forbidden origin' });
+  if (!rateLimit(event, 20, 60000)) return json(429, { error: 'too many requests' });
   if (event.httpMethod !== 'POST') return json(405, { error: 'POST only' });
   try {
     /* Login required: reject anonymous callers before doing any work. */

@@ -8,7 +8,8 @@
    Print files must be at public URLs at order time (Drive direct-download links for now). */
 const {
   PF_BASE, pfHeaders, paypalBase, paypalToken, priceBasket, authoritativeShipping,
-  verifyUser, findOrderByPaypalId, recordOrder, json
+  verifyUser, findOrderByPaypalId, recordOrder, json,
+  corsHeaders, isOriginAllowed, rateLimit, isAllowedPrintFile
 } = require('./_lib');
 
 async function resolveVariantId(catalogProductId, colour, size) {
@@ -25,6 +26,10 @@ async function resolveVariantId(catalogProductId, colour, size) {
 }
 
 exports.handler = async (event) => {
+  /* M2 - CORS preflight, foreign-origin block, best-effort throttle */
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: corsHeaders(event), body: '' };
+  if (!isOriginAllowed(event)) return json(403, { error: 'forbidden origin' });
+  if (!rateLimit(event, 20, 60000)) return json(429, { error: 'too many requests' });
   if (event.httpMethod !== 'POST') return json(405, { error: 'POST only' });
   try {
     /* Login required: reject anonymous callers. */
@@ -94,6 +99,16 @@ exports.handler = async (event) => {
         paid: Number.isFinite(paid) ? paid : null,
         expected: +expected.toFixed(2)
       });
+    }
+
+    /* M4 - never hand Printful an untrusted/missing file URL. Payment already
+       captured, so hold for manual review rather than printing a bad URL. */
+    const badFile = items.find(i => !isAllowedPrintFile(i.printFileUrl));
+    if (badFile) {
+      console.error('BLOCKED untrusted/missing print file url', badFile && badFile.printFileUrl);
+      await recordOrder({ ...base, status: 'COMPLETED', fulfilment_status: 'MANUAL_REVIEW_REQUIRED',
+        review_reason: 'print file url not allowed', paid_amount: paid, expected_amount: +expected.toFixed(2) });
+      return json(200, { status: 'COMPLETED', fulfilment: 'MANUAL_REVIEW_REQUIRED', reason: 'print file url not allowed' });
     }
 
     /* 2 - create Printful DRAFT order (raw design file until mockup pipeline ships) */
