@@ -13,6 +13,6 @@
 #   PAYPAL_CLIENT_SECRET      — PayPal Business REST app
 #   PAYPAL_ENV                — "sandbox" or "live"
 #
-#   SUPABASE_URL              — https://hhplvaxvecantmwswmsh.supabase.co
+#   SUPABASE_URL              — your Supabase project URL (set in Netlify env, not committed here)
 #   SUPABASE_ANON_KEY         — public anon key (safe in browser; served via /api/supabase-config)
 #   SUPABASE_SERVICE_ROLE_KEY — SECRET service-role key (server functions only; bypasses RLS — never expose)
