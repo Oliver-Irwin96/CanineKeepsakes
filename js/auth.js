@@ -60,5 +60,17 @@ CK.auth = (() => {
     const { data } = await c.from('orders').select('*').order('created_at', { ascending: false });
     return data || [];
   }
-  return { init, signUp, signIn, signOut, session, user, token, profile, saveProfile, orders };
+  /* Sends a password-reset email. The link returns the user to
+     reset-password.html with a recovery token Supabase picks up automatically. */
+  async function requestPasswordReset(email) {
+    const c = await init();
+    return c.auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/reset-password.html' });
+  }
+  /* Sets a new password for the currently-recovered session (used on reset-password.html). */
+  async function updatePassword(password) {
+    const c = await init();
+    return c.auth.updateUser({ password });
+  }
+  return { init, signUp, signIn, signOut, session, user, token, profile, saveProfile, orders,
+           requestPasswordReset, updatePassword };
 })();

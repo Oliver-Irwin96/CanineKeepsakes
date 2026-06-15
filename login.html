@@ -21,13 +21,17 @@
 
   <div class="notice" id="msg" style="display:none;margin-top:14px"></div>
 
-  <p class="muted" style="margin-top:18px" id="toggle-line">
+  <p class="muted" style="margin-top:14px" id="forgot-line">
+    <a href="#" id="forgot">Forgot your password?</a>
+  </p>
+
+  <p class="muted" style="margin-top:10px" id="toggle-line">
     New here? <a href="#" id="toggle">Create an account</a>
   </p>
 </div>
 
 <script src="js/store.js?v=3"></script>
-<script src="js/auth.js?v=1"></script>
+<script src="js/auth.js?v=2"></script>
 <script>
 (() => {
   CK.mountChrome();
@@ -42,11 +46,16 @@
   const toggleLine = document.getElementById('toggle-line');
   const pw = document.querySelector('input[name=password]');
   const msg = document.getElementById('msg');
+  const forgotLine = document.getElementById('forgot-line');
 
   function show(text, ok) {
     msg.style.display = 'block';
     msg.textContent = text;
     msg.style.borderColor = ok ? '' : '';
+  }
+  function showHTML(html) {
+    msg.style.display = 'block';
+    msg.innerHTML = html;
   }
 
   function setMode(m) {
@@ -57,17 +66,33 @@
       submit.textContent = 'Create account';
       pw.setAttribute('autocomplete', 'new-password');
       toggleLine.innerHTML = 'Already have an account? <a href="#" id="toggle">Sign in</a>';
+      forgotLine.style.display = 'none';
     } else {
       title.textContent = 'Sign in';
       subtitle.textContent = 'Sign in to check out and track your orders.';
       submit.textContent = 'Sign in';
       pw.setAttribute('autocomplete', 'current-password');
       toggleLine.innerHTML = 'New here? <a href="#" id="toggle">Create an account</a>';
+      forgotLine.style.display = '';
     }
     document.getElementById('toggle').onclick = (e) => { e.preventDefault(); setMode(mode === 'signin' ? 'signup' : 'signin'); };
     msg.style.display = 'none';
   }
   setMode('signin');
+
+  /* Forgot password: emails a reset link (neutral wording — never reveals
+     whether an account exists, to avoid leaking who's registered). */
+  document.getElementById('forgot').onclick = async (e) => {
+    e.preventDefault();
+    const email = document.querySelector('input[name=email]').value.trim();
+    if (!email) { show('Enter your email above first, then tap “Forgot your password?” again.', false); return; }
+    try {
+      await CK.auth.requestPasswordReset(email);
+      show('If an account exists for ' + email + ', we’ve emailed a password reset link. Check your inbox.', true);
+    } catch (err) {
+      show('Could not send reset email: ' + err.message, false);
+    }
+  };
 
   // If already signed in, skip straight to the redirect target.
   CK.auth.session().then(s => { if (s) location.href = redirect; }).catch(() => {});
