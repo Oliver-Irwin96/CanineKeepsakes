@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Basket — Canine Keepsakes</title>
+  <meta name="description" content="Review your Canine Keepsakes basket before secure checkout.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -18,7 +19,7 @@
   </div>
 </div>
 
-<script src="js/store.js?v=3"></script>
+<script src="js/store.js?v=6"></script>
 <script>
 (() => {
   CK.mountChrome();
@@ -28,7 +29,7 @@
   function render() {
     const b = CK.getBasket();
     if (!b.length) {
-      area.innerHTML = `<div class="empty-state"><div class="big">🐾</div><p>Your basket is empty.</p><p style="margin-top:18px"><a class="btn-gold" href="index.html#collections">Browse the collections</a></p></div>`;
+      area.innerHTML = `<div class="empty-state"><div class="big">🐾</div><h3 style="font-family:var(--font-display);margin:0 0 8px">Looks like the dog ran off with your basket.</h3><p>Ready to find the collection that feels most like your dog?</p><p style="margin-top:18px"><a class="btn-gold" href="index.html#collections">Explore Collections</a> <a class="btn-ghost" href="submit-design.html" style="margin-left:8px">Customise With My Dog</a></p></div>`;
       box.style.display = 'none';
       return;
     }
@@ -58,7 +59,10 @@
       <div class="row"><span>Subtotal</span><span>${CK.gbp(sub)}</span></div>
       <div class="row"><span>Shipping</span><span>calculated at checkout</span></div>
       <div class="row total"><span>Total</span><span>${CK.gbp(sub)}</span></div>
-      <a class="btn-gold" style="display:block;text-align:center;margin-top:18px" href="checkout.html">Checkout</a>
+      <div style="display:grid;gap:6px;margin-top:14px;font-size:.86rem">
+        <span>✓ Secure PayPal checkout</span><span>✓ Printed to order</span><span>✓ UK delivery</span><span>✓ Order confirmation by email</span>
+      </div>
+      <a class="btn-gold" style="display:block;text-align:center;margin-top:18px" href="checkout.html">Continue to Checkout</a>
       <div class="notice" style="margin-bottom:0">UK delivery only at launch. Made to order — please allow 2–5 working days for printing.</div>`;
   }
   render();

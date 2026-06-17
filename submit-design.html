@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Dog Art | Put Your Dog In Our Designs | Canine Keepsakes</title>
+  <meta name="description" content="Put your dog into an existing Canine Keepsakes design with our custom dog artwork service. Upload a photo and receive a digital preview before printing.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .submit-intro { background:radial-gradient(140% 120% at 78% -10%,var(--ink-3) 0%,var(--ink-2) 45%,var(--ink) 100%); color:var(--cream); padding:96px 0 70px; text-align:center; position:relative; overflow:hidden; }
+    .submit-intro .eyebrow{margin-bottom:18px}
+    .submit-intro h1 { font-family:var(--font-display); font-weight:600; font-size:clamp(2.2rem,5vw,3.4rem); line-height:1.05; margin:0 0 14px; }
+    .submit-intro h1 em { font-style:italic; color:var(--gold-soft); }
+    .submit-intro p { max-width:600px; margin:0 auto; opacity:.88; font-size:1.08rem; }
+    .conv { display:flex; gap:14px; align-items:center; justify-content:center; margin-top:34px; flex-wrap:wrap; }
+    .conv .c { width:150px; border-radius:16px; overflow:hidden; background:rgba(250,246,239,.06); box-shadow:var(--shadow-lg); }
+    .conv .c img{width:100%;aspect-ratio:1;object-fit:cover}
+    .conv .c .l{font-size:.72rem;padding:8px;color:var(--gold-soft);font-weight:600;letter-spacing:.04em}
+    .conv .ph{width:150px;aspect-ratio:1;border-radius:16px;border:2px dashed rgba(236,192,106,.45);display:grid;place-items:center;text-align:center;color:var(--gold-soft);font-size:.82rem;padding:14px}
+    .conv .ar{font-size:1.6rem;color:var(--gold-soft)}
+    .step-h{font-family:var(--font-display);font-weight:600;font-size:1.15rem;margin:0 0 14px;display:flex;align-items:center;gap:10px}
+    .step-h .num{width:28px;height:28px;border-radius:50%;background:var(--gold);color:var(--ink);display:grid;place-items:center;font-size:.85rem;font-weight:700;flex:none}
+    .blk{background:var(--white);border:1px solid rgba(22,24,31,.07);border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:var(--shadow-sm)}
+    .reqs{list-style:none;display:grid;gap:8px;margin:0;padding:0;font-size:.92rem}
+    .reqs li::before{content:"✓ ";color:var(--sage);font-weight:700}
+    .file-drop { border:2px dashed rgba(22,24,31,.25); border-radius:14px; padding:24px; text-align:center; cursor:pointer; transition:border-color .15s,background .15s; }
+    .file-drop:hover { border-color:var(--gold); background:var(--cream-deep); }
+    .file-drop.has { border-style:solid; border-color:var(--gold); }
+    .file-drop img { max-height:170px; border-radius:10px; margin-top:10px; }
+    .addons{display:grid;gap:10px}
+    .addon{display:flex;align-items:center;gap:12px;border:1.5px solid rgba(22,24,31,.14);border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .15s}
+    .addon:hover{border-color:var(--ink)}
+    .addon input{width:18px;height:18px;flex:none}
+    .addon .a-name{font-weight:600}
+    .addon .a-desc{font-size:.84rem;color:var(--ink-soft)}
+    .addon .a-price{margin-left:auto;font-weight:700;color:var(--gold)}
+    .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    @media(max-width:680px){.rules-grid{grid-template-columns:1fr}}
+    .rule-card{border-radius:14px;padding:18px}
+    .rule-card.inc{background:#eef5ea;border:1px solid #cfe3c4}
+    .rule-card.exc{background:#fbeceA;border:1px solid #f1cdc6}
+    .rule-card h4{font-family:var(--font-display);font-weight:600;margin:0 0 10px;font-size:1rem}
+    .rule-card ul{list-style:none;margin:0;padding:0;display:grid;gap:7px;font-size:.9rem}
+    .rule-card.inc li::before{content:"✓ ";color:#3f7d2f;font-weight:700}
+    .rule-card.exc li::before{content:"✗ ";color:#b3402f;font-weight:700}
+    .example{margin-top:16px;background:var(--cream-deep);border-radius:14px;padding:16px 18px;font-size:.9rem}
+    .example b{font-family:var(--font-display)}
+    .example .ex-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+    @media(max-width:680px){.example .ex-cols{grid-template-columns:1fr}}
+    .example .ok li::before{content:"✓ ";color:#3f7d2f;font-weight:700}
+    .example .no li::before{content:"✗ ";color:#b3402f;font-weight:700}
+    .example ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:5px}
+    .tickrow{display:flex;gap:12px;align-items:flex-start;background:var(--cream-deep);border-radius:12px;padding:16px;margin:4px 0 18px}
+    .tickrow input{width:20px;height:20px;flex:none;margin-top:2px}
+    .tickrow label{font-size:.92rem;line-height:1.5}
+    .sumline{display:flex;justify-content:space-between;font-size:.95rem;margin-bottom:8px}
+    .sumline.total{font-weight:700;font-size:1.2rem;border-top:1.5px solid var(--cream-deep);padding-top:12px;margin-top:12px}
+    .turn{font-size:.86rem;color:var(--ink-soft);margin-top:6px}
+    #paypal-area{margin-top:18px}
+    .field textarea { width:100%; min-height:84px; font-family:inherit; }
+  </style>
+</head>
+<body>
+
+<section class="submit-intro">
+  <div class="wrap">
+    <span class="eyebrow">Custom Dog Art Service</span>
+    <h1>Put <em>your dog</em> in our art.</h1>
+    <p>Choose one of our existing Canine Keepsakes designs, upload a clear photo, and we'll replace the dog in the artwork with your dog. We customise the dog inside an existing Canine Keepsakes design so it looks like your dog — matching breed, colour and markings as closely as the artwork style allows. This is a dog-swap service, not a brand-new scene from scratch.</p>
+    <div class="conv">
+      <div class="c"><img src="images/designs/woof-business/06cfad06-762c-4727-b48f-5ec6fe75960f.jpg" alt=""><div class="l">Existing design</div></div>
+      <div class="ar">→</div>
+      <div class="ph">🐾<br>Your dog<br>dropped in</div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding:46px 0 0">
+  <div class="wrap" style="max-width:640px">
+    <div class="blk">
+      <div class="step-h" style="margin-bottom:14px">How it works</div>
+      <ol style="margin:0;padding-left:20px;display:grid;gap:8px;font-size:.95rem">
+        <li>Choose an existing Canine Keepsakes design</li>
+        <li>Upload a clear photo of your dog</li>
+        <li>Pay the artwork fee to book the request</li>
+        <li>We send your preview for approval before printing</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:24px">
+  <div class="wrap" style="max-width:640px">
+
+    <form id="submit-form">
+      <!-- 1 details -->
+      <div class="blk">
+        <div class="step-h"><span class="num">1</span> Your details</div>
+        <div class="field"><label>Your name</label><input required type="text" name="name" autocomplete="name"></div>
+        <div class="field"><label>Email <small class="muted">(so we can send your preview)</small></label><input required type="email" name="email" autocomplete="email"></div>
+        <div class="field-row">
+          <div class="field"><label>Your dog's name <small class="muted">(optional)</small></label><input type="text" name="dog_name"></div>
+          <div class="field"><label>Breed / mix <small class="muted">(optional)</small></label><input type="text" name="breed"></div>
+        </div>
+      </div>
+
+      <!-- 2 design -->
+      <div class="blk">
+        <div class="step-h"><span class="num">2</span> Choose a design</div>
+        <div class="field" style="margin-bottom:0">
+          <label>Choose the existing design you want customised</label>
+          <small class="muted" style="display:block;margin:4px 0 8px">We'll keep the same scene, background and collection style — only the dog is replaced.</small>
+          <select name="collection_slug" id="collection-select" required><option value="">Choose a design…</option><option value="__unsure">Help me choose / surprise me</option></select>
+        </div>
+      </div>
+
+      <!-- 3 photo -->
+      <div class="blk">
+        <div class="step-h"><span class="num">3</span> Upload your dog's photo</div>
+        <p style="font-weight:600;margin:0 0 8px">Best photos for accurate artwork</p>
+        <ul class="reqs" style="margin-bottom:14px">
+          <li>Clear front or side view</li>
+          <li>Good lighting</li>
+          <li>Dog's face and markings visible</li>
+          <li>One dog per standard submission</li>
+          <li>JPG, PNG or WebP · up to 8 MB</li>
+        </ul>
+        <div class="file-drop" id="file-drop">
+          <div id="file-prompt">📸 Tap to choose a photo</div>
+          <div id="file-preview"></div>
+        </div>
+        <input type="file" id="photo-input" accept="image/png,image/jpeg,image/webp,image/heic" style="display:none">
+        <div class="field" style="margin:16px 0 0"><label>Important markings or details</label><textarea name="notes" placeholder="Example: white chest patch, one floppy ear, darker muzzle, blue collar. Please do not request a new background or scene here."></textarea></div>
+      </div>
+
+      <!-- 4 add-ons -->
+      <div class="blk">
+        <div class="step-h"><span class="num">4</span> Add-ons <small class="muted" style="font-weight:400">(optional)</small></div>
+        <div class="addons">
+          <label class="addon"><input type="checkbox" id="ad-dog"><span><span class="a-name">Add a second dog</span><br><span class="a-desc">For designs where two dogs can fit naturally.</span></span><span class="a-price">+£6.99</span></label>
+          <label class="addon"><input type="checkbox" id="ad-rev"><span><span class="a-name">Extra revision round</span><br><span class="a-desc">One additional round of likeness tweaks after your included revision.</span></span><span class="a-price">+£3.99</span></label>
+          <label class="addon"><input type="checkbox" id="ad-pri"><span><span class="a-name">Priority artwork</span><br><span class="a-desc">Move your request to the priority queue for a 48-hour artwork turnaround.</span></span><span class="a-price">+£6.99</span></label>
+        </div>
+        <p class="muted" style="font-size:.84rem;margin-top:10px">Add-ons must still fit the original design. We may contact you if a request cannot be applied cleanly.</p>
+      </div>
+
+      <!-- 5 rules -->
+      <div class="blk">
+        <div class="step-h"><span class="num">5</span> What your artwork fee includes</div>
+        <div class="rules-grid">
+          <div class="rule-card inc">
+            <h4>We include</h4>
+            <ul>
+              <li>Your dog added into one existing Canine Keepsakes design</li>
+              <li>Breed, colour and markings matched as closely as possible</li>
+              <li>Purebred and mixed-breed dogs welcome</li>
+              <li>One included revision for likeness tweaks</li>
+              <li>Digital preview before anything is printed</li>
+              <li>Ability to order the approved artwork on available products</li>
+            </ul>
+          </div>
+          <div class="rule-card exc">
+            <h4>What this service does not include</h4>
+            <ul>
+              <li>New backgrounds or locations</li>
+              <li>New scenes or story ideas</li>
+              <li>New artwork created from scratch</li>
+              <li>Changes to the overall collection theme</li>
+              <li>Major pose or composition changes</li>
+              <li>Unlimited revisions</li>
+              <li>Third-party characters, logos or copyrighted designs</li>
+            </ul>
+          </div>
+        </div>
+        <div class="example">
+          <b>Example — a cartoon sci-fi walking design:</b>
+          <div class="ex-cols">
+            <div class="ok"><strong>Allowed</strong><ul><li>Replace the dog with your dog</li><li>Adjust the owner-style character if that option is available</li><li>Match your dog's colour and markings</li></ul></div>
+            <div class="no"><strong>Not allowed</strong><ul><li>Turn it into a new TV show or movie scene</li><li>Add copyrighted characters or logos</li><li>Change the background, location or story</li><li>Request a completely new artwork concept</li></ul></div>
+          </div>
+        </div>
+        <p class="turn">Typical artwork turnaround is 3–5 working days. Priority requests aim for 48 hours. Complex markings, unclear photos or extra dogs may take longer.</p>
+      </div>
+
+      <!-- 6 agree + pay -->
+      <div class="blk">
+        <div class="step-h"><span class="num">6</span> Approve &amp; pay</div>
+        <div class="tickrow">
+          <input type="checkbox" id="agree">
+          <label for="agree">I understand this is a dog-swap customisation service. My dog will be added into an existing Canine Keepsakes design, and the background, scene, theme and overall composition will not be changed.</label>
+        </div>
+        <div id="summary"></div>
+        <div id="paypal-area">
+          <div id="paypal-button-container"></div>
+          <div class="notice" id="pay-notice">Complete the form above and tick the box to pay.</div>
+        </div>
+      </div>
+    </form>
+
+    <div class="notice" id="msg" style="display:none;margin-top:16px"></div>
+    <p class="muted" style="margin-top:14px;font-size:.85rem">The artwork fee is paid upfront to reserve design time. After payment, your photo is uploaded securely and your request is submitted. We only use your photo to create your custom artwork. By paying you agree to the terms above and our <a href="privacy.html">Privacy Policy</a>.</p>
+    <p class="muted" style="margin-top:6px;font-size:.85rem">Physical products are purchased separately after you approve the artwork.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap" style="max-width:640px">
+    <div class="step-h" style="font-size:1.4rem;margin-bottom:18px">FAQs</div>
+    <div class="blk"><strong>Is this a full custom drawing?</strong><p class="muted" style="margin:6px 0 0">No. We customise one of our existing designs by replacing the dog with your dog.</p></div>
+    <div class="blk"><strong>Can you change the background?</strong><p class="muted" style="margin:6px 0 0">No. Backgrounds, scenes and collection themes stay the same.</p></div>
+    <div class="blk"><strong>Can you do mixed-breed dogs?</strong><p class="muted" style="margin:6px 0 0">Yes. Upload a clear photo and tell us the breed mix if you know it.</p></div>
+    <div class="blk"><strong>Do I get a preview?</strong><p class="muted" style="margin:6px 0 0">Yes. We send a digital preview before anything is printed.</p></div>
+    <div class="blk"><strong>What if the likeness is slightly off?</strong><p class="muted" style="margin:6px 0 0">One revision is included for colour, markings or likeness tweaks.</p></div>
+    <div class="blk"><strong>Can I order the artwork on different products?</strong><p class="muted" style="margin:6px 0 0">Yes. Once approved, the artwork can be used on available Canine Keepsakes products.</p></div>
+  </div>
+</section>
+
+<script src="js/store.js?v=6"></script>
+<script src="js/auth.js?v=2"></script>
+<script>
+(async () => {
+  CK.mountChrome('submit');
+
+  const PRICES = { base: 9.99, extraDog: 6.99, extraRevision: 3.99, priority: 6.99 };
+  const $ = id => document.getElementById(id);
+  const form = $('submit-form');
+  let photoFile = null, paid = false;
+
+  // design dropdown from catalog
+  try {
+    const cat = await CK.load();
+    const sel = $('collection-select');
+    cat.collections.slice().sort((a,b)=>a.name.localeCompare(b.name)).forEach(c => {
+      const o = document.createElement('option'); o.value = c.slug; o.textContent = c.name; sel.appendChild(o);
+    });
+  } catch (_) {}
+
+  // prefill email if signed in
+  let currentUser = null;
+  try { currentUser = await CK.auth.user(); if (currentUser?.email) form.email.value = currentUser.email; } catch (_) {}
+
+  // photo picker (held in memory; uploaded only after payment)
+  const drop = $('file-drop'), input = $('photo-input'), prompt = $('file-prompt'), preview = $('file-preview');
+  drop.onclick = () => input.click();
+  input.onchange = () => {
+    const f = input.files[0]; if (!f) return;
+    if (f.size > 8 * 1024 * 1024) { showMsg('That photo is over 8 MB — please choose a smaller one.', false); input.value=''; return; }
+    photoFile = f; drop.classList.add('has'); prompt.style.display='none'; preview.innerHTML='';
+    const img = new Image(); img.src = URL.createObjectURL(f); preview.appendChild(img);
+    const cap = document.createElement('div'); cap.className='muted'; cap.style.marginTop='8px'; cap.textContent=f.name; preview.appendChild(cap);
+    updateSummary();
+  };
+
+  function addons() { return { extraDog: $('ad-dog').checked, extraRevision: $('ad-rev').checked, priority: $('ad-pri').checked }; }
+  function total() { const a=addons(); return Math.round((PRICES.base + (a.extraDog?PRICES.extraDog:0) + (a.extraRevision?PRICES.extraRevision:0) + (a.priority?PRICES.priority:0))*100)/100; }
+  function updateSummary() {
+    const a = addons();
+    let rows = `<div class="sumline"><span>Custom dog conversion</span><span>${CK.gbp(PRICES.base)}</span></div>`;
+    if (a.extraDog) rows += `<div class="sumline"><span>Extra dog</span><span>${CK.gbp(PRICES.extraDog)}</span></div>`;
+    if (a.extraRevision) rows += `<div class="sumline"><span>Extra revision</span><span>${CK.gbp(PRICES.extraRevision)}</span></div>`;
+    if (a.priority) rows += `<div class="sumline"><span>Priority (48h)</span><span>${CK.gbp(PRICES.priority)}</span></div>`;
+    rows += `<div class="sumline total"><span>Total today</span><span>${CK.gbp(total())}</span></div>`;
+    $('summary').innerHTML = rows;
+  }
+  ['ad-dog','ad-rev','ad-pri'].forEach(id => $(id).addEventListener('change', updateSummary));
+  $('agree').addEventListener('change', refreshGate);
+  form.addEventListener('input', refreshGate);
+  updateSummary();
+
+  const msg = $('msg');
+  function showMsg(t, ok){ msg.style.display='block'; msg.textContent=t; msg.style.color = ok ? '' : '#b3261e'; }
+  function valid() {
+    return form.name.value.trim() && form.email.value.trim() && /\S+@\S+\.\S+/.test(form.email.value) &&
+      $('collection-select').value && photoFile && $('agree').checked;
+  }
+  function refreshGate() {
+    const ok = valid();
+    $('pay-notice').style.display = ok ? 'none' : 'block';
+    $('paypal-button-container').style.opacity = ok ? '1' : '.4';
+    $('paypal-button-container').style.pointerEvents = ok ? 'auto' : 'none';
+  }
+
+  // PayPal
+  function mountPayPal(clientId) {
+    const s = document.createElement('script');
+    s.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=GBP`;
+    s.onload = () => {
+      refreshGate();
+      paypal.Buttons({
+        onClick: (d, actions) => { if (!valid()) { showMsg('Please complete every step and tick the box first.', false); return actions.reject(); } return actions.resolve(); },
+        createOrder: () => fetch('/api/design-pay', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'create', addons: addons() }) }).then(r=>r.json()).then(d=>d.id),
+        onApprove: (data) => fetch('/api/design-pay', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'capture', orderID:data.orderID, addons: addons() }) })
+          .then(r=>r.json()).then(async d => {
+            if (d.status !== 'COMPLETED') { showMsg('Payment could not be completed. You have not been charged.', false); return; }
+            paid = true;
+            try {
+              const c = await CK.auth.init();
+              const ext = (photoFile.name.split('.').pop()||'jpg').toLowerCase();
+              const path = (crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2))+'.'+ext;
+              const up = await c.storage.from('design-submissions').upload(path, photoFile, { contentType: photoFile.type, upsert:false });
+              if (up.error) throw up.error;
+              const fd = new FormData(form);
+              const ins = await c.from('design_submissions').insert({
+                name: fd.get('name').trim(), email: fd.get('email').trim(),
+                dog_name:(fd.get('dog_name')||'').trim()||null, breed:(fd.get('breed')||'').trim()||null,
+                collection_slug: fd.get('collection_slug')==='__unsure' ? null : fd.get('collection_slug'),
+                notes:(fd.get('notes')||'').trim()||null, photo_path: path,
+                user_id: currentUser?currentUser.id:null,
+                paypal_order_id: d.paypalOrderId, amount_paid: d.amount, currency:'GBP', addons: addons(), status:'paid'
+              });
+              if (ins.error) throw ins.error;
+              try { fetch('/api/notify', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type:'design', email: fd.get('email').trim(), dogName:(fd.get('dog_name')||'').trim(), collection: (($('collection-select').selectedOptions||[])[0]||{}).textContent || '', total: CK.gbp(d.amount) }) }); } catch(_) {}
+              form.style.display='none';
+              showMsg('Payment received — thank you! 🐾 We’ve got your photo and we’ll email your design preview to '+fd.get('email').trim()+' within 3–5 working days'+(addons().priority?' (priority: ~48h)':'')+'.', true);
+            } catch (err) {
+              showMsg('Your payment went through (ref '+d.paypalOrderId+') but we hit a snag saving your photo. Please email caninekeepsakes.admin@gmail.com with this reference and your photo and we\'ll sort it right away.', false);
+            }
+          })
+      }).render('#paypal-button-container');
+    };
+    document.head.appendChild(s);
+  }
+  fetch('/api/paypal-config').then(r=>r.json()).then(d=>{ if(d.clientId) mountPayPal(d.clientId); else $('pay-notice').textContent='⚠️ Payment unavailable — config missing.'; })
+    .catch(()=>{ $('pay-notice').textContent='⚠️ Could not load payment options. Please refresh.'; });
+})();
+</script>
+</body>
+</html>

@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My account — Canine Keepsakes</title>
+  <title>My Account | Canine Keepsakes</title>
+  <meta name="description" content="Manage your Canine Keepsakes account, saved delivery details and order history.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -11,14 +12,15 @@
 <body>
 <div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-    <h1 class="page-title" style="margin-bottom:0">My account</h1>
+    <h1 class="page-title" style="margin-bottom:0">My Canine Keepsakes account</h1>
     <button class="btn-add" id="signout" style="background:transparent;border:1px solid currentColor">Sign out</button>
   </div>
-  <p class="muted" id="hello">Loading…</p>
+  <p class="muted" id="hello">Loading your account…</p>
 
   <div class="two-col" style="margin-top:18px">
     <div>
-      <h3 style="font-family:var(--font-display);margin-bottom:14px">Default delivery address</h3>
+      <h3 style="font-family:var(--font-display);margin-bottom:6px">Saved delivery address</h3>
+      <p class="muted" style="margin:0 0 14px;font-size:.9rem">Save your details here to make future checkouts faster.</p>
       <form id="profile-form">
         <div class="field-row">
           <div class="field"><label>First name</label><input name="first_name" autocomplete="given-name"></div>
@@ -30,19 +32,28 @@
           <div class="field"><label>Town / City</label><input name="city" autocomplete="address-level2"></div>
           <div class="field"><label>Postcode</label><input name="zip" autocomplete="postal-code"></div>
         </div>
-        <button class="btn-add" id="save-profile" type="submit" style="margin-top:6px">Save address</button>
+        <button class="btn-add" id="save-profile" type="submit" style="margin-top:6px">Save Delivery Address</button>
         <span class="muted" id="save-msg" style="margin-left:10px"></span>
       </form>
     </div>
 
     <div>
-      <h3 style="font-family:var(--font-display);margin-bottom:14px">Order history</h3>
+      <h3 style="font-family:var(--font-display);margin-bottom:14px">Your orders</h3>
       <div id="orders-area"><p class="muted">Loading orders…</p></div>
+
+      <div style="margin-top:28px">
+        <h3 style="font-family:var(--font-display);margin-bottom:8px">Custom artwork requests</h3>
+        <p class="muted">Paid custom dog artwork requests will appear here once submitted. <span style="opacity:.7">Coming soon.</span></p>
+      </div>
+      <div style="margin-top:24px">
+        <h3 style="font-family:var(--font-display);margin-bottom:8px">Creator dashboard <span class="muted" style="font-weight:400;font-size:.8rem">Coming soon</span></h3>
+        <p class="muted">Track submitted designs, approved collections and creator earnings. <a href="creators.html">Submit a Design →</a></p>
+      </div>
     </div>
   </div>
 </div>
 
-<script src="js/store.js?v=3"></script>
+<script src="js/store.js?v=6"></script>
 <script src="js/auth.js?v=2"></script>
 <script>
 (() => {
@@ -81,7 +92,7 @@
     const area = document.getElementById('orders-area');
     try {
       const orders = await CK.auth.orders();
-      if (!orders.length) { area.innerHTML = '<p class="muted">No orders yet. <a href="index.html#collections">Start shopping →</a></p>'; return; }
+      if (!orders.length) { area.innerHTML = '<p class="muted">No orders yet. When you place an order, it will appear here.</p><a class="btn-gold" style="display:inline-block;margin-top:10px" href="index.html#collections">Explore Collections</a>'; return; }
       area.innerHTML = orders.map(o => {
         const when = new Date(o.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
         const n = Array.isArray(o.items) ? o.items.reduce((s,i)=>s+(parseInt(i.qty)||1),0) : 0;

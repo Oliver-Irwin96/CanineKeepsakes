@@ -16,3 +16,11 @@
 #   SUPABASE_URL              — your Supabase project URL (set in Netlify env, not committed here)
 #   SUPABASE_ANON_KEY         — public anon key (safe in browser; served via /api/supabase-config)
 #   SUPABASE_SERVICE_ROLE_KEY — SECRET service-role key (server functions only; bypasses RLS — never expose)
+#
+#   RESEND_API_KEY            — Resend API key (re_...) for transactional emails (/api/notify). If unset, emails no-op safely.
+#   RESEND_FROM               — optional, default "Canine Keepsakes <noreply@caninekeepsakes.co.uk>"
+#   RESEND_REPLY_TO           — optional, default caninekeepsakes.admin@gmail.com
+#
+#   DESIGN_FEE_GBP / DESIGN_FEE_EXTRA_DOG / DESIGN_FEE_EXTRA_REVISION / DESIGN_FEE_PRIORITY
+#     — optional price overrides. If SET, they override the code defaults (9.99 / 6.99 / 3.99 / 6.99).
+#       Clear them or set them to the new prices, or the old values will keep charging.

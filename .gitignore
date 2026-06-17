@@ -22,5 +22,5 @@ ck_test.js
 deploy-*.zip
 
 # Session notes saved to root (Knowledge/ & Handoffs/ dirs broken on mount)
-2026-*_CK_*_s2.md
+2026-*_CK_*.md
 notes2/

@@ -3,26 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign in — Canine Keepsakes</title>
+  <title>Sign In or Create Account | Canine Keepsakes</title>
+  <meta name="description" content="Sign in or create a Canine Keepsakes account to track orders and checkout faster.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="wrap" style="max-width:460px">
-  <h1 class="page-title" id="title" style="margin-top:28px">Sign in</h1>
-  <p class="muted" id="subtitle" style="margin-top:-10px">Sign in to check out and track your orders.</p>
+  <h1 class="page-title" id="title" style="margin-top:28px">Welcome back</h1>
+  <p class="muted" id="subtitle" style="margin-top:-10px">Sign in to checkout faster, track orders and manage your Canine Keepsakes account.</p>
 
   <form id="auth-form" style="margin-top:18px">
     <div class="field"><label>Email</label><input required type="email" name="email" autocomplete="email"></div>
     <div class="field"><label>Password</label><input required type="password" name="password" minlength="6" autocomplete="current-password"></div>
-    <button class="btn-add" id="submit" type="submit" style="width:100%;margin-top:6px">Sign in</button>
+    <button class="btn-add" id="submit" type="submit" style="width:100%;margin-top:6px">Sign In</button>
   </form>
 
   <div class="notice" id="msg" style="display:none;margin-top:14px"></div>
 
   <p class="muted" style="margin-top:14px" id="forgot-line">
-    <a href="#" id="forgot">Forgot your password?</a>
+    <a href="#" id="forgot">Forgot your password?</a> <span style="opacity:.8">We'll email you a secure reset link.</span>
   </p>
 
   <p class="muted" style="margin-top:10px" id="toggle-line">
@@ -30,7 +31,7 @@
   </p>
 </div>
 
-<script src="js/store.js?v=3"></script>
+<script src="js/store.js?v=6"></script>
 <script src="js/auth.js?v=2"></script>
 <script>
 (() => {
@@ -61,16 +62,16 @@
   function setMode(m) {
     mode = m;
     if (m === 'signup') {
-      title.textContent = 'Create account';
-      subtitle.textContent = 'Create an account to check out and track your orders.';
-      submit.textContent = 'Create account';
+      title.textContent = 'Join the pack';
+      subtitle.textContent = 'Create an account to checkout faster, save your details and track your orders.';
+      submit.textContent = 'Create Account';
       pw.setAttribute('autocomplete', 'new-password');
       toggleLine.innerHTML = 'Already have an account? <a href="#" id="toggle">Sign in</a>';
       forgotLine.style.display = 'none';
     } else {
-      title.textContent = 'Sign in';
-      subtitle.textContent = 'Sign in to check out and track your orders.';
-      submit.textContent = 'Sign in';
+      title.textContent = 'Welcome back';
+      subtitle.textContent = 'Sign in to checkout faster, track orders and manage your Canine Keepsakes account.';
+      submit.textContent = 'Sign In';
       pw.setAttribute('autocomplete', 'current-password');
       toggleLine.innerHTML = 'New here? <a href="#" id="toggle">Create an account</a>';
       forgotLine.style.display = '';

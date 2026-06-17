@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Collection — Canine Keepsakes</title>
+  <meta name="description" content="Explore this Canine Keepsakes dog artwork collection, choose your breed design, then personalise the product, colour and size.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -22,19 +23,29 @@
       <p id="col-sub" style="margin-left:0"></p>
     </div>
 
+    <div class="reveal" style="max-width:70ch;margin-bottom:24px">
+      <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:0 0 8px">About this collection</h3>
+      <p style="margin:0;color:var(--ink-soft)">This collection is designed around one simple idea: every dog has a personality big enough to deserve its own artwork. Choose the breed version that feels closest to your dog, then personalise the product on the next screen.</p>
+    </div>
+
     <div class="picker" style="max-width:100%">
-      <label>Browse the designs <small id="design-count"></small></label>
+      <label>1 · Choose your dog design <small id="design-count"></small></label>
       <div class="design-strip" id="design-strip" style="max-height:none;grid-template-columns:repeat(auto-fill,minmax(110px,1fr))"></div>
+      <p class="muted" style="margin-top:10px;font-size:.9rem">Pick the version that looks most like your dog. You'll choose the product, colour and size on the next screen.</p>
+      <div class="reveal" style="display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:16px;padding:14px 16px;border:1px solid rgba(22,24,31,.12);border-radius:12px;font-size:.9rem">
+        <span>✓ Choose design first</span><span>✓ Change product later</span><span>✓ Real product mockup</span><span>✓ Printed to order</span>
+      </div>
     </div>
 
     <div class="section-head reveal" style="text-align:left;margin:48px 0 24px">
-      <h2 style="font-size:1.6rem">Choose a product</h2>
+      <h2 style="font-size:1.6rem">Prefer to choose the product first?</h2>
+      <p style="margin-left:0">Start with the item you want, then choose this collection and breed inside the configurator.</p>
     </div>
     <div class="grid cols-4" id="product-grid"></div>
   </div>
 </section>
 
-<script src="js/store.js?v=3"></script>
+<script src="js/store.js?v=6"></script>
 <script>
 (async () => {
   CK.mountChrome();
@@ -52,7 +63,7 @@
   col.designs.forEach(d => {
     const cell = document.createElement('a');
     cell.className = 'd';
-    cell.href = `product.html?c=${col.slug}&p=summer-tee&d=${d.id}`;
+    cell.href = `product.html?c=${col.slug}&d=${d.id}`;
     cell.title = d.label;
     cell.appendChild(CK.designImg(d, '🐾'));
     strip.appendChild(cell);

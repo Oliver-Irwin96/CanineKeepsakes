@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout — Canine Keepsakes</title>
+  <meta name="description" content="Secure checkout for Canine Keepsakes printed-to-order dog artwork products.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -12,10 +13,11 @@
 <body>
 
 <div class="wrap">
-  <h1 class="page-title">Checkout</h1>
+  <h1 class="page-title">Secure checkout</h1>
+  <p class="muted" style="max-width:60ch">Your items are printed to order and shipped to the address below. Payment is handled securely through PayPal.</p>
   <div class="two-col">
     <div>
-      <h3 style="margin-bottom:18px;font-family:var(--font-display)">Delivery details</h3>
+      <h3 style="margin-bottom:18px;font-family:var(--font-display)">Where should we send your order?</h3>
       <form id="ship-form">
         <div class="field-row">
           <div class="field"><label>First name</label><input required name="first_name" autocomplete="given-name"></div>
@@ -31,10 +33,11 @@
         <div class="field"><label>Country</label><select name="country_code" disabled><option value="GB" selected>United Kingdom</option></select></div>
       </form>
 
-      <button class="btn-add" id="btn-rates" style="margin-top:8px">Get shipping rates</button>
+      <button class="btn-add" id="btn-rates" style="margin-top:8px">Calculate Delivery</button>
       <div id="rates-area"></div>
 
       <div id="paypal-area" style="margin-top:24px">
+        <p class="muted" style="font-size:.88rem;margin-bottom:10px">Secure payment via PayPal. You can pay using your PayPal account or supported card options.</p>
         <div id="paypal-button-container"></div>
         <div class="notice" id="paypal-notice">Loading payment options…</div>
       </div>
@@ -44,7 +47,7 @@
   </div>
 </div>
 
-<script src="js/store.js?v=3"></script>
+<script src="js/store.js?v=6"></script>
 <script src="js/auth.js?v=2"></script>
 <script>
 (() => {
@@ -68,7 +71,7 @@
 
   function renderSummary() {
     const b = CK.getBasket();
-    if (!b.length) { box.innerHTML = '<p>Your basket is empty.</p>'; return; }
+    if (!b.length) { box.innerHTML = '<p>Your basket is empty. Head back to the collections to choose your dog artwork.</p><a class="btn-gold" style="display:block;text-align:center;margin-top:12px" href="index.html#collections">Explore Collections</a>'; return; }
     const sub = CK.basketTotal();
     const total = sub + (shipping ? shipping.rate : 0);
     box.innerHTML = `
@@ -93,7 +96,7 @@
       });
       if (!res.ok) throw new Error('rates unavailable');
       const rates = await res.json();
-      area.innerHTML = '<div class="swatches" style="margin-top:14px">' + rates.map((r, i) =>
+      area.innerHTML = '<p style="font-weight:600;margin:14px 0 6px">Choose your delivery option</p><div class="swatches" style="margin-top:6px">' + rates.map((r, i) =>
         `<button type="button" class="swatch" data-i="${i}">${r.name} — ${CK.gbp(parseFloat(r.rate))}</button>`).join('') + '</div>';
       area.querySelectorAll('.swatch').forEach(btn => btn.onclick = () => {
         area.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
@@ -145,7 +148,7 @@
             CK.saveBasket([]);
             const review = d.fulfilment === 'MANUAL_REVIEW_REQUIRED' || d.fulfilment === 'MANUAL_FOLLOWUP_REQUIRED';
             document.querySelector('.two-col').innerHTML =
-              '<div class="empty-state" style="grid-column:1/-1"><div class="big">🎉</div><h2>Order confirmed!</h2><p>' +
+              '<div class="empty-state" style="grid-column:1/-1"><div class="big">🎉</div><h2>Order confirmed — thank you!</h2><p>' +
               (review
                 ? 'Thanks — your payment went through. We\'re giving this order a quick manual check and will email you shortly.'
                 : 'Thanks — your keepsake is heading to print. Confirmation email on its way.') +

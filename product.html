@@ -4,9 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product — Canine Keepsakes</title>
+  <meta name="description" content="Choose your Canine Keepsakes product, dog design, colour and size with a real product mockup before checkout.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* product picker (grouped by category) — reuses .swatch look */
+    .prod-group { margin-bottom: 14px; }
+    .prod-group:last-child { margin-bottom: 0; }
+    .prod-group-label { font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; opacity: .55; margin: 0 0 8px; }
+    .swatch.prod { display: inline-flex; align-items: baseline; gap: 8px; }
+    .swatch.prod .p-price { font-weight: 500; opacity: .6; font-size: .82rem; }
+    .swatch.prod.sel .p-price { opacity: .85; }
+  </style>
 </head>
 <body>
 
@@ -17,7 +27,7 @@
   <div class="product-layout">
     <div class="product-gallery">
       <div class="main" id="main-img"></div>
-      <p class="notice" style="margin-top:14px">Product mockups are generated per design — final printed item shows your chosen design on the chosen garment colour.</p>
+      <p class="notice" style="margin-top:14px">Your preview updates as you choose the product, design, colour and size. Final artwork is printed to order using your selected options.<span id="garment-word" style="display:none"></span></p>
     </div>
     <div class="product-info">
       <h1 id="p-name"></h1>
@@ -25,17 +35,22 @@
       <div class="price" id="p-price"></div>
 
       <div class="picker">
-        <label>1 · Choose your design <small id="d-label"></small></label>
+        <label>1 · Pick your product <small id="p-label"></small></label>
+        <div id="product-picker"></div>
+      </div>
+
+      <div class="picker">
+        <label>2 · Pick your dog design <small id="d-label"></small></label>
         <div class="design-strip" id="design-strip"></div>
       </div>
 
       <div class="picker" id="colour-picker">
-        <label>2 · Colour <small id="c-label"></small></label>
+        <label>3 · Choose colour <small id="c-label"></small></label>
         <div class="swatches" id="colour-swatches"></div>
       </div>
 
       <div class="picker" id="size-picker">
-        <label>3 · Size <small id="s-label"></small></label>
+        <label>4 · Choose size <small id="s-label"></small></label>
         <div class="swatches" id="size-swatches"></div>
       </div>
 
@@ -45,39 +60,135 @@
         </div>
         <button class="btn-add" id="btn-add">Add to basket</button>
       </div>
+      <p class="muted" style="margin-top:10px;font-size:.86rem">Printed to order. Delivery calculated at checkout.</p>
+      <div style="margin-top:18px;border:1px solid rgba(22,24,31,.1);border-radius:12px;padding:16px">
+        <h3 style="font-family:var(--font-display);font-size:1.05rem;margin:0 0 8px">Why you'll love it</h3>
+        <ul style="margin:0;padding-left:18px;display:grid;gap:5px;font-size:.92rem">
+          <li>Original Canine Keepsakes artwork</li>
+          <li>Breed-specific design</li>
+          <li>Printed to order</li>
+          <li>Great as a gift or personal keepsake</li>
+          <li>Secure checkout</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
 
-<script src="js/store.js?v=3"></script>
+<script src="js/store.js?v=6"></script>
 <script>
 (async () => {
   CK.mountChrome();
   const cat = await CK.load();
   const col = cat.collections.find(c => c.slug === CK.params.get('c')) || cat.collections[0];
-  const prod = cat.products.find(p => p.slug === CK.params.get('p')) || cat.products[0];
 
+  // entry can carry any of c / p / d — nothing is locked in
+  let prod = cat.products.find(p => p.slug === CK.params.get('p')) || cat.products[0];
   let design = col.designs.find(d => d.id === CK.params.get('d')) || col.designs[0];
   let colour = prod.colours[0];
   let size = prod.sizes[0];
   let qty = 1;
 
-  document.title = `${col.name} ${prod.name} — Canine Keepsakes`;
   const crumbCol = document.getElementById('crumb-col');
   crumbCol.textContent = col.name;
   crumbCol.href = `collection.html?c=${col.slug}`;
-  document.getElementById('crumb-prod').textContent = prod.name;
-  document.getElementById('p-name').textContent = `${col.name} — ${prod.name}`;
-  document.getElementById('p-desc').textContent = prod.description;
-  document.getElementById('p-price').textContent = CK.gbp(prod.retailPrice);
 
+  const elName = document.getElementById('p-name');
+  const elDesc = document.getElementById('p-desc');
+  const elPrice = document.getElementById('p-price');
+  const elCrumbProd = document.getElementById('crumb-prod');
+  const elGarment = document.getElementById('garment-word');
   const mainImg = document.getElementById('main-img');
-  function renderMain() {
+
+  function renderProductInfo() {
+    document.title = `${col.name} ${prod.name} — Canine Keepsakes`;
+    elName.textContent = `${col.name} — ${prod.name}`;
+    elDesc.textContent = prod.description;
+    elPrice.textContent = CK.gbp(prod.retailPrice);
+    elCrumbProd.textContent = prod.name;
+    elGarment.textContent = (prod.productType || 'item').toLowerCase();
+    document.getElementById('p-label').textContent = `— ${prod.shortName}`;
+  }
+
+  let mockReqId = 0;
+  function showFlat() {
     mainImg.innerHTML = '';
     mainImg.appendChild(CK.designImg(design, col.name));
     document.getElementById('d-label').textContent = `— ${design.label}`;
   }
+  /* Ask Printful for a real product mockup of this design+product+colour.
+     Shows the flat design immediately, swaps in the mockup when ready.
+     A request id guards against out-of-order responses on rapid changes. */
+  async function requestMockup() {
+    const id = ++mockReqId;
+    const tag0 = mainImg.querySelector('.mockup-tag'); if (tag0) tag0.remove();
+    const imageUrl = location.origin + design.thumb;
+    mainImg.classList.add('mockup-loading');
+    try {
+      for (let attempt = 0; attempt < 14; attempt++) {
+        const res = await fetch('/api/mockup', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ catalogProductId: prod.catalogProductId, colour, size, designId: design.id, imageUrl })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (id !== mockReqId) return;
+        if (data.status === 'completed' && data.url) {
+          const im = new Image();
+          im.onload = () => { if (id !== mockReqId) return;
+            mainImg.classList.remove('mockup-loading'); mainImg.innerHTML = '';
+            mainImg.appendChild(im);
+            const t = document.createElement('span'); t.className = 'mockup-tag'; t.textContent = 'Real product mockup'; mainImg.appendChild(t); };
+          im.src = data.url; return;
+        }
+        if (data.status === 'failed' || data.error) { mainImg.classList.remove('mockup-loading'); return; }
+        await new Promise(r => setTimeout(r, 3000));
+      }
+      if (id === mockReqId) mainImg.classList.remove('mockup-loading');
+    } catch (_) { if (id === mockReqId) mainImg.classList.remove('mockup-loading'); }
+  }
+  function renderMain() { showFlat(); requestMockup(); }
 
+  /* ── 1 · product picker, grouped by category ── */
+  const pp = document.getElementById('product-picker');
+  function renderProductPicker() {
+    pp.innerHTML = '';
+    const cats = [];
+    cat.products.forEach(p => { if (!cats.includes(p.category)) cats.push(p.category); });
+    cats.forEach(category => {
+      const group = document.createElement('div');
+      group.className = 'prod-group';
+      const lbl = document.createElement('div');
+      lbl.className = 'prod-group-label';
+      lbl.textContent = category;
+      group.appendChild(lbl);
+      const row = document.createElement('div');
+      row.className = 'swatches';
+      cat.products.filter(p => p.category === category).forEach(p => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'swatch prod' + (p.slug === prod.slug ? ' sel' : '');
+        b.innerHTML = `<span>${p.shortName}</span><span class="p-price">${CK.gbp(p.retailPrice)}</span>`;
+        b.onclick = () => selectProduct(p);
+        row.appendChild(b);
+      });
+      group.appendChild(row);
+      pp.appendChild(group);
+    });
+  }
+
+  function selectProduct(p) {
+    if (p.slug === prod.slug) return;
+    prod = p;
+    colour = prod.colours[0];
+    size = prod.sizes[0];
+    renderProductInfo();
+    renderProductPicker();   // refresh selected state
+    renderColours();
+    renderSizes();
+    renderMain();
+  }
+
+  /* ── 2 · design strip ── */
   const strip = document.getElementById('design-strip');
   col.designs.forEach(d => {
     const cell = document.createElement('button');
@@ -94,38 +205,48 @@
     strip.appendChild(cell);
   });
 
+  /* ── 3 · colour ── */
   const cw = document.getElementById('colour-swatches');
-  prod.colours.forEach(c => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'swatch' + (c === colour ? ' sel' : '');
-    b.textContent = c;
-    b.onclick = () => {
-      colour = c;
-      cw.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
-      b.classList.add('sel');
-      document.getElementById('c-label').textContent = `— ${c}`;
-    };
-    cw.appendChild(b);
-  });
-  document.getElementById('c-label').textContent = `— ${colour}`;
+  function renderColours() {
+    cw.innerHTML = '';
+    prod.colours.forEach(c => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'swatch' + (c === colour ? ' sel' : '');
+      b.textContent = c;
+      b.onclick = () => {
+        colour = c;
+        cw.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
+        b.classList.add('sel');
+        document.getElementById('c-label').textContent = `— ${c}`;
+        requestMockup();
+      };
+      cw.appendChild(b);
+    });
+    document.getElementById('c-label').textContent = `— ${colour}`;
+  }
 
+  /* ── 4 · size ── */
   const sw = document.getElementById('size-swatches');
-  prod.sizes.forEach(s => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'swatch' + (s === size ? ' sel' : '');
-    b.textContent = s;
-    b.onclick = () => {
-      size = s;
-      sw.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
-      b.classList.add('sel');
-      document.getElementById('s-label').textContent = `— ${s}`;
-    };
-    sw.appendChild(b);
-  });
-  document.getElementById('s-label').textContent = `— ${size}`;
+  function renderSizes() {
+    sw.innerHTML = '';
+    prod.sizes.forEach(s => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'swatch' + (s === size ? ' sel' : '');
+      b.textContent = s;
+      b.onclick = () => {
+        size = s;
+        sw.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
+        b.classList.add('sel');
+        document.getElementById('s-label').textContent = `— ${s}`;
+      };
+      sw.appendChild(b);
+    });
+    document.getElementById('s-label').textContent = `— ${size}`;
+  }
 
+  /* ── qty + add ── */
   document.getElementById('qty-minus').onclick = () => { qty = Math.max(1, qty - 1); document.getElementById('qty-val').textContent = qty; };
   document.getElementById('qty-plus').onclick = () => { qty++; document.getElementById('qty-val').textContent = qty; };
 
@@ -150,6 +271,10 @@
     setTimeout(() => { btn.textContent = 'Add to basket'; btn.classList.remove('flash'); }, 1400);
   };
 
+  renderProductInfo();
+  renderProductPicker();
+  renderColours();
+  renderSizes();
   renderMain();
 })();
 </script>

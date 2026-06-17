@@ -3,92 +3,205 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Canine Keepsakes — Premium Gifts for Dog People</title>
-  <meta name="description" content="21 original dog design collections across tees, hoodies, mugs and more. Pick your breed, pick your style — printed and delivered in the UK.">
+  <title>Canine Keepsakes | Original Dog Artwork by Breed</title>
+  <meta name="description" content="Original dog artwork collections by breed, printed to order on gifts, clothing and homeware. Explore Canine Keepsakes or customise a design with your own dog.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    @media (hover:hover){
+      body.home{cursor:none}
+      body.home a,body.home button,body.home .swatch,body.home .d{cursor:none}
+      body.home input,body.home textarea,body.home select{cursor:auto}
+    }
+    .hero h1 .w{display:inline-block;opacity:0;transform:translateY(40px) rotate(4deg);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}
+    .hero h1 em{position:relative}
+    .hero h1 em::after{content:"";position:absolute;left:0;bottom:.06em;width:100%;height:.07em;background:var(--gold);transform:scaleX(0);transform-origin:left;animation:uline 1s ease 1.1s forwards}
+    @keyframes rise{to{opacity:1;transform:none}}
+    @keyframes uline{to{transform:scaleX(1)}}
+    .hero .lead,.hero .cta-row{opacity:0;animation:rise .9s ease 1s forwards}
+    .hero .cta-row{animation-delay:1.2s}
+  </style>
 </head>
-<body>
+<body class="home">
 
-<section class="hero">
-  <span class="float-paw" style="top:14%;left:8%;animation-delay:0s">🐾</span>
-  <span class="float-paw" style="top:30%;right:10%;animation-delay:1.4s;font-size:2.8rem">🐾</span>
-  <span class="float-paw" style="bottom:24%;left:18%;animation-delay:2.6s;font-size:1.6rem">🐾</span>
-  <span class="float-paw" style="bottom:30%;right:22%;animation-delay:.8s">🐾</span>
-  <div class="wrap">
-    <h1>Your dog, but <em>cooler</em>.</h1>
-    <p class="lead">21 original collections of character-packed dog art — your breed, your style, on tees, hoodies, mugs and more. Printed &amp; shipped in the UK.</p>
-    <div class="cta-row">
-      <a class="btn-gold" href="#collections">Shop the collections</a>
-      <a class="btn-ghost" href="#how">How it works</a>
+<section class="hero" id="hero">
+  <canvas class="hero-fx" id="fx"></canvas>
+  <div class="hero-glow" id="glow"></div>
+  <span class="float-paw" style="top:16%;left:6%">🐾</span>
+  <span class="float-paw" style="top:62%;left:11%;font-size:1.3rem;animation-delay:-2s">🐾</span>
+  <span class="float-paw" style="top:24%;right:46%;font-size:1.1rem;animation-delay:-4s">🐾</span>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">🐾 Original dog art · printed in the UK</span>
+      <h1 id="head"></h1>
+      <p class="lead">Original dog artwork collections made for people who are properly obsessed with their dogs. Choose the design, find your breed, then put it on products you'll actually use, wear and gift.</p>
+      <div class="cta-row">
+        <a class="btn-gold" href="#collections" data-mag>Explore Collections</a>
+        <a class="btn-ghost" href="submit-design.html" data-mag>Customise With My Dog</a>
+      </div>
     </div>
+    <div class="hero-stage">
+      <div class="pcard pc1" data-tilt><img src="images/designs/snorefather/066c4b6a-7d3b-42fa-ae69-ea0830a93756.jpg" alt="Snorefather design"><div class="cap"><b>Snorefather</b><span>£24.99</span></div></div>
+      <div class="pcard pc2" data-tilt><img src="images/designs/dirty-dog/0ce0b6d8-ec32-4750-950a-f225910afcf9.jpg" alt="Dirty Dog design"><div class="cap"><b>Dirty Dog</b><span>£24.99</span></div></div>
+      <div class="pcard pc3" data-tilt><img src="images/designs/woof-business/06cfad06-762c-4727-b48f-5ec6fe75960f.jpg" alt="Woof Business design"><div class="cap"><b>Woof Business</b><span>£24.99</span></div></div>
+    </div>
+  </div>
+  <div class="scrollcue"><span>Scroll</span><span class="ln"></span></div>
+</section>
+
+<section class="stats"><div class="wrap"><div class="row">
+  <div class="stat"><div class="num" data-count="21">0</div><div class="lab">Original collections</div></div>
+  <div class="stat"><div class="num" data-count="20">0</div><div class="lab">Breeds per design</div></div>
+  <div class="stat"><div class="num" data-count="13">0</div><div class="lab">Products</div></div>
+  <div class="stat"><div class="num" data-count="100" data-suffix="%">0</div><div class="lab">UK printed</div></div>
+</div></div></section>
+
+<div class="wall"><div class="track" id="wall1"></div><div class="track rev" id="wall2"></div></div>
+
+<section class="section" id="bestsellers">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">Start here</div>
+      <h2>Start with the fan favourites</h2>
+      <p>Not sure where to begin? These are the collections most likely to make dog people say "that is absolutely my dog."</p>
+    </div>
+    <div class="grid cols-3" id="bestseller-grid"></div>
   </div>
 </section>
 
 <section class="section" id="collections">
   <div class="wrap">
     <div class="section-head reveal">
-      <div class="kicker">The Collections</div>
-      <h2>Every dog has a personality. We drew them all.</h2>
-      <p>From the Snorefather to Dog Eastwood — find the design that's unmistakably your dog.</p>
+      <div class="kicker">The collections</div>
+      <h2>Find the collection that feels like your dog.</h2>
+      <p>From sofa bosses and chaos gremlins to rock stars, boxers, bikers and space rangers — each collection is built around a dog personality owners instantly recognise.</p>
     </div>
     <div class="grid cols-3" id="collection-grid"></div>
   </div>
 </section>
 
-<section class="section" id="how" style="background:var(--cream-deep)">
-  <div class="wrap">
-    <div class="section-head reveal">
-      <div class="kicker">How it works</div>
-      <h2>Three steps to the perfect dog-person gift</h2>
+<section class="hero" id="feat" style="padding:96px 0">
+  <div class="wrap hero-grid">
+    <div class="reveal">
+      <span class="eyebrow">Bespoke · one of a kind</span>
+      <h1 style="font-size:clamp(2rem,4vw,3rem);margin-bottom:16px">Want the artwork to feature <em>your</em> actual dog?</h1>
+      <p class="lead" style="opacity:.85;animation:none">Choose one of our existing designs, upload a clear photo, and we'll replace the dog in the artwork with your dog. Same collection style, same scene, unmistakably yours.</p>
+      <div class="cta-row" style="animation:none"><a class="btn-gold" href="submit-design.html" data-mag>Start Custom Dog Art</a></div>
+      <p class="muted" style="font-size:.85rem;margin-top:10px">Dog-swap service only — not a new scene from scratch.</p>
     </div>
-    <div class="grid cols-3">
-      <div class="card reveal"><div class="body" style="padding:30px">
-        <div style="font-size:2rem">🎨</div>
-        <div class="title">1. Pick a collection</div>
-        <div class="meta">21 original art styles, each drawn with 20 breeds.</div>
-      </div></div>
-      <div class="card reveal"><div class="body" style="padding:30px">
-        <div style="font-size:2rem">🐕</div>
-        <div class="title">2. Pick your breed &amp; product</div>
-        <div class="meta">Tees, hoodies, sweatshirts, mugs, blankets and more — in your colour and size.</div>
-      </div></div>
-      <div class="card reveal"><div class="body" style="padding:30px">
-        <div style="font-size:2rem">📦</div>
-        <div class="title">3. We print &amp; deliver</div>
-        <div class="meta">Made to order and shipped to your door, anywhere in the UK.</div>
-      </div></div>
+    <div class="hero-stage reveal" style="height:360px">
+      <div class="pcard pc1" data-tilt style="left:30px"><img src="images/designs/whos-walking-who/210b29ae-8b63-4dcf-9533-8db97a55ee87.jpg" alt=""><div class="cap"><b>Your dog, our art</b><span>preview first</span></div></div>
+      <div class="pcard pc2" data-tilt><img src="images/designs/work-like-a-dog/1614c18d-1f2a-4a82-9136-bc04b19f98a4.jpg" alt=""><div class="cap"><b>20 breeds</b><span>or your own</span></div></div>
     </div>
   </div>
 </section>
 
-<script src="js/store.js?v=3"></script>
+<section class="section how" style="background:var(--cream-deep)">
+  <div class="wrap">
+    <div class="section-head reveal"><div class="kicker">How it works</div><h2>How Canine Keepsakes works</h2></div>
+    <div class="grid cols-3">
+      <div class="step reveal"><div class="n">1</div><h3>Choose your collection</h3><p>Start with the artwork that feels most like your dog's personality.</p></div>
+      <div class="step reveal" style="transition-delay:.1s"><div class="n">2</div><h3>Find your breed</h3><p>Most collections are available across a wide breed range, with real product mockups before you buy.</p></div>
+      <div class="step reveal" style="transition-delay:.2s"><div class="n">3</div><h3>Pick your product</h3><p>Choose the item you want, checkout securely, and we print it to order.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--cream-deep)">
+  <div class="wrap reveal" style="max-width:760px;margin:0 auto;text-align:center">
+    <div class="kicker">For artists &amp; designers</div>
+    <h2>Are you an artist or designer?</h2>
+    <p style="max-width:560px;margin:0 auto 18px">Submit an original dog-themed design idea. If we approve it, we'll turn it into a Canine Keepsakes collection, adapt it across our breed range and credit you as the creator.</p>
+    <div class="cta-row" style="justify-content:center;animation:none"><a class="btn-ghost" href="creators.html" data-mag>Design for Canine Keepsakes</a></div>
+    <p class="muted" style="font-size:.85rem;margin-top:12px">For creators only. Customers wanting their own dog in our artwork should use Custom Dog Art.</p>
+  </div>
+</section>
+
+<section class="hero" style="padding:104px 0;text-align:center">
+  <div class="wrap reveal" style="max-width:760px;margin:0 auto;text-align:center">
+    <h1 style="margin-bottom:18px">Ready to find your dog's<br>alter ego?</h1>
+    <p class="lead" style="margin:0 auto 24px;max-width:520px;animation:none;opacity:.85">Explore original Canine Keepsakes collections and find the design that captures your dog's personality.</p>
+    <div class="cta-row" style="justify-content:center;animation:none"><a class="btn-gold" href="#collections" data-mag>Explore Collections</a><a class="btn-ghost" href="submit-design.html" data-mag>Customise With My Dog</a></div>
+  </div>
+</section>
+
+<script src="js/store.js?v=6"></script>
 <script>
 (async () => {
   CK.mountChrome('collections');
+
+  /* kinetic headline */
+  const head = document.getElementById('head');
+  head.innerHTML = 'Your dog,'.split(' ').map((w,i)=>`<span class="w" style="animation-delay:${.15+.12*i}s">${w}&nbsp;</span>`).join('')
+    + '<br>' + `<span class="w" style="animation-delay:.5s">but&nbsp;</span><em><span class="w" style="animation-delay:.62s">cooler.</span></em>`;
+
+  /* custom cursor (homepage showpiece) */
+  if (matchMedia('(hover:hover)').matches) {
+    const cur=document.createElement('div'); cur.className='ck-cursor';
+    const dot=document.createElement('div'); dot.className='ck-dot';
+    document.body.append(cur,dot);
+    let mx=innerWidth/2,my=innerHeight/2,cx=mx,cy=my;
+    addEventListener('pointermove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+    (function loop(){cx+=(mx-cx)*.18;cy+=(my-cy)*.18;cur.style.left=cx+'px';cur.style.top=cy+'px';requestAnimationFrame(loop);})();
+    document.addEventListener('pointerover',e=>{if(e.target.closest('a,button,[data-tilt],.swatch,.d'))cur.classList.add('big');});
+    document.addEventListener('pointerout',e=>{if(e.target.closest('a,button,[data-tilt],.swatch,.d'))cur.classList.remove('big');});
+  }
+
+  /* hero spotlight + canvas constellation */
+  const hero=document.getElementById('hero'),glow=document.getElementById('glow');
+  hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();glow.style.setProperty('--mx',(e.clientX-r.left)+'px');glow.style.setProperty('--my',(e.clientY-r.top)+'px');});
+  const cv=document.getElementById('fx'),ctx=cv.getContext('2d');let W,H,pts,pm={x:-1e9,y:-1e9};
+  function size(){W=cv.width=hero.offsetWidth;H=cv.height=hero.offsetHeight;pts=Array.from({length:Math.min(86,Math.floor(W/16))},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.8+.6}));}
+  size();addEventListener('resize',size);
+  hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();pm={x:e.clientX-r.left,y:e.clientY-r.top};});
+  hero.addEventListener('pointerleave',()=>pm={x:-1e9,y:-1e9});
+  (function draw(){ctx.clearRect(0,0,W,H);
+    for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+      const dm=Math.hypot(p.x-pm.x,p.y-pm.y);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle='rgba(236,192,106,'+(dm<160?.9:.45)+')';ctx.fill();}
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<118){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle='rgba(210,146,47,'+(1-d/118)*.22+')';ctx.lineWidth=.6;ctx.stroke();}}
+    requestAnimationFrame(draw);})();
+
+  /* data-driven content */
   const cat = await CK.load();
-  const grid = document.getElementById('collection-grid');
-  cat.collections.forEach(c => {
-    const a = document.createElement('a');
-    a.className = 'card reveal';
-    a.href = `collection.html?c=${c.slug}`;
-    const thumb = document.createElement('div');
-    thumb.className = 'thumb';
+
+  const wall1=document.getElementById('wall1'),wall2=document.getElementById('wall2');
+  const tiles=cat.collections.map(c=>`<div class="tile"><img src="${c.designs[0].thumb}" alt="" loading="lazy"></div>`).join('');
+  wall1.innerHTML=(tiles).repeat(2);
+  wall2.innerHTML=(cat.collections.slice().reverse().map(c=>`<div class="tile"><img src="${c.designs[Math.min(1,c.designs.length-1)].thumb}" alt="" loading="lazy"></div>`).join('')).repeat(2);
+
+  const grid=document.getElementById('collection-grid');
+  cat.collections.forEach(c=>{
+    const a=document.createElement('a');
+    a.className='card reveal';
+    a.href=`collection.html?c=${c.slug}`;
+    const thumb=document.createElement('div'); thumb.className='thumb';
     thumb.appendChild(CK.designImg(c.designs[0], c.name.split(' ')[0]));
-    const badge = document.createElement('span');
-    badge.className = 'badge';
-    badge.textContent = `${c.designCount} breeds`;
+    const badge=document.createElement('span'); badge.className='badge'; badge.textContent=`${c.designCount} breeds`;
     thumb.appendChild(badge);
     a.appendChild(thumb);
-    a.insertAdjacentHTML('beforeend', `
-      <div class="body">
-        <div class="title">${c.name}</div>
-        <div class="meta">13 products · from £4.99</div>
-        <div class="price">Shop ${c.name} →</div>
-      </div>`);
+    a.insertAdjacentHTML('beforeend',`<div class="body"><div class="title">${c.name}</div><div class="meta">13 products · from £4.99</div><div class="price">Shop ${c.name} →</div></div>`);
     grid.appendChild(a);
   });
+
+  /* curated best sellers (filtered from the real catalog so links never break) */
+  const featNames=["Snorefather","Who's Walking Who","Hear No Bell","Woof Business","I'll Be Bark","Work Like A Dog"];
+  const featBadges={"Snorefather":"Fan Favourite","Who's Walking Who":"Most Relatable","Hear No Bell":"Big Personality","Woof Business":"Best Gift Pick","I'll Be Bark":"Fan Favourite","Work Like A Dog":"Big Personality"};
+  const bsGrid=document.getElementById('bestseller-grid');
+  if(bsGrid){featNames.forEach(nm=>{
+    const c=cat.collections.find(x=>x.name===nm); if(!c) return;
+    const a=document.createElement('a'); a.className='card reveal'; a.href=`collection.html?c=${c.slug}`;
+    const thumb=document.createElement('div'); thumb.className='thumb';
+    thumb.appendChild(CK.designImg(c.designs[0], c.name.split(' ')[0]));
+    const badge=document.createElement('span'); badge.className='badge'; badge.textContent=featBadges[nm]||'Fan Favourite';
+    thumb.appendChild(badge); a.appendChild(thumb);
+    a.insertAdjacentHTML('beforeend',`<div class="body"><div class="title">${c.name}</div><div class="meta">13 products · from £4.99</div><div class="price">Shop ${c.name} →</div></div>`);
+    bsGrid.appendChild(a);
+  });}
+
   CK.reveals();
 })();
 </script>
