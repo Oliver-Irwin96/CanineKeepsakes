@@ -60,6 +60,18 @@ CK.auth = (() => {
     const { data } = await c.from('orders').select('*').order('created_at', { ascending: false });
     return data || [];
   }
+  /* Custom-art requests for the signed-in user (RLS scopes to auth.uid()). */
+  async function designSubmissions() {
+    const c = await init();
+    const { data } = await c.from('design_submissions').select('*').order('created_at', { ascending: false });
+    return data || [];
+  }
+  /* Creator design submissions for the signed-in user (RLS scopes to auth.uid()). */
+  async function creatorSubmissions() {
+    const c = await init();
+    const { data } = await c.from('creator_submissions').select('*').order('created_at', { ascending: false });
+    return data || [];
+  }
   /* Sends a password-reset email. The link returns the user to
      reset-password.html with a recovery token Supabase picks up automatically. */
   async function requestPasswordReset(email) {
@@ -72,5 +84,5 @@ CK.auth = (() => {
     return c.auth.updateUser({ password });
   }
   return { init, signUp, signIn, signOut, session, user, token, profile, saveProfile, orders,
-           requestPasswordReset, updatePassword };
+           designSubmissions, creatorSubmissions, requestPasswordReset, updatePassword };
 })();

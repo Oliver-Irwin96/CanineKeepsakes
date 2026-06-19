@@ -20,7 +20,11 @@ exports.handler = async (event) => {
     if (!items?.length) return json(400, { error: 'empty basket' });
     if (!recipient?.address1 || !recipient?.zip) return json(400, { error: 'recipient address required' });
 
-    const subtotal = priceBasket(items);
+    /* Validate basket server-side: an unknown/tampered productSlug is a clean 400,
+       not a 500. */
+    let subtotal;
+    try { subtotal = priceBasket(items); }
+    catch (e) { return json(400, { error: 'invalid basket — unknown product' }); }
     /* H1 fix - never trust shipping.rate from the browser; re-derive it. */
     const ship = await authoritativeShipping(recipient, items, shipping?.id);
     const shipCost = ship.rate;

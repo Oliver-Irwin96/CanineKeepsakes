@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Custom Dog Art | Put Your Dog In Our Designs | Canine Keepsakes</title>
   <meta name="description" content="Put your dog into an existing Canine Keepsakes design with our custom dog artwork service. Upload a photo and receive a digital preview before printing.">
+  <link rel="canonical" href="https://caninekeepsakes.co.uk/submit-design.html">
+  <!-- B4 social cards — PLACEHOLDER copy; ChatGPT to refine. og:image asset TODO. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Canine Keepsakes">
+  <meta property="og:url" content="https://caninekeepsakes.co.uk/submit-design.html">
+  <meta property="og:title" content="Turn Your Dog Into A Canine Keepsakes Design">
+  <meta property="og:description" content="Upload your dog's photo and we'll place them into one of our existing artwork collections to create a personalised keepsake.">
+  <meta property="og:image" content="https://caninekeepsakes.co.uk/images/og-default.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Custom Dog Artwork">
+  <meta name="twitter:description" content="Transform your dog's photo into a personalised Canine Keepsakes design ready for gifts, clothing and keepsakes.">
+  <meta name="twitter:image" content="https://caninekeepsakes.co.uk/images/og-default.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -292,33 +304,39 @@
       paypal.Buttons({
         onClick: (d, actions) => { if (!valid()) { showMsg('Please complete every step and tick the box first.', false); return actions.reject(); } return actions.resolve(); },
         createOrder: () => fetch('/api/design-pay', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'create', addons: addons() }) }).then(r=>r.json()).then(d=>d.id),
-        onApprove: (data) => fetch('/api/design-pay', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'capture', orderID:data.orderID, addons: addons() }) })
-          .then(r=>r.json()).then(async d => {
+        onApprove: async (data) => {
+          /* Upload the photo FIRST so the server can record its path when it
+             captures. The server (/api/design-pay capture) verifies the payment
+             and writes the design_submissions row + sends the email — the browser
+             no longer self-reports status/amount. If anything here throws before
+             capture, the buyer is not charged. */
+          try {
+            const c = await CK.auth.init();
+            const fd = new FormData(form);
+            const ext = (photoFile.name.split('.').pop()||'jpg').toLowerCase();
+            const path = (crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2))+'.'+ext;
+            const up = await c.storage.from('design-submissions').upload(path, photoFile, { contentType: photoFile.type, upsert:false });
+            if (up.error) throw up.error;
+
+            const tok = await CK.auth.token().catch(()=>null);
+            const headers = { 'Content-Type':'application/json' };
+            if (tok) headers.Authorization = 'Bearer ' + tok;
+            const submission = {
+              name: fd.get('name').trim(), email: fd.get('email').trim(),
+              dog_name:(fd.get('dog_name')||'').trim()||null, breed:(fd.get('breed')||'').trim()||null,
+              collection_slug: fd.get('collection_slug')==='__unsure' ? null : fd.get('collection_slug'),
+              collection_name: (($('collection-select').selectedOptions||[])[0]||{}).textContent || '',
+              notes:(fd.get('notes')||'').trim()||null, photo_path: path
+            };
+            const d = await fetch('/api/design-pay', { method:'POST', headers, body: JSON.stringify({ action:'capture', orderID:data.orderID, addons: addons(), submission }) }).then(r=>r.json());
             if (d.status !== 'COMPLETED') { showMsg('Payment could not be completed. You have not been charged.', false); return; }
             paid = true;
-            try {
-              const c = await CK.auth.init();
-              const ext = (photoFile.name.split('.').pop()||'jpg').toLowerCase();
-              const path = (crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2))+'.'+ext;
-              const up = await c.storage.from('design-submissions').upload(path, photoFile, { contentType: photoFile.type, upsert:false });
-              if (up.error) throw up.error;
-              const fd = new FormData(form);
-              const ins = await c.from('design_submissions').insert({
-                name: fd.get('name').trim(), email: fd.get('email').trim(),
-                dog_name:(fd.get('dog_name')||'').trim()||null, breed:(fd.get('breed')||'').trim()||null,
-                collection_slug: fd.get('collection_slug')==='__unsure' ? null : fd.get('collection_slug'),
-                notes:(fd.get('notes')||'').trim()||null, photo_path: path,
-                user_id: currentUser?currentUser.id:null,
-                paypal_order_id: d.paypalOrderId, amount_paid: d.amount, currency:'GBP', addons: addons(), status:'paid'
-              });
-              if (ins.error) throw ins.error;
-              try { fetch('/api/notify', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type:'design', email: fd.get('email').trim(), dogName:(fd.get('dog_name')||'').trim(), collection: (($('collection-select').selectedOptions||[])[0]||{}).textContent || '', total: CK.gbp(d.amount) }) }); } catch(_) {}
-              form.style.display='none';
-              showMsg('Payment received — thank you! 🐾 We’ve got your photo and we’ll email your design preview to '+fd.get('email').trim()+' within 3–5 working days'+(addons().priority?' (priority: ~48h)':'')+'.', true);
-            } catch (err) {
-              showMsg('Your payment went through (ref '+d.paypalOrderId+') but we hit a snag saving your photo. Please email caninekeepsakes.admin@gmail.com with this reference and your photo and we\'ll sort it right away.', false);
-            }
-          })
+            form.style.display='none';
+            showMsg('Payment received — thank you! 🐾 We’ve got your photo and we’ll email your design preview to '+submission.email+' within 3–5 working days'+(addons().priority?' (priority: ~48h)':'')+'.', true);
+          } catch (err) {
+            showMsg('We hit a snag preparing your order'+(err && err.message ? ' ('+err.message+')' : '')+'. If you were charged, email caninekeepsakes.admin@gmail.com and we\'ll sort it right away.', false);
+          }
+        }
       }).render('#paypal-button-container');
     };
     document.head.appendChild(s);

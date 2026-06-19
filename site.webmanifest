@@ -1,0 +1,12 @@
+{
+  "name": "Canine Keepsakes",
+  "short_name": "Canine Keepsakes",
+  "description": "Original dog artwork, printed to order.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf6ef",
+  "theme_color": "#16181f",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" }
+  ]
+}

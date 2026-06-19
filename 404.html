@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Page not found (404) | Canine Keepsakes</title>
+  <meta name="description" content="We couldn't find that page. Browse our dog-themed collections, create custom dog art, or head back to the Canine Keepsakes home page.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* scoped to the 404 hero — reuses the site .hero look, just centred */
+    .err-hero { padding: 104px 0 116px; }
+    .err-hero .wrap { text-align: center; max-width: 720px; }
+    .err-hero p.lead { margin-left: auto; margin-right: auto; }
+    .err-hero .cta-row { justify-content: center; }
+    .err-note {
+      margin: 28px auto 0; max-width: 520px;
+      font-size: .9rem; line-height: 1.6; opacity: .68;
+    }
+    @media (max-width: 640px) {
+      .err-hero { padding: 72px 0 84px; }
+      .err-hero .cta-row .btn-gold,
+      .err-hero .cta-row .btn-ghost { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<section class="hero err-hero">
+  <div class="wrap">
+    <span class="eyebrow">404 · Off the lead</span>
+    <h1>Oops. This page must have <em>chased a squirrel</em>.</h1>
+    <p class="lead">The page you're looking for doesn't exist, has moved, or never learned how to stay where it was told.</p>
+    <div class="cta-row">
+      <a class="btn-gold" href="index.html#collections">Browse Collections</a>
+      <a class="btn-ghost" href="submit-design.html">Custom Dog Art</a>
+      <a class="btn-ghost" href="index.html">Home Page</a>
+    </div>
+    <p class="err-note">If you typed the address manually, double-check the spelling. If not, one of our dogs has probably hidden it.</p>
+  </div>
+</section>
+
+<script src="/js/store.js?v=6"></script>
+<script>CK.mountChrome();</script>
+</body>
+</html>

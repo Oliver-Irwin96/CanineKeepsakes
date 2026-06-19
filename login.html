@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
   <title>Sign In or Create Account | Canine Keepsakes</title>
   <meta name="description" content="Sign in or create a Canine Keepsakes account to track orders and checkout faster.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,7 +38,11 @@
 (() => {
   CK.mountChrome();
   const params = new URLSearchParams(location.search);
-  const redirect = params.get('redirect') || 'account.html';
+  /* SECURITY: only allow redirecting to a same-site relative .html page (e.g.
+     checkout.html). Blocks open redirects (//evil.com, https://evil.com) and
+     javascript:/data: URIs that could run in-page. Anything else -> account.html. */
+  const rawRedirect = params.get('redirect') || 'account.html';
+  const redirect = /^[\w\-]+\.html([?#][^\s]*)?$/.test(rawRedirect) ? rawRedirect : 'account.html';
   let mode = 'signin'; // or 'signup'
 
   const title = document.getElementById('title');

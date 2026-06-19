@@ -55,22 +55,24 @@ async function resolveVariantId(catalogProductId, colour, size) {
   return match.id;
 }
 
-/* Pick a sensible print placement for this product + variant and build the
-   position block Printful requires (fills the print area). */
-async function placementAndPosition(catalogProductId, variantId) {
-  const r = await fetch(`${PF_BASE}/mockup-generator/printfiles/${catalogProductId}`, { headers: pfHeaders() });
-  const d = await r.json();
-  const res = d.result || {};
-  const ap = res.available_placements || {};
-  const keys = Array.isArray(ap) ? ap.map(p => p.placement || p) : Object.keys(ap);
-  const placement = keys.includes('front')
-    ? 'front'
-    : (keys.find(k => k !== 'default' && !String(k).startsWith('label')) || keys.find(k => k === 'default') || keys[0]);
-  const vp = (res.variant_printfiles || []).find(v => v.variant_id === variantId);
-  const pfId = vp && vp.placements && vp.placements[placement];
-  const pf = (res.printfiles || []).find(p => p.printfile_id === pfId);
-  if (!pf) throw new Error(`no printfile for ${catalogProductId} ${placement}`);
-  return { placement, position: { area_width: pf.width, area_height: pf.height, width: pf.width, height: pf.height, top: 0, left: 0 } };
+/* Pick a sensible print placement NAME for this product. We deliberately do NOT
+   send a position block: forcing position {width/height = full print area, top:0}
+   stretched the art and pushed it to the neckline (Neil bugs 001 bowl + 003 apparel).
+   Omitting position lets Printful auto-place at its proven default (centred, correctly
+   sized) — matching the pawprint approach. Never throws: falls back to 'front'. */
+async function choosePlacement(catalogProductId) {
+  try {
+    const r = await fetch(`${PF_BASE}/mockup-generator/printfiles/${catalogProductId}`, { headers: pfHeaders() });
+    const d = await r.json();
+    const res = d.result || {};
+    const ap = res.available_placements || {};
+    const keys = Array.isArray(ap) ? ap.map(p => p.placement || p) : Object.keys(ap);
+    return keys.includes('front')
+      ? 'front'
+      : (keys.find(k => k !== 'default' && !String(k).startsWith('label')) || keys.find(k => k === 'default') || keys[0] || 'front');
+  } catch (_) {
+    return 'front';
+  }
 }
 
 exports.handler = async (event) => {
@@ -86,7 +88,9 @@ exports.handler = async (event) => {
     // Only let Printful fetch artwork from our own trusted hosts.
     if (!isAllowedPrintFile(imageUrl)) return json(400, { error: 'image url not allowed' });
 
-    const key = `${catalogProductId}:${colour}:${designId}`;
+    /* cache key bumped to v2 to invalidate old mockups generated with the bad
+       full-area position (Neil 001/003) so they regenerate with default placement. */
+    const key = `v2:${catalogProductId}:${colour}:${designId}`;
     let row = await cacheGet(key);
 
     if (row && row.status === 'completed' && row.mockup_url) {
@@ -96,10 +100,10 @@ exports.handler = async (event) => {
     // No task yet -> create one
     if (!row || (!row.task_key && row.status !== 'completed')) {
       const variantId = await resolveVariantId(catalogProductId, colour, size);
-      const { placement, position } = await placementAndPosition(catalogProductId, variantId);
+      const placement = await choosePlacement(catalogProductId);
       const cr = await fetch(`${PF_BASE}/mockup-generator/create-task/${catalogProductId}`, {
         method: 'POST', headers: pfHeaders(),
-        body: JSON.stringify({ variant_ids: [variantId], format: 'jpg', files: [{ placement, image_url: imageUrl, position }] })
+        body: JSON.stringify({ variant_ids: [variantId], format: 'jpg', files: [{ placement, image_url: imageUrl }] })
       });
       const cd = await cr.json();
       const taskKey = cd.result && cd.result.task_key;

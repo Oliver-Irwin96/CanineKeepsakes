@@ -1,27 +1,24 @@
 /* GET /api/health — verifies PayPal + Printful credentials without touching money.
-   Safe to leave deployed; returns no secrets. */
-const { PF_BASE, pfHeaders, paypalToken, json } = require('./_lib');
+   Returns no secrets. Hardened: throttled + origin-gated so it can't be hammered
+   (each call hits PayPal + Printful upstream), and it no longer leaks the store
+   name/id or raw upstream error bodies — just OK / FAIL + the environment. */
+const { PF_BASE, pfHeaders, paypalToken, json, isOriginAllowed, rateLimit } = require('./_lib');
 
-exports.handler = async () => {
+exports.handler = async (event) => {
+  if (!isOriginAllowed(event)) return json(403, { error: 'forbidden origin' });
+  if (!rateLimit(event, 6, 60000)) return json(429, { error: 'too many requests' });
+
   const out = { paypal: 'unconfigured', printful: 'unconfigured', env: process.env.PAYPAL_ENV || 'sandbox' };
 
   try {
     await paypalToken();
     out.paypal = 'OK';
-  } catch (e) { out.paypal = `FAIL: ${e.message}`; }
+  } catch (_) { out.paypal = 'FAIL'; }
 
   try {
     const res = await fetch(`${PF_BASE}/stores`, { headers: pfHeaders() });
-    const data = await res.json();
-    if (res.ok) {
-      const store = (data?.result || []).find(s => s.id === 18269364) || data?.result?.[0];
-      out.printful = store
-        ? `OK — store: ${store.name} (id:${store.id}, type:${store.type || '?'})`
-        : 'OK — key valid but Canine Keepsakes store not found';
-    } else {
-      out.printful = `FAIL: ${res.status} ${JSON.stringify(data?.error || data).slice(0, 200)}`;
-    }
-  } catch (e) { out.printful = `FAIL: ${e.message}`; }
+    out.printful = res.ok ? 'OK' : `FAIL: ${res.status}`;
+  } catch (_) { out.printful = 'FAIL'; }
 
   return json(200, out);
 };

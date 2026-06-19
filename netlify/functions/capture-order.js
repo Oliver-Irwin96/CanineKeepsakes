@@ -9,7 +9,7 @@
 const {
   PF_BASE, pfHeaders, paypalBase, paypalToken, priceBasket, authoritativeShipping,
   verifyUser, findOrderByPaypalId, recordOrder, json,
-  corsHeaders, isOriginAllowed, rateLimit, isAllowedPrintFile
+  corsHeaders, isOriginAllowed, rateLimit, isAllowedPrintFile, buildPrintFiles, sendBrandedEmail, clampQty
 } = require('./_lib');
 
 async function resolveVariantId(catalogProductId, colour, size) {
@@ -18,10 +18,12 @@ async function resolveVariantId(catalogProductId, colour, size) {
   const data = await res.json();
   const variants = data?.result?.variants || [];
   const norm = s => (s || '').toLowerCase().trim();
+  /* Strict: require at least a colour match. We do NOT fall back to variants[0],
+     which could silently fulfil the wrong colour/size on tampered or drifted input.
+     No confident match -> throw -> caller records a manual follow-up (paid, safe). */
   const match = variants.find(v => norm(v.color) === norm(colour) && norm(v.size) === norm(size))
-    || variants.find(v => norm(v.color) === norm(colour))
-    || variants[0];
-  if (!match) throw new Error(`no variant for ${catalogProductId} ${colour}/${size}`);
+    || variants.find(v => norm(v.color) === norm(colour));
+  if (!match) throw new Error(`no variant matching colour="${colour}" size="${size}" for product ${catalogProductId}`);
   return match.id;
 }
 
@@ -76,6 +78,18 @@ exports.handler = async (event) => {
     const paid = parseFloat(
       capture?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value
     );
+
+    /* Order confirmation email (non-fatal). Payment is captured, so confirm now
+       regardless of which fulfilment branch follows. Uses the server-verified
+       paid amount for the total; line items show name × qty only (no client price). */
+    try {
+      await sendBrandedEmail('order', recipient && recipient.email, {
+        firstName: recipient && recipient.first_name,
+        orderRef: orderID,
+        total: Number.isFinite(paid) ? '£' + paid.toFixed(2) : '',
+        items: (items || []).map(i => ({ name: `${i.collectionName} ${i.productName}`, qty: Math.max(1, parseInt(i.qty) || 1) }))
+      });
+    } catch (e) { console.error('order email send failed (non-fatal)', e.message); }
     let expected;
     try {
       const subtotal = priceBasket(items);
@@ -111,39 +125,49 @@ exports.handler = async (event) => {
       return json(200, { status: 'COMPLETED', fulfilment: 'MANUAL_REVIEW_REQUIRED', reason: 'print file url not allowed' });
     }
 
-    /* 2 - create Printful DRAFT order (raw design file until mockup pipeline ships) */
-    const pfItems = [];
-    for (const i of items) {
-      const variant_id = await resolveVariantId(i.catalogProductId, i.colour, i.size);
-      pfItems.push({
-        variant_id,
-        quantity: Math.max(1, parseInt(i.qty) || 1),
-        name: `${i.collectionName} - ${i.productName} (${i.designLabel})`,
-        files: [{ url: i.printFileUrl }]
+    /* 2 - create Printful DRAFT order. EVERYTHING after a captured payment is wrapped:
+       any failure (variant lookup, no matching variant, Printful/network/JSON error)
+       must NOT 500 and lose the paid order — record it for manual follow-up instead. */
+    let pfData = null, pfOk = false;
+    try {
+      const pfItems = [];
+      for (const i of items) {
+        const variant_id = await resolveVariantId(i.catalogProductId, i.colour, i.size);
+        pfItems.push({
+          variant_id,
+          quantity: clampQty(i.qty),
+          name: `${i.collectionName} - ${i.productName} (${i.designLabel})`,
+          files: buildPrintFiles(i)
+        });
+      }
+      const pfRes = await fetch(`${PF_BASE}/orders`, {
+        method: 'POST',
+        headers: pfHeaders(),
+        body: JSON.stringify({
+          external_id: `ck-${orderID}`,
+          recipient: {
+            name: `${recipient.first_name} ${recipient.last_name}`,
+            email: recipient.email,
+            address1: recipient.address1,
+            address2: recipient.address2 || '',
+            city: recipient.city,
+            zip: recipient.zip,
+            country_code: 'GB'
+          },
+          items: pfItems,
+          shipping: shipping?.id || 'STANDARD',
+          confirm: false
+        })
       });
+      pfData = await pfRes.json();
+      pfOk = pfRes.ok;
+    } catch (e) {
+      console.error('FULFILMENT PREP FAILED after capture - holding paid order for follow-up', e.message);
+      await recordOrder({ ...base, status: 'COMPLETED', fulfilment_status: 'MANUAL_FOLLOWUP_REQUIRED',
+        review_reason: 'fulfilment prep error: ' + e.message, paid_amount: paid, expected_amount: +expected.toFixed(2) });
+      return json(200, { status: 'COMPLETED', fulfilment: 'MANUAL_FOLLOWUP_REQUIRED', reason: 'fulfilment prep error' });
     }
-
-    const pfRes = await fetch(`${PF_BASE}/orders`, {
-      method: 'POST',
-      headers: pfHeaders(),
-      body: JSON.stringify({
-        external_id: `ck-${orderID}`,
-        recipient: {
-          name: `${recipient.first_name} ${recipient.last_name}`,
-          email: recipient.email,
-          address1: recipient.address1,
-          address2: recipient.address2 || '',
-          city: recipient.city,
-          zip: recipient.zip,
-          country_code: 'GB'
-        },
-        items: pfItems,
-        shipping: shipping?.id || 'STANDARD',
-        confirm: false
-      })
-    });
-    const pfData = await pfRes.json();
-    if (!pfRes.ok) {
+    if (!pfOk) {
       console.error('PRINTFUL DRAFT FAILED after successful capture', pfData);
       await recordOrder({ ...base, status: 'COMPLETED', fulfilment_status: 'MANUAL_FOLLOWUP_REQUIRED',
         review_reason: 'printful draft failed', paid_amount: paid, expected_amount: +expected.toFixed(2) });

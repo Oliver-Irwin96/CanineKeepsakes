@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Collection — Canine Keepsakes</title>
   <meta name="description" content="Explore this Canine Keepsakes dog artwork collection, choose your breed design, then personalise the product, colour and size.">
+  <!-- B4: generic static cards; canonical + og:url set per-collection by JS below. Per-collection share previews need SSR/prerender (noted). -->
+  <link rel="canonical" href="https://caninekeepsakes.co.uk/index.html#collections">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Canine Keepsakes">
+  <meta property="og:url" content="https://caninekeepsakes.co.uk/index.html#collections">
+  <meta property="og:title" content="Browse Our Dog Artwork Collections">
+  <meta property="og:description" content="Explore funny, heartwarming and personality-packed dog artwork collections inspired by the dogs we love most.">
+  <meta property="og:image" content="https://caninekeepsakes.co.uk/images/og-default.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Dog Artwork Collections">
+  <meta name="twitter:description" content="Discover original dog-themed collections packed with humour, personality and gifts worth keeping.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -25,7 +36,7 @@
 
     <div class="reveal" style="max-width:70ch;margin-bottom:24px">
       <h3 style="font-family:var(--font-display);font-size:1.15rem;margin:0 0 8px">About this collection</h3>
-      <p style="margin:0;color:var(--ink-soft)">This collection is designed around one simple idea: every dog has a personality big enough to deserve its own artwork. Choose the breed version that feels closest to your dog, then personalise the product on the next screen.</p>
+      <div id="col-story" style="color:var(--ink-soft)"></div>
     </div>
 
     <div class="picker" style="max-width:100%">
@@ -49,15 +60,36 @@
 <script>
 (async () => {
   CK.mountChrome();
+  const esc = s => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
   const cat = await CK.load();
   const slug = CK.params.get('c') || cat.collections[0].slug;
   const col = cat.collections.find(c => c.slug === slug) || cat.collections[0];
 
-  document.title = `${col.name} — Canine Keepsakes`;
+  /* B4 + SEO fields: use seoTitle/seoDescription/ogTitle/ogDescription when filled, else fallback */
+  const _seoTitle = (col.seoTitle || '').trim() || `${col.name} — Canine Keepsakes`;
+  const _seoDesc = (col.seoDescription || '').trim();
+  document.title = _seoTitle;
+  (() => {
+    const url = `${location.origin}/collection.html?c=${col.slug}`;
+    const set = (sel, val) => { if (!val) return; const m = document.querySelector(sel); if (m) m.setAttribute('content', val); };
+    const cl = document.querySelector('link[rel=canonical]'); if (cl) cl.href = url;
+    set('meta[property="og:url"]', url);
+    set('meta[property="og:title"]', (col.ogTitle || '').trim() || _seoTitle);
+    set('meta[property="og:description"]', (col.ogDescription || '').trim() || _seoDesc);
+    set('meta[name="description"]', _seoDesc);
+  })();
   document.getElementById('crumb-name').textContent = col.name;
   document.getElementById('col-name').textContent = col.name;
   document.getElementById('col-sub').textContent = `${col.designCount} breed designs · available on ${cat.products.length} products`;
   document.getElementById('design-count').textContent = `(${col.designCount})`;
+
+  /* per-collection story: unique copy from the catalogue, generic fallback otherwise */
+  const storyEl = document.getElementById('col-story');
+  if (storyEl) {
+    const fallback = ['This collection is designed around one simple idea: every dog has a personality big enough to deserve its own artwork. Choose the breed version that feels closest to your dog, then personalise the product on the next screen.'];
+    const paras = Array.isArray(col.description) && col.description.length ? col.description : (col.description ? [col.description] : fallback);
+    storyEl.innerHTML = paras.map(t => '<p style="margin:0 0 10px">' + esc(t) + '</p>').join('');
+  }
 
   const strip = document.getElementById('design-strip');
   col.designs.forEach(d => {

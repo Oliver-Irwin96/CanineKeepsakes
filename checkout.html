@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
   <title>Checkout — Canine Keepsakes</title>
   <meta name="description" content="Secure checkout for Canine Keepsakes printed-to-order dog artwork products.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,6 +54,7 @@
 (() => {
   CK.mountChrome();
   const box = document.getElementById('summary-box');
+  const esc = s => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
   let shipping = null;
 
   /* Login is required to check out. Bounce anonymous visitors to the login
@@ -75,7 +77,7 @@
     const sub = CK.basketTotal();
     const total = sub + (shipping ? shipping.rate : 0);
     box.innerHTML = `
-      ${b.map(i => `<div class="row"><span>${i.collectionName} ${i.productName} ×${i.qty}</span><span>${CK.gbp(i.price * i.qty)}</span></div>`).join('')}
+      ${b.map(i => `<div class="row"><span>${esc(i.collectionName)} ${esc(i.productName)} ×${esc(i.qty)}</span><span>${CK.gbp((parseFloat(i.price) || 0) * (parseInt(i.qty) || 1))}</span></div>`).join('')}
       <div class="row"><span>Shipping</span><span>${shipping ? CK.gbp(shipping.rate) + ' · ' + shipping.name : 'select rate'}</span></div>
       <div class="row total"><span>Total</span><span>${CK.gbp(total)}</span></div>`;
   }

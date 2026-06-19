@@ -2,10 +2,81 @@
   publish = "."
   functions = "netlify/functions"
 
+# --- Security headers (safe defaults; no CSP to avoid breaking inline scripts /
+#     fonts / esm.sh / PayPal / Supabase). Applied to every response. ---
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+
+# --- Security (N1): block public access to server source, internal docs & notes ---
+# publish = "." serves the whole repo, so these real files were publicly fetchable.
+# force = true makes each redirect win over static file serving, returning 404
+# instead of the file's contents. These paths are NOT used by the app:
+#   - the app calls functions via /api/*  ->  /.netlify/functions/* (different path,
+#     unaffected); the literal /netlify/* path is just the un-bundled source.
+#   - no public page links to any doc/notes path below.
+[[redirects]]
+  from = "/netlify/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/Knowledge/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/Handoffs/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/AI_CHANGE_CONTROL.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/PROJECT_OWNERSHIP_MATRIX.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/README.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/README_s4.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/2026-06-16_CK_Handoff_s4.md"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/2026-06-16_CK_Knowledge_Capture_s4.md"
+  to = "/404.html"
+  status = 404
+  force = true
 
 # Required environment variables (Netlify dashboard → Site settings → Environment):
 #   PRINTFUL_API_KEY          — from Printful Manual order / API store

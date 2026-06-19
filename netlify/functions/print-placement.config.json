@@ -1,0 +1,21 @@
+{
+  "_doc": "Group F-a print placement. Keyed by productSlug (matches the PRICES table in _lib.js). For each product set position values (pixels, relative to the print area) to control how the artwork prints. A product is only applied when area_width, area_height, width, height, top AND left are all numbers; leave them null to keep Printful's DEFAULT placement (current behaviour). 'placement' is the Printful file type e.g. 'front' or 'default'. 'limit_to_print_area' defaults true. Values come from the print-placement form / PODDROP per-product print-area data.",
+  "_example": {
+    "summer-tee": {
+      "placement": "front",
+      "position": { "area_width": 1800, "area_height": 2400, "width": 1500, "height": 1500, "top": 380, "left": 150, "limit_to_print_area": true }
+    }
+  },
+  "summer-tee":          { "placement": "front_large", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "summer-long-sleeve":  { "placement": "front", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "winter-tee":          { "placement": "front", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "winter-long-sleeve":  { "placement": "front", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "sweatshirt":          { "placement": "front", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "hoodie":              { "placement": "front", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "zip-hoodie":          { "_note": "Neil decision (bug 004): print on BACK so the zip doesn't bisect the design. NOTE: mockup.js still needs to be made config-aware so the PREVIEW also shows back (currently previews front).", "placement": "back", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "womens-relaxed-tee":  { "placement": "front", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "white-mug":           { "placement": "default", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "black-mug":           { "placement": "default", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "pet-bowl":            { "placement": "default", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } },
+  "stickers":            { "placement": "default", "position": { "area_width": null, "area_height": null, "width": null, "height": null, "top": null, "left": null, "limit_to_print_area": true } }
+}

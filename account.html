@@ -3,11 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
   <title>My Account | Canine Keepsakes</title>
   <meta name="description" content="Manage your Canine Keepsakes account, saved delivery details and order history.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Creator / account dashboard — premium branded UI (real data only) */
+    .ck-creator-hero{position:relative;overflow:hidden;background:radial-gradient(120% 140% at 100% 0,#2a2d3a 0,#16181f 55%);color:#fff;border-radius:18px;padding:20px 22px;margin-bottom:14px;box-shadow:0 16px 32px -20px rgba(0,0,0,.55)}
+    .ck-creator-hero:before{content:"";position:absolute;top:-46px;right:-34px;width:170px;height:170px;background:radial-gradient(circle,rgba(210,146,47,.34),transparent 70%);pointer-events:none}
+    .ck-rank{display:flex;align-items:center;gap:14px;position:relative}
+    .ck-medal{flex:0 0 auto;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:linear-gradient(145deg,#e0a23c,#a86f1d);box-shadow:0 0 0 4px rgba(210,146,47,.16),inset 0 2px 5px rgba(255,255,255,.35);animation:ckPop .5s ease;position:relative;overflow:hidden}
+    .ck-medal:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.55) 50%,transparent 60%);transform:translateX(-100%);animation:ckShine 4.5s ease-in-out infinite}
+    .ck-rank .s{color:#eab556;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase}
+    .ck-rank .t{font-family:var(--font-display);font-size:1.35rem;line-height:1.05;margin-top:2px}
+    .ck-rank .nx{color:#aab1be;font-size:.74rem;margin-top:4px}
+    .ck-jar{margin-top:18px}
+    .ck-jar .lab{display:flex;justify-content:space-between;align-items:center;font-size:.84rem;margin-bottom:7px;color:#efe9dd}
+    .ck-soon{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(234,181,86,.16);color:#eab556;border:1px solid rgba(234,181,86,.4);border-radius:999px;padding:2px 9px;margin-left:8px;white-space:nowrap}
+    .ck-bar{height:14px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+    .ck-bar>span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#d2922f,#eab556,#d2922f);background-size:200% 100%;animation:ckShimmer 2.8s linear infinite;transition:width .8s ease}
+    .ck-note{font-size:.74rem;color:#aab1be;margin-top:8px;line-height:1.45}
+    .ck-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+    .ck-stat{background:linear-gradient(180deg,#fbf7ef,#f1ebdd);border:1px solid rgba(0,0,0,.05);border-radius:14px;padding:14px 8px;text-align:center;transition:transform .15s ease,box-shadow .15s ease}
+    .ck-stat:hover{transform:translateY(-2px);box-shadow:0 12px 22px -16px rgba(0,0,0,.4)}
+    .ck-stat .ic{font-size:15px}
+    .ck-stat b{display:block;font-family:var(--font-display);font-size:1.7rem;line-height:1;margin:3px 0 1px}
+    .ck-stat span{font-size:.62rem;color:#6b7280;text-transform:uppercase;letter-spacing:.07em}
+    .ck-ach-wrap{margin-bottom:18px}
+    .ck-ach-head{display:flex;align-items:center;justify-content:space-between;font-family:var(--font-display);font-size:.98rem;margin-bottom:9px}
+    .ck-ach-head .cnt{font-size:.7rem;color:#a86f1d;background:#fbf3e3;border:1px solid #e6c485;border-radius:999px;padding:3px 10px}
+    .ck-nudge{font-size:.77rem;color:#6b7280;margin-top:9px}
+    .ck-nudge b{color:#7a4f12}
+    .ck-ach{display:flex;flex-wrap:wrap;gap:8px}
+    .ck-chip{display:flex;align-items:center;gap:6px;border-radius:999px;padding:7px 13px;font-size:.78rem;border:1px solid rgba(0,0,0,.1);transition:transform .15s ease}
+    .ck-chip.on{background:#fbf3e3;border-color:#e6c485;color:#7a4f12;box-shadow:0 4px 12px -8px rgba(122,79,18,.5)}
+    .ck-chip.on:hover{transform:translateY(-1px)}
+    .ck-chip.off{opacity:.4;filter:grayscale(.4)}
+    .ck-empty{text-align:center;background:linear-gradient(180deg,#fbf7ef,#f1ebdd);border:1px dashed #d8c9a6;border-radius:16px;padding:26px 18px}
+    .ck-empty .pw{font-size:30px;display:block;margin-bottom:8px}
+    .ck-empty p{margin:0 0 14px;color:#6b7280;font-size:.9rem}
+    .row{display:block;border-bottom:1px solid rgba(0,0,0,.08);padding:12px 0}
+    .ck-track{display:flex;align-items:flex-start;margin:8px 0 2px}
+    .ck-step{flex:1;text-align:center;position:relative;font-size:.64rem;color:#9aa0ac}
+    .ck-step .dot{width:16px;height:16px;border-radius:50%;background:#d8d2c4;margin:0 auto 5px;border:2px solid #fff;box-shadow:0 0 0 1px #d8d2c4;position:relative;z-index:1;transition:background .3s}
+    .ck-step.done .dot{background:#d2922f;box-shadow:0 0 0 1px #d2922f}
+    .ck-step.now .dot{animation:ckPulse 1.8s ease-in-out infinite}
+    .ck-step.done{color:#16181f;font-weight:600}
+    .ck-step:not(:last-child):after{content:"";position:absolute;top:7px;left:50%;width:100%;height:2px;background:#d8d2c4;z-index:0}
+    .ck-step.done:not(:last-child):after{background:#d2922f}
+    @keyframes ckShimmer{to{background-position:200% 0}}
+    @keyframes ckPop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes ckPulse{0%,100%{box-shadow:0 0 0 1px #d2922f,0 0 0 4px rgba(210,146,47,.3)}50%{box-shadow:0 0 0 1px #d2922f,0 0 0 7px rgba(210,146,47,.05)}}
+    @keyframes ckShine{0%,70%{transform:translateX(-100%)}88%,100%{transform:translateX(100%)}}
+    @media(prefers-reduced-motion:reduce){.ck-bar>span,.ck-medal,.ck-medal:after,.ck-step.now .dot{animation:none}}
+    @media(max-width:560px){
+      .ck-creator-hero{padding:16px 16px}
+      .ck-rank .t{font-size:1.2rem}
+      .ck-medal{width:46px;height:46px;font-size:22px}
+      .ck-stat b{font-size:1.4rem}
+      .ck-step{font-size:.56rem}
+    }
+  </style>
 </head>
 <body>
 <div class="wrap">
@@ -43,11 +101,11 @@
 
       <div style="margin-top:28px">
         <h3 style="font-family:var(--font-display);margin-bottom:8px">Custom artwork requests</h3>
-        <p class="muted">Paid custom dog artwork requests will appear here once submitted. <span style="opacity:.7">Coming soon.</span></p>
+        <div id="design-area"><p class="muted">Loading…</p></div>
       </div>
       <div style="margin-top:24px">
-        <h3 style="font-family:var(--font-display);margin-bottom:8px">Creator dashboard <span class="muted" style="font-weight:400;font-size:.8rem">Coming soon</span></h3>
-        <p class="muted">Track submitted designs, approved collections and creator earnings. <a href="creators.html">Submit a Design →</a></p>
+        <h3 style="font-family:var(--font-display);margin-bottom:8px">🐾 Your creator kennel</h3>
+        <div id="creator-area"><p class="muted">Loading…</p></div>
       </div>
     </div>
   </div>
@@ -58,6 +116,8 @@
 <script>
 (() => {
   CK.mountChrome();
+
+  const esc = s => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
 
   const fulfilLabel = {
     DRAFT_CREATED: 'Confirmed — heading to print',
@@ -105,6 +165,124 @@
       }).join('');
     } catch (err) {
       area.innerHTML = '<p class="muted">Could not load orders: ' + err.message + '</p>';
+    }
+
+    // ── custom artwork requests ──
+    const designLabel = {
+      paid: 'Paid — in the artwork queue',
+      review_underpaid: 'Under review',
+      preview_sent: 'Preview sent — awaiting your approval',
+      approved: 'Approved — heading to print',
+      complete: 'Complete',
+      new: 'Received'
+    };
+    const designSteps = ['Received', 'Paid', 'Preview', 'Approved', 'Complete'];
+    const designStepIdx = { new: 0, received: 0, paid: 1, review_underpaid: 1, preview_sent: 2, approved: 3, complete: 4 };
+    const dArea = document.getElementById('design-area');
+    try {
+      const subs = await CK.auth.designSubmissions();
+      if (!subs.length) {
+        dArea.innerHTML = '<div class="ck-empty"><span class="pw">🎨</span><p>No custom artwork yet — turn your dog into a one-off, hand-finished piece.</p><a class="btn-gold" href="submit-design.html">Create your dog\'s artwork</a></div>';
+      } else {
+        dArea.innerHTML = subs.map(s => {
+          const when = new Date(s.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+          const dog = s.dog_name ? esc(s.dog_name) : 'Your dog';
+          const amt = s.amount_paid != null ? CK.gbp(parseFloat(s.amount_paid)) : '—';
+          const state = designLabel[s.status] || s.status || 'Received';
+          const si = designStepIdx[s.status] != null ? designStepIdx[s.status] : 0;
+          const track = `<div class="ck-track">${designSteps.map((st, i) => `<div class="ck-step ${i <= si ? 'done' : ''}${i === si ? ' now' : ''}"><div class="dot"></div>${st}</div>`).join('')}</div>`;
+          return `<div class="row" style="display:block;border-bottom:1px solid rgba(0,0,0,.08);padding:12px 0">
+            <div style="display:flex;justify-content:space-between"><strong>${dog}</strong><span>${amt}</span></div>
+            <div class="muted" style="margin-bottom:10px">${when} · ${esc(state)}</div>
+            ${track}
+          </div>`;
+        }).join('');
+      }
+    } catch (err) {
+      dArea.innerHTML = '<p class="muted">Could not load your custom artwork requests: ' + esc(err.message) + '</p>';
+    }
+
+    // ── creator design submissions ──
+    const creatorLabel = {
+      submitted: 'In review',
+      approved: 'Approved 🎉',
+      published: 'Published — earning eligible',
+      declined: 'Not selected this time'
+    };
+    // Kennel Rank tiers, by number of accepted (approved + published) designs.
+    const RANKS = [
+      { min: 8, badge: '👑', name: 'Hall of Fame' },
+      { min: 5, badge: '🏆', name: 'Best in Show' },
+      { min: 3, badge: '🏅', name: 'Pack Leader' },
+      { min: 2, badge: '⭐', name: 'Top Dog' },
+      { min: 1, badge: '🦴', name: 'Good Boy' },
+      { min: 0, badge: '🐾', name: 'New Pup' }
+    ];
+    const cArea = document.getElementById('creator-area');
+    try {
+      const subs = await CK.auth.creatorSubmissions();
+      if (!subs.length) {
+        cArea.innerHTML = '<div class="ck-empty"><span class="pw">🐾</span><p>Your kennel\'s empty — submit your first design to start earning your Creator rank.</p><a class="btn-gold" href="creators.html">Submit a design</a></div>';
+      } else {
+        const cnt = st => subs.filter(x => x.status === st).length;
+        const inReview = cnt('submitted');
+        const published = cnt('published');
+        const accepted = cnt('approved') + published;
+        const rank = RANKS.find(r => accepted >= r.min);
+        const next = [...RANKS].sort((a, b) => a.min - b.min).find(r => r.min > accepted);
+        const nx = next ? `${next.min - accepted} more accepted to reach ${next.name} ${next.badge}` : 'Top rank reached — Hall of Fame 🎉';
+        const earnings = 0;            // earnings pipeline not live yet — shown as "coming soon"
+        const target = 50;
+        const pct = Math.min(100, Math.round(earnings / target * 100));
+
+        const ach = [
+          { on: subs.length >= 1, icon: '🎨', label: 'First Submission', hint: 'submit your first design' },
+          { on: accepted >= 1,    icon: '✅', label: 'First Approval', hint: 'get a design approved' },
+          { on: published >= 1,   icon: '🛍️', label: 'Went Live', hint: 'get a design published' },
+          { on: subs.length >= 5, icon: '📚', label: 'Prolific (5+)', hint: `submit ${Math.max(0, 5 - subs.length)} more` },
+          { on: accepted >= 5,    icon: '🏆', label: 'Pack of Five', hint: `get ${Math.max(0, 5 - accepted)} more accepted` }
+        ];
+        const earned = ach.filter(a => a.on).length;
+        const nextAch = ach.find(a => !a.on);
+        const nudge = nextAch
+          ? `<div class="ck-nudge">Next up: ${nextAch.icon} <b>${esc(nextAch.label)}</b> — ${esc(nextAch.hint)}.</div>`
+          : `<div class="ck-nudge">🎉 Every achievement unlocked — top of the pack!</div>`;
+
+        const list = subs.map(s => {
+          const when = new Date(s.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+          const state = creatorLabel[s.status] || s.status || 'Submitted';
+          return `<div class="row" style="display:block;border-bottom:1px solid rgba(0,0,0,.08);padding:12px 0">
+            <div style="display:flex;justify-content:space-between"><strong>${esc(s.title || 'Untitled design')}</strong><span class="muted">${esc(state)}</span></div>
+            <div class="muted">${when}</div>
+          </div>`;
+        }).join('');
+
+        cArea.innerHTML = `
+          <div class="ck-creator-hero">
+            <div class="ck-rank">
+              <span class="ck-medal">${rank.badge}</span>
+              <div><div class="s">Kennel Rank</div><div class="t">${rank.name}</div><div class="nx">${esc(nx)}</div></div>
+            </div>
+            <div class="ck-jar">
+              <div class="lab"><span>🦴 Treat Jar <span class="ck-soon">Coming soon</span></span><span>${CK.gbp(earnings)} / ${CK.gbp(target)}</span></div>
+              <div class="ck-bar"><span style="width:${pct}%"></span></div>
+              <div class="ck-note">Earnings tracking launches soon — your treats fill up here as your designs sell, and payouts are made once you reach ${CK.gbp(target)}.</div>
+            </div>
+          </div>
+          <div class="ck-stats">
+            <div class="ck-stat"><div class="ic">⏳</div><b>${inReview}</b><span>In review</span></div>
+            <div class="ck-stat"><div class="ic">✅</div><b>${accepted}</b><span>Accepted</span></div>
+            <div class="ck-stat"><div class="ic">🛍️</div><b>${published}</b><span>Live</span></div>
+          </div>
+          <div class="ck-ach-wrap">
+            <div class="ck-ach-head"><span>🏅 Achievements</span><span class="cnt">${earned}/${ach.length} unlocked</span></div>
+            <div class="ck-ach">${ach.map(a => `<span class="ck-chip ${a.on ? 'on' : 'off'}">${a.icon} ${esc(a.label)}</span>`).join('')}</div>
+            ${nudge}
+          </div>
+          <div>${list}</div>`;
+      }
+    } catch (err) {
+      cArea.innerHTML = '<p class="muted">Could not load your design submissions: ' + esc(err.message) + '</p>';
     }
   })();
 

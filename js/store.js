@@ -157,7 +157,19 @@ const CK = (() => {
     bar.querySelector('.ck-cookie-ok').onclick = () => { try { localStorage.setItem('ck-cookie-ok', '1'); } catch (_) {} bar.remove(); };
   }
 
+  /* favicon / manifest / theme-color — injected once per page (added only if absent). */
+  function headIcons() {
+    const head = document.head;
+    if (!head) return;
+    const add = (sel, html) => { if (!document.querySelector(sel)) head.insertAdjacentHTML('beforeend', html); };
+    add('link[rel="icon"]', '<link rel="icon" href="/favicon.svg" type="image/svg+xml">');
+    add('link[rel="apple-touch-icon"]', '<link rel="apple-touch-icon" href="/favicon.svg">');
+    add('link[rel="manifest"]', '<link rel="manifest" href="/site.webmanifest">');
+    add('meta[name="theme-color"]', '<meta name="theme-color" content="#16181f">');
+  }
+
   function mountChrome(active) {
+    headIcons();
     document.body.insertAdjacentHTML('afterbegin', header(active));
     document.body.insertAdjacentHTML('beforeend', footer());
     renderCount();

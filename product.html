@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product — Canine Keepsakes</title>
   <meta name="description" content="Choose your Canine Keepsakes product, dog design, colour and size with a real product mockup before checkout.">
+  <!-- B4: generic static cards; canonical, og:url and Product JSON-LD set per-product by JS below. -->
+  <link rel="canonical" href="https://caninekeepsakes.co.uk/index.html#collections">
+  <meta property="og:type" content="product">
+  <meta property="og:site_name" content="Canine Keepsakes">
+  <meta property="og:url" content="https://caninekeepsakes.co.uk/index.html#collections">
+  <meta property="og:title" content="Personalised Dog Product | Canine Keepsakes">
+  <meta property="og:description" content="Choose your Canine Keepsakes product, dog design, colour and size with a real product mockup before checkout.">
+  <meta property="og:image" content="https://caninekeepsakes.co.uk/images/og-default.jpg">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -101,13 +110,30 @@
   const mainImg = document.getElementById('main-img');
 
   function renderProductInfo() {
-    document.title = `${col.name} ${prod.name} — Canine Keepsakes`;
+    const _pTitle = (prod.seoTitle || '').trim() || `${col.name} ${prod.name} — Canine Keepsakes`;
+    document.title = _pTitle;
     elName.textContent = `${col.name} — ${prod.name}`;
     elDesc.textContent = prod.description;
     elPrice.textContent = CK.gbp(prod.retailPrice);
     elCrumbProd.textContent = prod.name;
     elGarment.textContent = (prod.productType || 'item').toLowerCase();
     document.getElementById('p-label').textContent = `— ${prod.shortName}`;
+    /* B4: per-product canonical, og:url/title + Product JSON-LD (catalog data is trusted) */
+    const url = `${location.origin}/product.html?c=${col.slug}&p=${prod.slug}&d=${design.id}`;
+    const set = (sel, val) => { if (!val) return; const m = document.querySelector(sel); if (m) m.setAttribute('content', val); };
+    const cl = document.querySelector('link[rel=canonical]'); if (cl) cl.href = url;
+    set('meta[property="og:url"]', url);
+    set('meta[property="og:title"]', (prod.ogTitle || '').trim() || _pTitle);
+    set('meta[property="og:description"]', (prod.ogDescription || '').trim() || (prod.seoDescription || '').trim());
+    set('meta[name="description"]', (prod.seoDescription || '').trim());
+    const ld = { '@context':'https://schema.org','@type':'Product',
+      name: `${col.name} — ${prod.name}`, description: prod.description,
+      image: location.origin + (design.thumb || ''),
+      brand: { '@type':'Brand', name:'Canine Keepsakes' },
+      offers: { '@type':'Offer', price: Number(prod.retailPrice).toFixed(2), priceCurrency:'GBP', availability:'https://schema.org/InStock', url } };
+    let s = document.getElementById('ld-product');
+    if (!s) { s = document.createElement('script'); s.type = 'application/ld+json'; s.id = 'ld-product'; document.head.appendChild(s); }
+    s.textContent = JSON.stringify(ld);
   }
 
   let mockReqId = 0;
@@ -248,7 +274,7 @@
 
   /* ── qty + add ── */
   document.getElementById('qty-minus').onclick = () => { qty = Math.max(1, qty - 1); document.getElementById('qty-val').textContent = qty; };
-  document.getElementById('qty-plus').onclick = () => { qty++; document.getElementById('qty-val').textContent = qty; };
+  document.getElementById('qty-plus').onclick = () => { qty = Math.min(99, qty + 1); document.getElementById('qty-val').textContent = qty; };
 
   const btn = document.getElementById('btn-add');
   btn.onclick = () => {

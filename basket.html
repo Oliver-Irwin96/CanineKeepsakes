@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
   <title>Your Basket — Canine Keepsakes</title>
   <meta name="description" content="Review your Canine Keepsakes basket before secure checkout.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,6 +26,7 @@
   CK.mountChrome();
   const area = document.getElementById('basket-area');
   const box = document.getElementById('summary-box');
+  const esc = s => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
 
   function render() {
     const b = CK.getBasket();
@@ -45,11 +47,11 @@
       row.appendChild(thumb);
       row.insertAdjacentHTML('beforeend', `
         <div>
-          <div class="bi-name">${item.collectionName} — ${item.productName}</div>
-          <div class="bi-meta">${item.designLabel} · ${item.colour} · ${item.size} · qty ${item.qty}</div>
+          <div class="bi-name">${esc(item.collectionName)} — ${esc(item.productName)}</div>
+          <div class="bi-meta">${esc(item.designLabel)} · ${esc(item.colour)} · ${esc(item.size)} · qty ${esc(item.qty)}</div>
           <button class="rm" data-i="${i}">Remove</button>
         </div>
-        <div class="bi-price">${CK.gbp(item.price * item.qty)}</div>`);
+        <div class="bi-price">${CK.gbp((parseFloat(item.price) || 0) * (parseInt(item.qty) || 1))}</div>`);
       list.appendChild(row);
     });
     list.querySelectorAll('.rm').forEach(btn => btn.onclick = () => { CK.removeFromBasket(+btn.dataset.i); render(); });

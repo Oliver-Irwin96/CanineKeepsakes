@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Design for Canine Keepsakes | Become a Creator</title>
   <meta name="description" content="Submit an original dog-themed design. If approved, we adapt it across our breed range, publish it as a collection and pay you a share of sales.">
+  <link rel="canonical" href="https://caninekeepsakes.co.uk/creators.html">
+  <!-- B4 social cards — PLACEHOLDER copy; ChatGPT to refine. og:image asset TODO. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Canine Keepsakes">
+  <meta property="og:url" content="https://caninekeepsakes.co.uk/creators.html">
+  <meta property="og:title" content="Submit Your Design To Canine Keepsakes">
+  <meta property="og:description" content="Got a great dog-themed design? Submit it for review and earn money when your artwork joins the Canine Keepsakes collection.">
+  <meta property="og:image" content="https://caninekeepsakes.co.uk/images/og-default.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Design For Canine Keepsakes">
+  <meta name="twitter:description" content="Submit original dog-themed artwork for review and earn from successful designs.">
+  <meta name="twitter:image" content="https://caninekeepsakes.co.uk/images/og-default.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -184,6 +196,11 @@
     if (!form.name.value.trim() || !/\S+@\S+\.\S+/.test(form.email.value) || !form.title.value.trim()) { showMsg('Please fill in your name, a valid email and a design title.', false); return; }
     if (!artFile) { showMsg('Please upload your artwork before submitting.', false); return; }
     if (!$('agree').checked) { showMsg('Please confirm the originality agreement to submit.', false); return; }
+    /* Login required: submissions are tied to the creator's account so they can
+       track status and earnings in their dashboard (and so a row can't be
+       attributed to anyone else). */
+    const usr = await CK.auth.user().catch(()=>null);
+    if (!usr) { showMsg('Please sign in to submit a design — submissions are saved to your account so you can track them. Taking you to sign in…', false); setTimeout(()=>{ location.href='login.html?redirect=creators.html'; }, 1400); return; }
     const btn = $('submit-btn'); btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Submitting…';
     try {
       const c = await CK.auth.init();
@@ -193,12 +210,17 @@
       if (up.error) throw up.error;
       const fd = new FormData(form);
       const ins = await c.from('creator_submissions').insert({
+        user_id: usr.id,
         name: fd.get('name'), email: fd.get('email'), payout_email: fd.get('payout_email') || null,
         socials: fd.get('socials') || null, title: fd.get('title'), description: fd.get('description') || null,
         notes: fd.get('notes') || null, file_path: path, status: 'submitted'
       });
       if (ins.error) throw ins.error;
-      try { fetch('/api/notify', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type:'creator', email: fd.get('email'), name: fd.get('name'), title: fd.get('title') }) }); } catch(_) {}
+      try {
+        const tok = await CK.auth.token().catch(()=>null);
+        const h = { 'Content-Type':'application/json' }; if (tok) h.Authorization = 'Bearer ' + tok;
+        fetch('/api/notify', { method:'POST', headers:h, body: JSON.stringify({ type:'creator', name: fd.get('name'), title: fd.get('title') }) });
+      } catch(_) {}
       form.style.display = 'none';
       showMsg('Thanks! Your design has been submitted for review. We\'ll be in touch by email if it\'s a fit. 🐾', true);
     } catch (err) {
