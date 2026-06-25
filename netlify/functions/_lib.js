@@ -455,8 +455,9 @@ function rateLimit(event, max = 30, windowMs = 60000) {
    with a client-supplied URL; restrict it to trusted hosts so a logged-in
    attacker can't make Printful fetch/print an arbitrary URL.
 --------------------------------------------------------------------------- */
-const PRINT_FILE_HOSTS = (process.env.PRINT_FILE_ALLOWED_HOSTS ||
+const PRINT_FILE_HOSTS = ((process.env.PRINT_FILE_ALLOWED_HOSTS ||
   'drive.google.com,drive.usercontent.google.com,lh3.googleusercontent.com,caninekeepsakes.co.uk,www.caninekeepsakes.co.uk')
+  + ',pub-11ab8f6c9a06485f86caac1425c43b27.r2.dev')   // R2 print-file host (always allowed, even if env override is set)
   .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 
 function isAllowedPrintFile(url) {

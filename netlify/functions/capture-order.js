@@ -5,7 +5,7 @@
    3. Reconciles paid amount vs a fresh server price (H2)
    4. Records the order in Supabase (incl. manual-review cases - H2 logging home)
    5. Creates a Printful order as DRAFT (confirm: false) - manual confirm at launch
-   Print files must be at public URLs at order time (Drive direct-download links for now). */
+   Print files must be at public URLs at order time (now hosted on Cloudflare R2). */
 const {
   PF_BASE, pfHeaders, paypalBase, paypalToken, priceBasket, authoritativeShipping,
   verifyUser, findOrderByPaypalId, recordOrder, json,
