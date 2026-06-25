@@ -2,6 +2,11 @@
   publish = "."
   functions = "netlify/functions"
 
+# Secret-scan false positive: PAYPAL_ENV's value ("live"/"sandbox") is a mode flag,
+# not a secret, but the scanner matches the word in built files. Exclude that one key.
+[build.environment]
+  SECRETS_SCAN_OMIT_KEYS = "PAYPAL_ENV"
+
 # --- Security headers (safe defaults; no CSP to avoid breaking inline scripts /
 #     fonts / esm.sh / PayPal / Supabase). Applied to every response. ---
 [[headers]]
