@@ -152,8 +152,10 @@
     const area = document.getElementById('orders-area');
     try {
       const orders = await CK.auth.orders();
-      if (!orders.length) { area.innerHTML = '<p class="muted">No orders yet. When you place an order, it will appear here.</p><a class="btn-gold" style="display:inline-block;margin-top:10px" href="index.html#collections">Explore Collections</a>'; return; }
-      area.innerHTML = orders.map(o => {
+      if (!orders.length) {
+        area.innerHTML = '<p class="muted">No orders yet. When you place an order, it will appear here.</p><a class="btn-gold" style="display:inline-block;margin-top:10px" href="index.html#collections">Explore Collections</a>';
+      } else {
+        area.innerHTML = orders.map(o => {
         const when = new Date(o.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
         const n = Array.isArray(o.items) ? o.items.reduce((s,i)=>s+(parseInt(i.qty)||1),0) : 0;
         const paid = o.paid_amount != null ? CK.gbp(parseFloat(o.paid_amount)) : '—';
@@ -161,8 +163,9 @@
         return `<div class="row" style="display:block;border-bottom:1px solid rgba(0,0,0,.08);padding:12px 0">
           <div style="display:flex;justify-content:space-between"><strong>${when}</strong><span>${paid}</span></div>
           <div class="muted">${n} item${n===1?'':'s'} · ${state}</div>
-        </div>`;
-      }).join('');
+          </div>`;
+        }).join('');
+      }
     } catch (err) {
       area.innerHTML = '<p class="muted">Could not load orders: ' + err.message + '</p>';
     }
