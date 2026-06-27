@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin Console | Canine Keepsakes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .adm-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+    .adm-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0 20px}
+    .adm-stat{background:linear-gradient(180deg,#fbf7ef,#f1ebdd);border:1px solid rgba(0,0,0,.06);border-radius:14px;padding:14px 10px;text-align:center}
+    .adm-stat b{display:block;font-family:var(--font-display);font-size:1.7rem;line-height:1;margin-bottom:2px}
+    .adm-stat span{font-size:.62rem;color:#6b7280;text-transform:uppercase;letter-spacing:.07em}
+    .adm-tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:2px solid rgba(0,0,0,.08);margin-bottom:16px}
+    .adm-tabs button{border:0;background:transparent;font-family:var(--font-body,inherit);font-size:.92rem;font-weight:600;color:#6b7280;padding:10px 14px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+    .adm-tabs button.on{color:#16181f;border-bottom-color:#d2922f}
+    .adm-tabs .badge{display:inline-block;min-width:18px;font-size:.66rem;background:#d2922f;color:#fff;border-radius:999px;padding:1px 6px;margin-left:4px}
+    .card{background:#fff;border:1px solid rgba(0,0,0,.09);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 8px 18px -16px rgba(0,0,0,.5)}
+    .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+    .card h4{font-family:var(--font-display);margin:0 0 2px;font-size:1.05rem}
+    .pill{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;border-radius:999px;padding:3px 10px;white-space:nowrap}
+    .pill.pending{background:#fef3df;color:#a86f1d;border:1px solid #e6c485}
+    .pill.approved{background:#e7f3ea;color:#2f7d49;border:1px solid #aacdb5}
+    .pill.rejected{background:#fbe9e6;color:#b34a32;border:1px solid #e2b6ab}
+    .pill.changes{background:#eef0fb;color:#4a52a8;border:1px solid #b9bfe6}
+    .adm-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+    .adm-actions button{border:0;border-radius:9px;padding:8px 13px;font-weight:600;font-size:.82rem;cursor:pointer}
+    .b-approve{background:#2f7d49;color:#fff}.b-reject{background:#b34a32;color:#fff}.b-changes{background:#4a52a8;color:#fff}
+    .b-view{background:#23263a;color:#fff}.b-save{background:#d2922f;color:#fff}.b-dl{background:#6e7f5c;color:#fff}
+    .adm-actions input,.adm-actions select,.card textarea{font-family:inherit;font-size:.85rem;border:1px solid rgba(0,0,0,.2);border-radius:8px;padding:8px}
+    .card textarea{width:100%;margin-top:10px;min-height:46px;resize:vertical}
+    .meta{color:#6b7280;font-size:.82rem}
+    table.adm{width:100%;border-collapse:collapse;font-size:.86rem}
+    table.adm th,table.adm td{text-align:left;padding:9px 8px;border-bottom:1px solid rgba(0,0,0,.08)}
+    table.adm th{font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:#6b7280}
+    .ana-link{display:inline-block;margin-top:10px;color:#a86f1d;font-weight:600}
+    #ana-range button{border:1px solid rgba(0,0,0,.2);background:#fff;border-radius:8px;padding:5px 10px;margin-left:6px;cursor:pointer;font-size:.8rem}#ana-range button.on{background:#16181f;color:#fff;border-color:#16181f}
+    @media(max-width:620px){.adm-stats{grid-template-columns:repeat(2,1fr)}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="adm-head">
+    <h1 class="page-title" style="margin-bottom:0">Admin Console</h1>
+    <div><span id="me" class="muted"></span> <button id="signout" class="btn-add" style="background:transparent;border:1px solid currentColor">Sign out</button></div>
+  </div>
+  <div id="gate" class="muted">Checking access…</div>
+
+  <div id="app" style="display:none">
+    <div class="adm-stats" id="stats"></div>
+    <div class="adm-tabs">
+      <button data-tab="subs" class="on">Submissions <span class="badge" id="b-subs">0</span></button>
+      <button data-tab="reqs">Custom requests <span class="badge" id="b-reqs">0</span></button>
+      <button data-tab="orders">Orders</button>
+      <button data-tab="analytics">Analytics</button>
+    </div>
+    <div id="panel-subs" class="panel"></div>
+    <div id="panel-reqs" class="panel" hidden></div>
+    <div id="panel-orders" class="panel" hidden></div>
+    <div id="panel-analytics" class="panel" hidden></div>
+  </div>
+</div>
+
+<script src="js/store.js?v=6"></script>
+<script src="js/auth.js?v=2"></script>
+<script>
+(() => {
+  CK.mountChrome();
+  const $ = s => document.querySelector(s);
+  const esc = s => String(s == null ? '' : s).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+  const when = d => d ? new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : '';
+  const money = n => (n==null?'—':CK.gbp(parseFloat(n)));
+  let TOKEN = null, DATA = null;
+
+  const api = async (path, opts={}) => {
+    const r = await fetch(path, { ...opts, headers: { 'Content-Type':'application/json', Authorization:`Bearer ${TOKEN}`, ...(opts.headers||{}) } });
+    const j = await r.json().catch(()=>({}));
+    if (!r.ok) throw new Error(j.error || ('HTTP '+r.status));
+    return j;
+  };
+
+  const subPill = s => {
+    const k = String(s||'submitted').toLowerCase();
+    if (k==='approved'||k==='published') return '<span class="pill approved">'+esc(k)+'</span>';
+    if (k==='rejected'||k==='declined') return '<span class="pill rejected">'+esc(k)+'</span>';
+    if (k==='changes_requested') return '<span class="pill changes">changes requested</span>';
+    return '<span class="pill pending">in review</span>';
+  };
+
+  async function viewArt(bucket, path, btn){
+    if (!path) { alert('No file attached to this entry.'); return; }
+    btn.disabled = true; const t = btn.textContent; btn.textContent = 'Opening…';
+    try { const r = await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'sign',bucket,path})}); window.open(r.url,'_blank','noopener'); }
+    catch(e){ alert('Could not open artwork: '+e.message); }
+    finally { btn.disabled=false; btn.textContent=t; }
+  }
+
+  async function dlFile(bucket, path, name, btn){
+    if(!path){ alert('No file attached to this entry.'); return; }
+    btn.disabled=true; const t=btn.textContent; btn.textContent='Downloading…';
+    try{
+      const r=await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'sign',bucket,path})});
+      const resp=await fetch(r.url); if(!resp.ok) throw new Error('fetch '+resp.status);
+      const blob=await resp.blob(); const u=URL.createObjectURL(blob);
+      const a=document.createElement('a'); a.href=u; a.download=name||(String(path).split('/').pop()||'file');
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),5000);
+    }catch(e){
+      try{ const r2=await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'sign',bucket,path})}); window.open(r2.url,'_blank','noopener'); }catch(_){}
+      alert('If the download did not start, the file opened in a new tab.');
+    }finally{ btn.disabled=false; btn.textContent=t; }
+  }
+
+  function renderSubs(){
+    const subs = DATA.submissions||[];
+    $('#b-subs').textContent = subs.filter(s=>!['approved','rejected','published','declined'].includes(String(s.status||'').toLowerCase())).length;
+    $('#panel-subs').innerHTML = subs.length ? subs.map(s=>`
+      <div class="card" data-id="${esc(s.id)}">
+        <div class="top">
+          <div><h4>${esc(s.title||'Untitled design')}</h4>
+            <div class="meta">${esc(s.name||'—')} · ${esc(s.email||'')} · ${when(s.created_at)}</div></div>
+          ${subPill(s.status)}
+        </div>
+        ${s.description?`<div class="meta" style="margin-top:8px">${esc(s.description)}</div>`:''}
+        ${s.reviewed_by?`<div class="meta" style="margin-top:6px">Last reviewed by ${esc(s.reviewed_by)} · ${when(s.reviewed_at)}</div>`:''}
+        <textarea placeholder="Review notes (optional, saved with your decision)">${esc(s.review_notes||'')}</textarea>
+        <div class="adm-actions">
+          <button class="b-view" data-act="view" data-bucket="creator-submissions" data-path="${esc(s.file_path||'')}">View artwork</button>
+          <button class="b-dl" data-act="download" data-bucket="creator-submissions" data-path="${esc(s.file_path||'')}" data-name="${esc((s.title||'artwork').replace(/[^a-z0-9]+/gi,'-'))}-${esc(s.id||'')}.${(String(s.file_path||'').split('.').pop()||'png')}">Download</button>
+          <button class="b-approve" data-act="approve">Approve</button>
+          <button class="b-changes" data-act="changes">Request changes</button>
+          <button class="b-reject" data-act="reject">Reject</button>
+        </div>
+      </div>`).join('') : '<p class="muted">No submissions yet.</p>';
+  }
+
+  function renderReqs(){
+    const reqs = DATA.requests||[];
+    $('#b-reqs').textContent = reqs.filter(r=>String(r.fulfilment_status||'new')!=='done').length;
+    const opts = ['new','in_progress','proof_sent','done'];
+    $('#panel-reqs').innerHTML = reqs.length ? reqs.map(r=>`
+      <div class="card" data-id="${esc(r.id)}">
+        <div class="top">
+          <div><h4>${esc(r.dog_name||'Custom artwork')}</h4>
+            <div class="meta">${esc(r.name||'—')} · ${esc(r.email||'')} · ${when(r.created_at)} · ${money(r.amount_paid)}</div></div>
+          <span class="pill pending">${esc(r.fulfilment_status||'new')}</span>
+        </div>
+        ${r.notes?`<div class="meta" style="margin-top:8px">“${esc(r.notes)}”</div>`:''}
+        <div class="adm-actions">
+          <button class="b-view" data-act="view" data-bucket="design-submissions" data-path="${esc(r.photo_path||'')}">View photo</button>
+          <button class="b-dl" data-act="download" data-bucket="design-submissions" data-path="${esc(r.photo_path||'')}" data-name="${esc((r.dog_name||'photo').replace(/[^a-z0-9]+/gi,'-'))}-${esc(r.id||'')}.${(String(r.photo_path||'').split('.').pop()||'jpg')}">Download</button>
+          <label class="meta">Status
+            <select data-fld="status">${opts.map(o=>`<option value="${o}"${(r.fulfilment_status||'new')===o?' selected':''}>${o.replace('_',' ')}</option>`).join('')}</select>
+          </label>
+          <input data-fld="assigned" placeholder="Assign to…" value="${esc(r.assigned_to||'')}" style="width:130px">
+          <button class="b-save" data-act="savereq">Save</button>
+        </div>
+      </div>`).join('') : '<p class="muted">No custom requests yet.</p>';
+  }
+
+  function renderOrders(){
+    const o = DATA.orders||[];
+    $('#panel-orders').innerHTML = o.length ? `<table class="adm"><thead><tr><th>Date</th><th>Email</th><th>Status</th><th>Paid</th></tr></thead><tbody>`+
+      o.map(x=>`<tr><td>${when(x.created_at)}</td><td>${esc(x.email||x.customer_email||'—')}</td><td>${esc(x.fulfilment_status||x.status||'—')}</td><td>${money(x.paid_amount!=null?x.paid_amount:x.amount)}</td></tr>`).join('')+
+      `</tbody></table>` : '<p class="muted">No orders yet.</p>';
+  }
+
+  function renderAnalytics(){
+    const c = DATA.counts||{};
+    $('#panel-analytics').innerHTML = `
+      <div class="adm-stats" style="margin-top:0">
+        <div class="adm-stat"><b>${c.pendingSubmissions||0}</b><span>Pending approvals</span></div>
+        <div class="adm-stat"><b>${c.submissionsThisWeek||0}</b><span>Submissions / 7d</span></div>
+        <div class="adm-stat"><b>${c.ordersThisWeek||0}</b><span>Orders / 7d</span></div>
+        <div class="adm-stat"><b>${money(c.salesThisWeek||0)}</b><span>Sales / 7d</span></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:6px 0 12px">
+        <h4 style="font-family:var(--font-display);margin:0">Website traffic</h4>
+        <div id="ana-range"><button data-r="7" class="on">7 days</button><button data-r="30">30 days</button></div>
+      </div>
+      <div id="ana-cf"><p class="muted">Loading traffic…</p></div>`;
+    const rb=$('#ana-range');
+    if(rb) rb.addEventListener('click',e=>{const b=e.target.closest('button[data-r]');if(!b)return;rb.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));loadAnalytics(+b.dataset.r);});
+    loadAnalytics(7);
+  }
+
+  async function loadAnalytics(range){
+    const box=$('#ana-cf'); if(!box) return; box.innerHTML='<p class="muted">Loading traffic…</p>';
+    let a; try{ a=await api('/api/admin-analytics?range='+range); }
+    catch(e){ box.innerHTML='<p class="muted">Could not load traffic: '+esc(e.message)+'</p>'; return; }
+    if(a && a.configured===false){ box.innerHTML='<div class="card"><h4>Traffic not connected yet</h4><p class="meta">Add the Cloudflare analytics token (owner setup) to switch this on — staff will then see live traffic here with only their CK login.</p></div>'; return; }
+    const max=Math.max(1,...(a.series||[]).map(d=>d.pageViews||0));
+    const bars=(a.series||[]).map(d=>`<div title="${esc(d.date)}: ${d.pageViews} views" style="flex:1;display:flex;align-items:flex-end"><div style="width:100%;height:${Math.round((d.pageViews||0)/max*90)}px;background:#d2922f;border-radius:3px 3px 0 0;min-height:2px"></div></div>`).join('');
+    const rows=arr=>arr&&arr.length?arr.map(p=>`<tr><td>${esc(p.label||'—')}</td><td style="text-align:right">${Number(p.count).toLocaleString()}</td></tr>`).join(''):'<tr><td class="muted">No data yet</td><td></td></tr>';
+    box.innerHTML=`
+      <div class="adm-stats" style="margin-top:0;grid-template-columns:repeat(2,1fr);max-width:340px">
+        <div class="adm-stat"><b>${Number(a.totals&&a.totals.pageViews||0).toLocaleString()}</b><span>Page views</span></div>
+        <div class="adm-stat"><b>${Number(a.totals&&a.totals.visits||0).toLocaleString()}</b><span>Visits</span></div>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:3px;height:96px;margin:4px 0 18px">${bars}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div><div class="meta" style="margin-bottom:6px">Top pages</div><table class="adm"><tbody>${rows((a.topPages||[]).map(p=>({label:p.path,count:p.count})))}</tbody></table></div>
+        <div><div class="meta" style="margin-bottom:6px">Top countries</div><table class="adm"><tbody>${rows((a.topCountries||[]).map(p=>({label:p.country,count:p.count})))}</tbody></table></div>
+      </div>`;
+  }
+
+  function renderStats(){
+    const c = DATA.counts||{};
+    $('#stats').innerHTML = `
+      <div class="adm-stat"><b>${c.pendingSubmissions||0}</b><span>Pending approvals</span></div>
+      <div class="adm-stat"><b>${c.openRequests||0}</b><span>Open requests</span></div>
+      <div class="adm-stat"><b>${c.ordersThisWeek||0}</b><span>Orders / 7d</span></div>
+      <div class="adm-stat"><b>${money(c.salesThisWeek||0)}</b><span>Sales / 7d</span></div>`;
+  }
+
+  function renderAll(){ renderStats(); renderSubs(); renderReqs(); renderOrders(); renderAnalytics(); }
+
+  async function refresh(){ DATA = await api('/api/admin-list'); renderAll(); }
+
+  // tab switching
+  document.querySelector('.adm-tabs').addEventListener('click', e => {
+    const b = e.target.closest('button[data-tab]'); if(!b) return;
+    document.querySelectorAll('.adm-tabs button').forEach(x=>x.classList.toggle('on', x===b));
+    ['subs','reqs','orders','analytics'].forEach(t=>$('#panel-'+t).hidden = (t!==b.dataset.tab));
+  });
+
+  // delegated actions
+  $('#app').addEventListener('click', async e => {
+    const btn = e.target.closest('button[data-act]'); if(!btn) return;
+    const card = btn.closest('.card'); const id = card && card.dataset.id; const act = btn.dataset.act;
+    try {
+      if (act==='view') return viewArt(btn.dataset.bucket, btn.dataset.path, btn);
+      if (act==='download') return dlFile(btn.dataset.bucket, btn.dataset.path, btn.dataset.name, btn);
+      if (act==='approve'||act==='reject'||act==='changes'){
+        const notes = card.querySelector('textarea').value;
+        btn.disabled=true;
+        await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'submission',id,action:act,notes})});
+        await refresh();
+      }
+      if (act==='savereq'){
+        const status = card.querySelector('[data-fld=status]').value;
+        const assigned_to = card.querySelector('[data-fld=assigned]').value;
+        btn.disabled=true;
+        await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'request',id,status,assigned_to})});
+        await refresh();
+      }
+    } catch(err){ alert('Action failed: '+err.message); btn.disabled=false; }
+  });
+
+  $('#signout').onclick = async () => { try{await CK.auth.signOut();}catch(_){} location.href='index.html'; };
+
+  function renderNoAccess(email){
+    const sid='CK-'+Math.random().toString(16).slice(2,9).toUpperCase();
+    const dt=new Date(), hh=String(dt.getUTCHours()).padStart(2,'0'), mm=String(dt.getUTCMinutes()).padStart(2,'0');
+    const mono="ui-monospace,Menlo,Consolas,monospace";
+    const g=$('#gate'); g.style.display='block';
+    g.innerHTML=`
+    <div style="max-width:560px;margin:18px auto;background:#121319;border:1px solid #2a2d3a;border-radius:14px;position:relative;overflow:hidden;color:#eef1f6">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(#ffffff0a 1px,transparent 1px),linear-gradient(90deg,#ffffff0a 1px,transparent 1px);background-size:26px 26px;pointer-events:none"></div>
+      <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,#0000,#0000 2px,#00000026 3px);pointer-events:none;opacity:.5"></div>
+      <div style="position:absolute;top:18px;right:-50px;transform:rotate(38deg);background:#c0573b;color:#fff;font-family:${mono};font-size:12px;letter-spacing:.24em;padding:6px 64px;border:1px solid #e0795f;z-index:3">RESTRICTED</div>
+      <div style="position:relative;padding:34px 30px 28px;text-align:center;z-index:2">
+        <div id="k9boot" style="font-family:${mono};font-size:12.5px;text-align:left;color:#aeb6c4;min-height:188px;line-height:1.9"></div>
+        <div id="k9card" style="opacity:0;transition:opacity .6s ease;display:none">
+          <div style="width:90px;height:90px;border-radius:50%;border:3px solid #d2922f;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 14px">
+            <span style="font-family:var(--font-display),Georgia,serif;font-size:1.3rem;color:#ecc06a;line-height:1">CK</span>
+            <span style="font-family:${mono};font-size:10px;letter-spacing:.18em;color:#d2922f;margin-top:2px">K-9</span>
+          </div>
+          <div style="font-family:${mono};font-size:10.5px;letter-spacing:.34em;color:#8b93a3;margin-bottom:7px">CANINE&nbsp;KEEPSAKES&nbsp;&middot;&nbsp;SECURITY&nbsp;DIVISION</div>
+          <div style="font-family:var(--font-display),Georgia,serif;font-size:2rem;font-weight:600;margin-bottom:14px">Access Denied</div>
+          <p style="color:#c2c7d2;font-size:.95rem;line-height:1.6;margin:0 auto 6px;max-width:410px">This area is reserved for authorised Canine Keepsakes personnel.</p>
+          <p style="color:#8b93a3;font-size:.85rem;line-height:1.6;margin:0 auto 18px;max-width:410px">If you reached this page by mistake, simply return to the public website.</p>
+          <div style="text-align:left;background:#0c0d12;border:1px solid #242836;border-radius:10px;padding:14px 16px;font-family:${mono};font-size:11.5px;color:#aab0bd;max-width:410px;margin:0 auto 20px">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1b1e29"><span style="color:#6b7280">ACCESS LEVEL</span><span>PUBLIC USER</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1b1e29"><span style="color:#6b7280">AUTHENTICATION</span><span style="color:#e89b85">FAILED</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1b1e29"><span style="color:#6b7280">SECURITY STATUS</span><span style="color:#e89b85">LOCKED</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1b1e29"><span style="color:#6b7280">SUBJECT</span><span>${esc(email)}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #1b1e29"><span style="color:#6b7280">LAST CHECK</span><span>${hh}:${mm} UTC</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0"><span style="color:#6b7280">SESSION ID</span><span>${sid}</span></div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+            <a href="index.html" style="background:linear-gradient(145deg,#d2922f,#a86f1d);color:#fff;border-radius:10px;padding:11px 20px;font-size:.9rem;font-weight:600;text-decoration:none">&larr; Return to Canine Keepsakes</a>
+            <a href="mailto:caninekeepsakes.admin@gmail.com?subject=Canine%20Keepsakes%20admin%20access%20request" style="background:transparent;border:1px solid #353a49;color:#c2c7d2;border-radius:10px;padding:11px 20px;font-size:.9rem;font-weight:600;text-decoration:none">Contact administrator</a>
+          </div>
+          <div style="font-family:${mono};font-size:10px;letter-spacing:.1em;color:#6b7280;margin-top:20px;line-height:1.7">Security event recorded. Only authorised Canine Keepsakes administrators may access this portal.<div style="color:#4a505e;margin-top:6px">treats have been confiscated.</div></div>
+        </div>
+      </div>
+    </div>`;
+    const boot=g.querySelector('#k9boot'), card=g.querySelector('#k9card');
+    const seq=[
+      {h:'CANINE KEEPSAKES — SECURITY DIVISION',c:'#ecc06a',d:60},
+      {t:'> initialising secure terminal…',d:360,bar:true},
+      {t:'> scanning credentials…',d:520,bar:true},
+      {t:'✓ identity verified',c:'#7fcf9e',d:340},
+      {t:'> checking clearance level…',d:540,bar:true},
+      {t:'✗ clearance: PUBLIC · required: ADMINISTRATOR',c:'#e89b85',d:420},
+      {t:'■ ACCESS DENIED',c:'#e0795f',big:true,d:480}
+    ];
+    let i=0;
+    const bar=cb=>{const w=document.createElement('div');w.style.cssText='height:7px;background:#1c2030;border-radius:3px;overflow:hidden;margin:5px 0 7px;max-width:260px';const fl=document.createElement('div');fl.style.cssText='height:100%;width:0;background:#d2922f;transition:width .42s linear';w.appendChild(fl);boot.appendChild(w);requestAnimationFrame(()=>fl.style.width='100%');setTimeout(cb,460);};
+    const step=()=>{
+      if(i>=seq.length){ setTimeout(()=>{ boot.style.display='none'; card.style.display='block'; requestAnimationFrame(()=>card.style.opacity='1'); },600); return; }
+      const o=seq[i++]; const el=document.createElement('div');
+      if(o.h){el.textContent=o.h;el.style.cssText='color:'+o.c+';letter-spacing:.18em;margin-bottom:8px';}
+      else if(o.big){el.textContent=o.t;el.style.cssText='color:'+o.c+';font-size:18px;letter-spacing:.14em;margin-top:6px;font-weight:700';}
+      else {el.textContent=o.t;el.style.color=o.c||'#aeb6c4';}
+      boot.appendChild(el);
+      if(o.bar) bar(()=>setTimeout(step,o.d)); else setTimeout(step,o.d);
+    };
+    setTimeout(step,200);
+  }
+
+  (async () => {
+    const session = await CK.auth.session().catch(()=>null);
+    if (!session) { location.href = 'login.html?redirect=admin.html'; return; }
+    $('#me').textContent = session.user.email;
+    TOKEN = await CK.auth.token().catch(()=>null);
+    try {
+      await refresh();
+      $('#gate').style.display='none';
+      $('#app').style.display='block';
+    } catch(err) {
+      if (/authoris|403/i.test(err.message)) renderNoAccess(session.user.email);
+      else $('#gate').innerHTML = '<p class="muted">Could not load the console: '+esc(err.message)+'</p>';
+    }
+  })();
+})();
+</script>
+</body>
+</html>

@@ -150,6 +150,17 @@
     const tag0 = mainImg.querySelector('.mockup-tag'); if (tag0) tag0.remove();
     const imageUrl = location.origin + design.thumb;
     mainImg.classList.add('mockup-loading');
+    /* 1) Instant path: pre-generated mockup on R2 (deterministic path). Use if present. */
+    const _slug = String(colour).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+    const _r2 = `https://pub-11ab8f6c9a06485f86caac1425c43b27.r2.dev/mockups/v1/${prod.catalogProductId}/${_slug}/${design.id}.jpg`;
+    const _hit = await new Promise(r => { const t = new Image(); t.onload = () => r(t); t.onerror = () => r(null); t.src = _r2; });
+    if (id !== mockReqId) return;
+    if (_hit) {
+      mainImg.classList.remove('mockup-loading'); mainImg.innerHTML = ''; mainImg.appendChild(_hit);
+      const tg = document.createElement('span'); tg.className = 'mockup-tag'; tg.textContent = 'Real product mockup'; mainImg.appendChild(tg);
+      return;
+    }
+    /* 2) Fall back to live Printful generation (self-heals + caches server-side). */
     try {
       for (let attempt = 0; attempt < 14; attempt++) {
         const res = await fetch('/api/mockup', {
