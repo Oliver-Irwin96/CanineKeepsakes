@@ -6,6 +6,8 @@ const { json, corsHeaders, isOriginAllowed, rateLimit, verifyUser } = require('.
 
 const SB_URL = process.env.SUPABASE_URL;
 const SB_SERVICE = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const splitList = v => String(v || '').toLowerCase().split(/[,\s]+/).filter(Boolean);
+function leadEmails(){ const e=splitList(process.env.LEAD_ADMIN_EMAILS||process.env.lead_admin_emails); if(e.length)return e; const a=splitList(process.env.ADMIN_EMAILS||process.env.admin_emails); return a.length?[a[0]]:[]; }
 const adminHeaders = () => ({ apikey: SB_SERVICE, Authorization: `Bearer ${SB_SERVICE}`, 'Content-Type': 'application/json' });
 
 async function requireAdmin(event) {
@@ -15,7 +17,7 @@ async function requireAdmin(event) {
   const allow = String(process.env.ADMIN_EMAILS || process.env.admin_emails || '').toLowerCase().split(/[,\s]+/).filter(Boolean);
   const email = String(u.email || '').toLowerCase();
   if (!email || !allow.includes(email)) return { ok: false, code: 403, error: 'Not authorised' };
-  return { ok: true, user: u, email };
+  return { ok: true, user: u, email, isLead: leadEmails().includes(email) };
 }
 
 async function sbGet(path) {
@@ -36,7 +38,7 @@ exports.handler = async (event) => {
   const gate = await requireAdmin(event);
   if (!gate.ok) return json(gate.code, { error: gate.error });
 
-  if ((event.queryStringParameters || {}).check) return json(200, { admin: true, me: gate.email });
+  if ((event.queryStringParameters || {}).check) return json(200, { admin: true, me: gate.email, isLead: gate.isLead });
 
   try {
     const [submissions, requests, orders] = await Promise.all([
@@ -53,7 +55,7 @@ exports.handler = async (event) => {
       ordersThisWeek: orders.filter(o => (o.created_at || '') >= wk).length,
       salesThisWeek: Math.round(orders.filter(o => (o.created_at || '') >= wk).reduce((t, o) => t + num(o), 0) * 100) / 100
     };
-    return json(200, { me: gate.email, counts, submissions, requests, orders });
+    return json(200, { me: gate.email, isLead: gate.isLead, counts, submissions, requests, orders });
   } catch (err) {
     return json(500, { error: err.message });
   }
