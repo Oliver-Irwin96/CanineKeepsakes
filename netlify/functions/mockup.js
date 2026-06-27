@@ -97,8 +97,13 @@ exports.handler = async (event) => {
       return json(200, { status: 'completed', url: row.mockup_url });
     }
 
-    // No task yet -> create one
-    if (!row || (!row.task_key && row.status !== 'completed')) {
+    /* Create a task when: no row, no task yet, it FAILED, or it has been stuck
+       'pending' for >2 min (e.g. a Printful task that expired/never completed).
+       This self-heals the "preview never loads again" bug instead of polling a
+       dead task_key forever. */
+    const stalePending = row && row.task_key && row.status !== 'completed'
+      && row.updated_at && (Date.now() - Date.parse(row.updated_at) > 120000);
+    if (!row || (!row.task_key && row.status !== 'completed') || row.status === 'failed' || stalePending) {
       const variantId = await resolveVariantId(catalogProductId, colour, size);
       const placement = await choosePlacement(catalogProductId);
       const cr = await fetch(`${PF_BASE}/mockup-generator/create-task/${catalogProductId}`, {
@@ -108,10 +113,9 @@ exports.handler = async (event) => {
       const cd = await cr.json();
       const taskKey = cd.result && cd.result.task_key;
       if (!taskKey) return json(502, { status: 'error', detail: (cd.result || cd.error || 'create-task failed') });
-      await cacheInsert({
-        cache_key: key, catalog_product_id: catalogProductId, colour, design_id: designId,
-        image_url: imageUrl, task_key: taskKey, status: 'pending'
-      });
+      const fields = { catalog_product_id: catalogProductId, colour, design_id: designId,
+        image_url: imageUrl, task_key: taskKey, status: 'pending' };
+      if (row) await cacheUpdate(key, fields); else await cacheInsert({ cache_key: key, ...fields });
       return json(200, { status: 'pending' });
     }
 
