@@ -2,10 +2,13 @@
   publish = "."
   functions = "netlify/functions"
 
-# Secret-scan false positive: PAYPAL_ENV's value ("live"/"sandbox") is a mode flag,
-# not a secret, but the scanner matches the word in built files. Exclude that one key.
+# Secret-scan false positives, excluded by key:
+#  - PAYPAL_ENV: value is a mode flag ("live"/"sandbox"), not a secret.
+#  - CF_WEB_ANALYTICS_SITE_TAG: Cloudflare Web Analytics beacon token; PUBLIC by
+#    design (it sits in js/store.js on every page). The real secret,
+#    CLOUDFLARE_API_TOKEN, is NOT omitted and never appears in any file.
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "PAYPAL_ENV"
+  SECRETS_SCAN_OMIT_KEYS = "PAYPAL_ENV,CF_WEB_ANALYTICS_SITE_TAG"
 
 # --- Security headers (safe defaults; no CSP to avoid breaking inline scripts /
 #     fonts / esm.sh / PayPal / Supabase). Applied to every response. ---
