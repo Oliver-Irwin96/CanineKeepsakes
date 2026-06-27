@@ -184,6 +184,8 @@ const CK = (() => {
     addEventListener('pointerup',function(){p.classList.remove('press');});
     document.addEventListener('mouseleave',function(){p.style.opacity=0;});
     document.addEventListener('mouseenter',function(){p.style.opacity=1;});
+    window.addEventListener('focus',function(){p.style.opacity=1;});
+    document.addEventListener('visibilitychange',function(){ if(!document.hidden) p.style.opacity=1; });
     (function loop(){cx+=(tx-cx)*0.25;cy+=(ty-cy)*0.25;p.style.transform='translate('+cx+'px,'+cy+'px) translate(-50%,-50%)';requestAnimationFrame(loop);})();
   }
 
