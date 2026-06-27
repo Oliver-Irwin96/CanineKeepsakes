@@ -29,7 +29,11 @@
     .adm-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
     .adm-actions button{border:0;border-radius:9px;padding:8px 13px;font-weight:600;font-size:.82rem;cursor:pointer}
     .b-approve{background:#2f7d49;color:#fff}.b-reject{background:#b34a32;color:#fff}.b-changes{background:#4a52a8;color:#fff}
-    .b-view{background:#23263a;color:#fff}.b-save{background:#d2922f;color:#fff}.b-dl{background:#6e7f5c;color:#fff}.b-mail{background:#4a4f63;color:#fff}.b-reopen{background:#6b7280;color:#fff}
+    .b-view{background:#23263a;color:#fff}.b-save{background:#d2922f;color:#fff}.b-dl{background:#6e7f5c;color:#fff}.b-mail{background:#4a4f63;color:#fff}.b-reopen{background:#6b7280;color:#fff}.b-decline{background:#b34a32;color:#fff}
+    .decide-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:10px}
+    .reason-sel{font-family:inherit;font-size:.85rem;border:1px solid rgba(0,0,0,.25);border-radius:8px;padding:8px;min-width:250px;background:#fff}
+    .resub{font-size:.82rem;color:#4a4f63;display:flex;align-items:center;gap:6px}
+    .pill.locked{background:#eef0fb;color:#4a52a8;border:1px solid #b9bfe6}
     .adm-actions input,.adm-actions select,.card textarea{font-family:inherit;font-size:.85rem;border:1px solid rgba(0,0,0,.2);border-radius:8px;padding:8px}
     .card textarea{width:100%;margin-top:10px;min-height:46px;resize:vertical}
     .meta{color:#6b7280;font-size:.82rem}
@@ -123,30 +127,55 @@
     window.location.href='mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
   }
 
+  var REASONS = [
+    ['Legal', ['Copyright / trademark','Inappropriate content','Illegal / prohibited content']],
+    ['Quality', ['Image quality too low','File damaged or unreadable','Background removal required','Subject not clearly visible']],
+    ['Print', ['Not suitable for printing','Resolution too low for product','Colour / contrast unsuitable','Transparency / edges need fixing']],
+    ['Brand', ['Not suitable for our style','Too similar to existing design','Too much text / poor typography','Poor composition or cropping']],
+    ['Submission', ['Duplicate submission','Missing required information','Wrong artwork submitted']],
+    ['Business', ['Commercial viability','Outside current collection plans','Cannot be fulfilled']]
+  ];
+  function reasonSelect(){
+    var h='<select data-fld="reason" class="reason-sel"><option value="">Reason for declining…</option>';
+    REASONS.forEach(function(g){ h+='<optgroup label="'+g[0]+'">'; g[1].forEach(function(o){ h+='<option value="'+esc(o)+'">'+esc(o)+'</option>'; }); h+='</optgroup>'; });
+    h+='<optgroup label="Other"><option value="__other">Other (type below)</option></optgroup></select>';
+    return h;
+  }
+
   function renderSubs(){
-    const subs = DATA.submissions||[];
-    $('#b-subs').textContent = subs.filter(s=>!['approved','rejected','published','declined'].includes(String(s.status||'').toLowerCase())).length;
-    $('#panel-subs').innerHTML = subs.length ? subs.map(s=>{
-      const st=String(s.status||'submitted').toLowerCase();
-      const decided=['approved','rejected','published','declined'].includes(st);
-      const ext=(String(s.file_path||'').split('.').pop()||'png');
-      const dlname=esc((s.title||'artwork').replace(/[^a-z0-9]+/gi,'-'))+'-'+esc(s.id||'')+'.'+ext;
-      const fileBtns='<button class="b-view" data-act="view" data-bucket="creator-submissions" data-path="'+esc(s.file_path||'')+'">View artwork</button>'
-        +'<button class="b-dl" data-act="download" data-bucket="creator-submissions" data-path="'+esc(s.file_path||'')+'" data-name="'+dlname+'">Download</button>'
-        +'<button class="b-mail" data-act="emailcreator">Email creator</button>';
-      const decideBtns='<button class="b-approve" data-act="approve">Approve</button>'
-        +'<button class="b-changes" data-act="changes">Request changes</button>'
-        +'<button class="b-reject" data-act="reject">Reject</button>';
-      const reopenBtn='<button class="b-reopen" data-act="reopen">Reopen</button>';
+    var subs=DATA.submissions||[]; var isLead=!!DATA.isLead;
+    $('#b-subs').textContent=subs.filter(function(s){return !['approved','rejected','published','declined','changes_requested'].includes(String(s.status||'').toLowerCase());}).length;
+    $('#panel-subs').innerHTML = subs.length ? subs.map(function(s){
+      var st=String(s.status||'submitted').toLowerCase();
+      var decided=['approved','rejected','published','declined','changes_requested'].includes(st);
+      var ext=(String(s.file_path||'').split('.').pop()||'png');
+      var dlname=esc((s.title||'artwork').replace(/[^a-z0-9]+/gi,'-'))+'-'+esc(s.id||'')+'.'+ext;
+      var locked=!!s.locked_by_lead;
+      var canChange = isLead || !locked;
+      var fileBtns='<button class="b-view" data-act="view" data-bucket="creator-submissions" data-path="'+esc(s.file_path||'')+'">View artwork</button>'
+        +'<button class="b-dl" data-act="download" data-bucket="creator-submissions" data-path="'+esc(s.file_path||'')+'" data-name="'+dlname+'">Download</button>';
+      var actions;
+      if(!decided){
+        actions='<div class="decide-row">'+reasonSelect()
+          +'<label class="resub"><input type="checkbox" data-fld="resubmit"> Allow resubmit after corrections</label></div>'
+          +'<textarea placeholder="Notes for the creator (optional; used as the reason if you pick Other)"></textarea>'
+          +'<div class="adm-actions">'+fileBtns
+          +'<button class="b-approve" data-act="approve">Approve</button>'
+          +'<button class="b-decline" data-act="decline">Decline / request changes</button></div>';
+      } else {
+        actions=(s.decision_reason?'<div class="meta" style="margin-top:6px">Reason: '+esc(s.decision_reason)+'</div>':'')
+          +'<div class="adm-actions">'+fileBtns
+          +(canChange?'<button class="b-reopen" data-act="reopen">Reopen</button>':'<span class="meta" style="align-self:center">Locked by lead — only a lead can change</span>')
+          +'</div>';
+      }
+      var lockPill=(decided&&locked)?'<div style="margin-top:5px"><span class="pill locked">finalised · lead</span></div>':'';
       return '<div class="card" data-id="'+esc(s.id)+'" data-email="'+esc(s.email||'')+'" data-title="'+esc(s.title||'')+'" data-status="'+esc(st)+'">'
         +'<div class="top"><div><h4>'+esc(s.title||'Untitled design')+'</h4>'
-        +'<div class="meta">'+esc(s.name||'—')+' · '+esc(s.email||'')+' · '+when(s.created_at)+'</div></div>'+subPill(s.status)+'</div>'
+        +'<div class="meta">'+esc(s.name||'—')+' · '+esc(s.email||'')+' · '+when(s.created_at)+'</div></div>'
+        +'<div style="text-align:right">'+subPill(s.status)+lockPill+'</div></div>'
         +(s.description?'<div class="meta" style="margin-top:8px">'+esc(s.description)+'</div>':'')
-        +(s.reviewed_by?'<div class="meta" style="margin-top:6px">Decision by '+esc(s.reviewed_by)+' · '+when(s.reviewed_at)+'</div>':'')
-        +((s.review_notes&&decided)?'<div class="meta" style="margin-top:4px">Notes: '+esc(s.review_notes)+'</div>':'')
-        +(decided?'':'<textarea placeholder="Review notes (included in the email + saved with your decision)">'+esc(s.review_notes||'')+'</textarea>')
-        +'<div class="adm-actions">'+fileBtns+(decided?reopenBtn:decideBtns)+'</div>'
-        +'</div>';
+        +(s.reviewed_by&&decided?'<div class="meta" style="margin-top:6px">Decision by '+esc(s.reviewed_by)+' · '+when(s.reviewed_at)+'</div>':'')
+        +actions+'</div>';
     }).join('') : '<p class="muted">No submissions yet.</p>';
   }
 
@@ -249,11 +278,15 @@
       if (act==='download') return dlFile(btn.dataset.bucket, btn.dataset.path, btn.dataset.name, btn);
       if (act==='emailcreator'){ const ta=card.querySelector('textarea'); return emailCreator(card.dataset.email, card.dataset.title, card.dataset.status, ta?ta.value:''); }
       if (act==='reopen'){ btn.disabled=true; await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'submission',id,action:'reopen'})}); await refresh(); return; }
-      if (act==='approve'||act==='reject'||act==='changes'){
-        const ta=card.querySelector('textarea'); const notes = ta?ta.value:'';
+      if (act==='approve'){ btn.disabled=true; await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'submission',id,action:'approve'})}); await refresh(); return; }
+      if (act==='decline'){
+        const sel=card.querySelector('[data-fld=reason]'); const ta=card.querySelector('textarea');
+        const notes=ta?ta.value.trim():''; let reason=sel?sel.value:'';
+        if(reason==='__other') reason=notes;
+        if(!reason){ alert('Please choose a reason (or pick Other and type one in the notes).'); return; }
+        const cb=card.querySelector('[data-fld=resubmit]'); const allow=cb&&cb.checked;
         btn.disabled=true;
-        await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'submission',id,action:act,notes})});
-        if (act==='changes') emailCreator(card.dataset.email, card.dataset.title, 'changes_requested', notes);
+        await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'submission',id,action:allow?'changes':'reject',reason,notes})});
         await refresh();
       }
       if (act==='savereq'){

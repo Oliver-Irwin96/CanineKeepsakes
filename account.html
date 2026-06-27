@@ -211,6 +211,8 @@
       submitted: 'In review',
       approved: 'Approved 🎉',
       published: 'Published — earning eligible',
+      changes_requested: 'Changes requested',
+      rejected: 'Not accepted',
       declined: 'Not selected this time'
     };
     // Kennel Rank tiers, by number of accepted (approved + published) designs.
@@ -255,9 +257,10 @@
         const list = subs.map(s => {
           const when = new Date(s.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
           const state = creatorLabel[s.status] || s.status || 'Submitted';
+          const reason = s.decision_reason ? `<div style="margin-top:4px;font-size:.84rem;color:#b34a32">${s.status==='changes_requested'?'Changes needed: ':'Reason: '}${esc(s.decision_reason)}${s.status==='changes_requested'?' — you can resubmit a corrected version.':''}</div>` : '';
           return `<div class="row" style="display:block;border-bottom:1px solid rgba(0,0,0,.08);padding:12px 0">
             <div style="display:flex;justify-content:space-between"><strong>${esc(s.title || 'Untitled design')}</strong><span class="muted">${esc(state)}</span></div>
-            <div class="muted">${when}</div>
+            <div class="muted">${when}</div>${reason}
           </div>`;
         }).join('');
 
