@@ -29,7 +29,7 @@
     .adm-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
     .adm-actions button{border:0;border-radius:9px;padding:8px 13px;font-weight:600;font-size:.82rem;cursor:pointer}
     .b-approve{background:#2f7d49;color:#fff}.b-reject{background:#b34a32;color:#fff}.b-changes{background:#4a52a8;color:#fff}
-    .b-view{background:#23263a;color:#fff}.b-save{background:#d2922f;color:#fff}.b-dl{background:#6e7f5c;color:#fff}
+    .b-view{background:#23263a;color:#fff}.b-save{background:#d2922f;color:#fff}.b-dl{background:#6e7f5c;color:#fff}.b-mail{background:#4a4f63;color:#fff}.b-reopen{background:#6b7280;color:#fff}
     .adm-actions input,.adm-actions select,.card textarea{font-family:inherit;font-size:.85rem;border:1px solid rgba(0,0,0,.2);border-radius:8px;padding:8px}
     .card textarea{width:100%;margin-top:10px;min-height:46px;resize:vertical}
     .meta{color:#6b7280;font-size:.82rem}
@@ -45,7 +45,7 @@
 <div class="wrap">
   <div class="adm-head">
     <h1 class="page-title" style="margin-bottom:0">Admin Console</h1>
-    <div><span id="me" class="muted"></span> <button id="signout" class="btn-add" style="background:transparent;border:1px solid currentColor">Sign out</button></div>
+    <div><span id="me" class="muted"></span> <button id="signout" style="background:#16181f;border:0;color:#fff;padding:9px 18px;border-radius:8px;font-weight:600;cursor:pointer">Sign out</button></div>
   </div>
   <div id="gate" class="muted">Checking access…</div>
 
@@ -113,27 +113,41 @@
     }finally{ btn.disabled=false; btn.textContent=t; }
   }
 
+  function emailCreator(email, title, status, notes){
+    if(!email){ alert('No email on file for this creator.'); return; }
+    const t=title||'your design'; let subj, body;
+    if(status==='approved'){ subj='Good news about "'+t+'" — Canine Keepsakes'; body='Hi,\n\nGreat news — your design "'+t+'" has been approved for Canine Keepsakes. We\'ll be in touch with the next steps.\n\nThank you,\nCanine Keepsakes'; }
+    else if(status==='rejected'||status==='declined'){ subj='Update on "'+t+'" — Canine Keepsakes'; body='Hi,\n\nThank you so much for submitting "'+t+'". After review, it isn\'t one we\'ll be taking forward this time — but we\'d genuinely love to see more from you.\n\nThank you,\nCanine Keepsakes'; }
+    else if(status==='changes_requested'){ subj='A few tweaks for "'+t+'" — Canine Keepsakes'; body='Hi,\n\nWe really like "'+t+'" and would love to feature it with a few tweaks:\n\n'+(notes||'(add details here)')+'\n\nSend the updated version back whenever you\'re ready.\n\nThank you,\nCanine Keepsakes'; }
+    else { subj='About "'+t+'" — Canine Keepsakes'; body='Hi,\n\nRegarding your design "'+t+'":\n\n'+(notes||'')+'\n\nThank you,\nCanine Keepsakes'; }
+    window.location.href='mailto:'+encodeURIComponent(email)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  }
+
   function renderSubs(){
     const subs = DATA.submissions||[];
     $('#b-subs').textContent = subs.filter(s=>!['approved','rejected','published','declined'].includes(String(s.status||'').toLowerCase())).length;
-    $('#panel-subs').innerHTML = subs.length ? subs.map(s=>`
-      <div class="card" data-id="${esc(s.id)}">
-        <div class="top">
-          <div><h4>${esc(s.title||'Untitled design')}</h4>
-            <div class="meta">${esc(s.name||'—')} · ${esc(s.email||'')} · ${when(s.created_at)}</div></div>
-          ${subPill(s.status)}
-        </div>
-        ${s.description?`<div class="meta" style="margin-top:8px">${esc(s.description)}</div>`:''}
-        ${s.reviewed_by?`<div class="meta" style="margin-top:6px">Last reviewed by ${esc(s.reviewed_by)} · ${when(s.reviewed_at)}</div>`:''}
-        <textarea placeholder="Review notes (optional, saved with your decision)">${esc(s.review_notes||'')}</textarea>
-        <div class="adm-actions">
-          <button class="b-view" data-act="view" data-bucket="creator-submissions" data-path="${esc(s.file_path||'')}">View artwork</button>
-          <button class="b-dl" data-act="download" data-bucket="creator-submissions" data-path="${esc(s.file_path||'')}" data-name="${esc((s.title||'artwork').replace(/[^a-z0-9]+/gi,'-'))}-${esc(s.id||'')}.${(String(s.file_path||'').split('.').pop()||'png')}">Download</button>
-          <button class="b-approve" data-act="approve">Approve</button>
-          <button class="b-changes" data-act="changes">Request changes</button>
-          <button class="b-reject" data-act="reject">Reject</button>
-        </div>
-      </div>`).join('') : '<p class="muted">No submissions yet.</p>';
+    $('#panel-subs').innerHTML = subs.length ? subs.map(s=>{
+      const st=String(s.status||'submitted').toLowerCase();
+      const decided=['approved','rejected','published','declined'].includes(st);
+      const ext=(String(s.file_path||'').split('.').pop()||'png');
+      const dlname=esc((s.title||'artwork').replace(/[^a-z0-9]+/gi,'-'))+'-'+esc(s.id||'')+'.'+ext;
+      const fileBtns='<button class="b-view" data-act="view" data-bucket="creator-submissions" data-path="'+esc(s.file_path||'')+'">View artwork</button>'
+        +'<button class="b-dl" data-act="download" data-bucket="creator-submissions" data-path="'+esc(s.file_path||'')+'" data-name="'+dlname+'">Download</button>'
+        +'<button class="b-mail" data-act="emailcreator">Email creator</button>';
+      const decideBtns='<button class="b-approve" data-act="approve">Approve</button>'
+        +'<button class="b-changes" data-act="changes">Request changes</button>'
+        +'<button class="b-reject" data-act="reject">Reject</button>';
+      const reopenBtn='<button class="b-reopen" data-act="reopen">Reopen</button>';
+      return '<div class="card" data-id="'+esc(s.id)+'" data-email="'+esc(s.email||'')+'" data-title="'+esc(s.title||'')+'" data-status="'+esc(st)+'">'
+        +'<div class="top"><div><h4>'+esc(s.title||'Untitled design')+'</h4>'
+        +'<div class="meta">'+esc(s.name||'—')+' · '+esc(s.email||'')+' · '+when(s.created_at)+'</div></div>'+subPill(s.status)+'</div>'
+        +(s.description?'<div class="meta" style="margin-top:8px">'+esc(s.description)+'</div>':'')
+        +(s.reviewed_by?'<div class="meta" style="margin-top:6px">Decision by '+esc(s.reviewed_by)+' · '+when(s.reviewed_at)+'</div>':'')
+        +((s.review_notes&&decided)?'<div class="meta" style="margin-top:4px">Notes: '+esc(s.review_notes)+'</div>':'')
+        +(decided?'':'<textarea placeholder="Review notes (included in the email + saved with your decision)">'+esc(s.review_notes||'')+'</textarea>')
+        +'<div class="adm-actions">'+fileBtns+(decided?reopenBtn:decideBtns)+'</div>'
+        +'</div>';
+    }).join('') : '<p class="muted">No submissions yet.</p>';
   }
 
   function renderReqs(){
@@ -233,10 +247,13 @@
     try {
       if (act==='view') return viewArt(btn.dataset.bucket, btn.dataset.path, btn);
       if (act==='download') return dlFile(btn.dataset.bucket, btn.dataset.path, btn.dataset.name, btn);
+      if (act==='emailcreator'){ const ta=card.querySelector('textarea'); return emailCreator(card.dataset.email, card.dataset.title, card.dataset.status, ta?ta.value:''); }
+      if (act==='reopen'){ btn.disabled=true; await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'submission',id,action:'reopen'})}); await refresh(); return; }
       if (act==='approve'||act==='reject'||act==='changes'){
-        const notes = card.querySelector('textarea').value;
+        const ta=card.querySelector('textarea'); const notes = ta?ta.value:'';
         btn.disabled=true;
         await api('/api/admin-action',{method:'POST',body:JSON.stringify({entity:'submission',id,action:act,notes})});
+        if (act==='changes') emailCreator(card.dataset.email, card.dataset.title, 'changes_requested', notes);
         await refresh();
       }
       if (act==='savereq'){

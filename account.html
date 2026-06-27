@@ -71,7 +71,7 @@
 <div class="wrap">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
     <h1 class="page-title" style="margin-bottom:0">My Canine Keepsakes account</h1>
-    <button class="btn-add" id="signout" style="background:transparent;border:1px solid currentColor">Sign out</button>
+    <a id="admin-link" href="admin.html" style="display:none;background:#d2922f;color:#fff;border:0;padding:9px 18px;border-radius:8px;font-weight:600;text-decoration:none;margin-right:10px">Admin console</a><button id="signout" style="background:#16181f;border:0;color:#fff;padding:9px 18px;border-radius:8px;font-weight:600;cursor:pointer">Sign out</button>
   </div>
   <p class="muted" id="hello">Loading your account…</p>
 
@@ -131,6 +131,7 @@
     if (!session) { location.href = 'login.html?redirect=account.html'; return; }
     const user = session.user;
     document.getElementById('hello').textContent = 'Signed in as ' + user.email;
+    try { const tok = await CK.auth.token(); if (tok) { const r = await fetch('/api/admin-list?check=1',{headers:{Authorization:'Bearer '+tok}}); if (r.ok) { const el=document.getElementById('admin-link'); if(el) el.style.display='inline-block'; } } } catch(_){}
 
     // prefill profile
     const prof = await CK.auth.profile().catch(() => null);
