@@ -3,12 +3,16 @@
   functions = "netlify/functions"
 
 # Secret-scan false positives, excluded by key:
-#  - PAYPAL_ENV: value is a mode flag ("live"/"sandbox"), not a secret.
+#  - PAYPAL_ENV / PRODIGI_ENV: mode flags ("live"/"sandbox"), not secrets. The
+#    value "sandbox" legitimately appears in code (e.g. api.sandbox.prodigi.com,
+#    ENV !== 'sandbox' guards), so the scanner matched it everywhere.
 #  - CF_WEB_ANALYTICS_SITE_TAG: Cloudflare Web Analytics beacon token; PUBLIC by
 #    design (it sits in js/store.js on every page). The real secret,
 #    CLOUDFLARE_API_TOKEN, is NOT omitted and never appears in any file.
+#  - PRODIGI_*_API_KEY: real secrets, server-side only, never written to any
+#    file; omitted to pre-empt false positives (they are not currently matched).
 [build.environment]
-  SECRETS_SCAN_OMIT_KEYS = "PAYPAL_ENV,CF_WEB_ANALYTICS_SITE_TAG,PRODIGI_API_KEY,PRODIGI_SANDBOX_API_KEY,PRODIGI_LIVE_API_KEY"
+  SECRETS_SCAN_OMIT_KEYS = "PAYPAL_ENV,PRODIGI_ENV,CF_WEB_ANALYTICS_SITE_TAG,PRODIGI_API_KEY,PRODIGI_SANDBOX_API_KEY,PRODIGI_LIVE_API_KEY"
 
 # --- Security headers (safe defaults; no CSP to avoid breaking inline scripts /
 #     fonts / esm.sh / PayPal / Supabase). Applied to every response. ---
