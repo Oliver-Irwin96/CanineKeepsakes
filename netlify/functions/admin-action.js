@@ -32,7 +32,7 @@ async function sbPatch(table, id, patch) {
   return rows[0] || null;
 }
 
-const SUB_STATUS = { approve: 'approved', reject: 'rejected', changes: 'changes_requested' };
+const SUB_STATUS = { approve: 'approved', reject: 'rejected', changes: 'changes_requested', reopen: 'submitted' };
 const REQ_STATUS = ['new', 'in_progress', 'proof_sent', 'done'];
 const BUCKETS = ['creator-submissions', 'design-submissions'];
 

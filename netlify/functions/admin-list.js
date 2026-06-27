@@ -36,6 +36,8 @@ exports.handler = async (event) => {
   const gate = await requireAdmin(event);
   if (!gate.ok) return json(gate.code, { error: gate.error });
 
+  if ((event.queryStringParameters || {}).check) return json(200, { admin: true, me: gate.email });
+
   try {
     const [submissions, requests, orders] = await Promise.all([
       sbGet('creator_submissions?select=*&order=created_at.desc&limit=300'),
