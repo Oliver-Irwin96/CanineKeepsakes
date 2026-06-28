@@ -84,7 +84,8 @@
   </div>
 </div>
 
-<script src="js/store.js?v=6"></script>
+<script src="js/region.js?v=1"></script>
+<script src="js/store.js?v=7"></script>
 <script>
 (async () => {
   CK.mountChrome();
@@ -114,10 +115,10 @@
     document.title = _pTitle;
     elName.textContent = `${col.name} — ${prod.name}`;
     elDesc.textContent = prod.description;
-    elPrice.textContent = CK.gbp(prod.retailPrice);
+    elPrice.textContent = CK.money(CKRegion.priceOf(prod));
     elCrumbProd.textContent = prod.name;
     elGarment.textContent = (prod.productType || 'item').toLowerCase();
-    document.getElementById('p-label').textContent = `— ${prod.shortName}`;
+    document.getElementById('p-label').textContent = `— ${prod.shortName || prod.name}`;
     /* B4: per-product canonical, og:url/title + Product JSON-LD (catalog data is trusted) */
     const url = `${location.origin}/product.html?c=${col.slug}&p=${prod.slug}&d=${design.id}`;
     const set = (sel, val) => { if (!val) return; const m = document.querySelector(sel); if (m) m.setAttribute('content', val); };
@@ -130,7 +131,7 @@
       name: `${col.name} — ${prod.name}`, description: prod.description,
       image: location.origin + (design.thumb || ''),
       brand: { '@type':'Brand', name:'Canine Keepsakes' },
-      offers: { '@type':'Offer', price: Number(prod.retailPrice).toFixed(2), priceCurrency:'GBP', availability:'https://schema.org/InStock', url } };
+      offers: { '@type':'Offer', price: Number(prod.retailGBP ?? prod.retailPrice).toFixed(2), priceCurrency:'GBP', availability:'https://schema.org/InStock', url } };
     let s = document.getElementById('ld-product');
     if (!s) { s = document.createElement('script'); s.type = 'application/ld+json'; s.id = 'ld-product'; document.head.appendChild(s); }
     s.textContent = JSON.stringify(ld);
@@ -146,6 +147,11 @@
      Shows the flat design immediately, swaps in the mockup when ready.
      A request id guards against out-of-order responses on rapid changes. */
   async function requestMockup() {
+    /* Gelato migration: no Printful mockup pipeline (Gelato products have no
+       catalogProductId). Launch shows the flat design; per-colour Gelato mockups
+       are a fast-follow. Early-return keeps the flat preview from showFlat(). */
+    return;
+    /* eslint-disable no-unreachable */
     const id = ++mockReqId;
     const tag0 = mainImg.querySelector('.mockup-tag'); if (tag0) tag0.remove();
     const imageUrl = location.origin + design.thumb;
@@ -204,7 +210,7 @@
         const b = document.createElement('button');
         b.type = 'button';
         b.className = 'swatch prod' + (p.slug === prod.slug ? ' sel' : '');
-        b.innerHTML = `<span>${p.shortName}</span><span class="p-price">${CK.gbp(p.retailPrice)}</span>`;
+        b.innerHTML = `<span>${p.shortName || p.name}</span><span class="p-price">${CK.money(CKRegion.priceOf(p))}</span>`;
         b.onclick = () => selectProduct(p);
         row.appendChild(b);
       });
@@ -246,6 +252,9 @@
   const cw = document.getElementById('colour-swatches');
   function renderColours() {
     cw.innerHTML = '';
+    const cpick = document.getElementById('colour-picker');
+    if (cpick) cpick.style.display = (prod.colours && prod.colours.length) ? '' : 'none';
+    if (!prod.colours || !prod.colours.length) { colour = undefined; return; }
     prod.colours.forEach(c => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -267,6 +276,8 @@
   const sw = document.getElementById('size-swatches');
   function renderSizes() {
     sw.innerHTML = '';
+    const spick = document.getElementById('size-picker');
+    if (spick) spick.style.display = (prod.sizes && prod.sizes.length > 1) ? '' : 'none';
     prod.sizes.forEach(s => {
       const b = document.createElement('button');
       b.type = 'button';
@@ -292,7 +303,10 @@
     CK.addToBasket({
       productSlug: prod.slug,
       productName: prod.name,
-      catalogProductId: prod.catalogProductId,
+      /* Gelato resolution fields (server resolves the exact productUid at checkout) */
+      productType: prod.productType,
+      category: prod.category,
+      gelatoUidBuilder: prod.gelatoUidBuilder,
       collection: col.slug,
       collectionName: col.name,
       designId: design.id,
@@ -301,7 +315,10 @@
       printFileUrl: design.printFileUrl,
       thumb: design.thumb,
       colour, size, qty,
-      price: prod.retailPrice
+      /* fixed per-currency price table baked in catalog; display + charge read it */
+      prices: prod.prices,
+      price: prod.retailGBP ?? prod.retailPrice,   // GBP base (legacy/fallback)
+      priceGBP: prod.retailGBP ?? prod.retailPrice
     });
     btn.textContent = 'Added ✓';
     btn.classList.add('flash');

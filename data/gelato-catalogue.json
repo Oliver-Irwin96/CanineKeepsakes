@@ -1,0 +1,54 @@
+{
+  "_meta": {
+    "note": "Master Gelato ID builders for CK, gathered from the live catalogue dump. {format}=UnifiedXFormat token (e.g. 16x20-inch-400x500-mm, A2); {orient}=hor|ver; {size}/{colour} per gelato-map size/colour maps. Build catalog.json variants from these.",
+    "status": "CONFIRMED builders below; PENDING list still needs a sample from dump pages offset 24/32/40/48/56."
+  },
+  "confirmed": {
+    "canvas":         "canvas_{format}_canvas_wood-fsc-slim_4-0_{orient}",
+    "fine-art":       "fine_arts_poster_geo_simplified_product_12-0_{orient}_{format}_200-gsm-80lb-enhanced-uncoated",
+    "framed-fine-art":"framed_fine_arts_poster_geo_simplified_product_12-0_{frameColor}_{frameMaterial}_{frameProps}_plexiglass_{orient}_{frameSize}_{format}_200-gsm-80lb-enhanced-uncoated",
+    "acrylic":        "acrylic_{format}_4-mm_4-0_{orient}",
+    "framed-canvas":  "framed_canvas_geo_simplified_{canvasFormat}_{frameColor}_{frameSize}_wood-fsc-slim_{orient}_wood_{frameProps}_canvas_4-0  (frameColor black/natural-wood/dark-wood)",
+    "framed-poster":  "frame_and_poster_product_frs_{frameSize}_frc_{frameColor}_frm_{frameMaterial}_frp_{frameProps}_gt_plexiglass__pf_{paperFormat}_pt_{paper}_cl_4-0_ct_none_prt_none_{orient}",
+    "foam":           "foam_{format}_5-mm_white_4-0_{orient}",
+    "metallic":       "metallic_{format}_3-mm_none_4-0_{orient}  (or 3-mm-silver-brushed + hor-grain)",
+    "notebook":       "wire-o-multi-page-brochures_pf_{format}_pt_{paper}_cl_4-4_bt_wire-o-left_cpt_{coverPaper}_ver  (A5/A4)",
+    "travel-mug":     "mug_product_msz_15-oz-travel_mmat_stainless-steel-white_cl_4-0  (validate)",
+    "single-card":    "cards_pf_{format}_pt_{paper}_cl_4-0_ct_{coating}_{orient}  (formats 5R/A5/A6/DL/SQ; paper e.g. 300-gsm-coated-silk)",
+    "poster":         "cards_pf_{format}_pt_200-gsm-uncoated_cl_4-0_{orient}  (flat-print model; poster sizes 11x14..28x40; paper 170/200gsm)",
+    "snapback":       "apparel_product_gca_hat_gsc_snapback_gcu_unisex_gqa_classic_gsi_onesize_gco_{colour}_gpr_0-4-emb_beechfield_b63nb  (EMBROIDERY)",
+    "tank-top":       "apparel_product_gca_t-shirt_gsc_tank-top_gcu_unisex_gqa_prm_gsi_{size}_gco_{colour}_gpr_4-0_bella-and-canvas_3480  (construct/validate)",
+    "folded-card":    "brochures_pf_{format}_pt_{paper}_cl_4-4_ft_{fold}_{orient}",
+    "card-pack-us":   "pack_of_cards_qt_10_pcs_pf_{format}_upt_{unifiedPaper}_cl_4-4_ct_glossy-protection_prt_1-0_sft_none_set_none_{orient}  (catalog cards-us)",
+    "card-pack-eu":   "same as card-pack-us but catalog cards-eu (region-split, local print)",
+    "calendar-desk":  "desk-calendars_pf_{format}_pt_{paper}_cl_4-0_bt_{wire-o-top}_{orient}",
+    "mug":            "mug_product_msz_11-oz_mmat_ceramic-white_cl_4-0  (colours: ceramic-black/blue/green/pink/red)",
+    "bottle":         "bottle_product_bsz_17-oz_bmat_stainless-steel-white_cl_4-0",
+    "tote":           "bag_product_bsc_tote-bag_bqa_clc_bsi_std-t_bco_{colour}_bpr_0-4  (colours incl natural/black)",
+    "tshirt":         "apparel_product_gca_t-shirt_gsc_crewneck_gcu_unisex_gqa_prm_gsi_{size}_gco_{colour}_gpr_4-0_bella-and-canvas_3001",
+    "womens-tee":     "apparel_product_gca_t-shirt_gsc_crewneck_gcu_womens_gqa_prm_gsi_{size}_gco_{colour}_gpr_4-0_bella-and-canvas_6400",
+    "hoodie":         "apparel_product_gca_hoodie_gsc_pullover_gcu_unisex_gqa_classic_gsi_{size}_gco_{colour}_gpr_4-0_gildan_18500",
+    "sweatshirt":     "apparel_product_gca_sweatshirt_gsc_crewneck_gcu_unisex_gqa_classic_gsi_{size}_gco_{colour}_gpr_4-0_gildan_18000",
+    "beanie":         "apparel_product_gca_hat_gsc_beanie_gcu_unisex_gqa_classic_gsi_onesize_gco_{colour}_gpr_4-0-emb_{brand}_{sku}  (beechfield/yupoong; EMBROIDERY)",
+    "bucket-hat":     "apparel_product_gca_hat_gsc_bucket-hat_gcu_unisex_gqa_prm_gsi_{s-m|l-xl}_gco_{colour}_gpr_4-0-emb_beechfield_b90nb  (EMBROIDERY)",
+    "dad-hat":        "apparel_product_gca_hat_gsc_dad-hat_gcu_unisex_gqa_classic_gsi_{l-xl|onesize}_gco_{colour}_gpr_4-0-emb_flexfit_6277  (EMBROIDERY)",
+    "apron":          "apparel_product_gca_home-and-living_gsc_apron_gcu_kids_gqa_prm_gsi_onesize_gco_{colour}_gpr_chstc-emb_sols_00599  (EMBROIDERY badge only)",
+    "baby-onesie":    "apparel_product_gca_onesie_gsc_short-sleeve_gcu_baby_gqa_classic_gsi_{size}_gco_{colour}_gpr_4-0_{brand}_{sku}  (rabbit-skins/sols — construct + validate)",
+    "phone-case":     "phonecase_{brand}_{model}_{substrate}_{colour}_{finish}  (brand apple/samsung; substrate slim/tough/clear; finish glossy/satin; offer popular iPhone+Galaxy models)",
+    "polo":           "apparel_product_gca_polo_gcu_unisex_gqa_organic_gsi_{size}_gco_{colour}_gpr_chstl-emb_sols_03566  (EMBROIDERY — badge only)",
+    "hanging-poster": "wall_hanging_poster_{hangerSize}_{hangerColor}_wood_w14xt20-mm_{format}_{paper}_4-0_{orient}",
+    "card-pack-folded-env": "pack_of_folded_cards_qt_10_pcs_pf_{format}_upt_{unifiedPaper}_cl_4-4_ft_crease-ver_ct_none_prt_none_sft_none_{orient}_ept_standard  (greeting cards, 10pk folded + envelopes)"
+  },
+  "confirmed2": {
+    "wood-print":     "wood_{format}_lined-plywood_10-mm_hor-grain_4-0_{orient}",
+    "trucker-hat":    "apparel_product_gca_hat_gsc_trucker-hat_gcu_unisex_gqa_classic_gsi_one-size_gco_{colour}_gpr_4-0-dtf_richardson_112  (DTF — full-colour art works, NOT just embroidery)",
+    "long-sleeve-tee":"apparel_product_gca_t-shirt_gsc_longsleeve-crew_gcu_unisex_gqa_classic_gsi_{size}_gco_{colour}_gpr_4-0_{brand}_{sku}  (construct/validate brand)",
+    "heavy-tee":      "apparel_product_gca_t-shirt_gsc_crewneck_gcu_unisex_gqa_heavy-weight_gsi_{size}_gco_{colour}_gpr_4-0_{brand}_{sku}  (winter tee; comfort-colours/gildan)"
+  },
+  "constructAndValidate": {
+    "_note": "patterns known; confirm exact brand+sku with one product lookup at build time",
+    "items": ["zip-hoodie (hoodies gsc_zip; independent/just-hoods)", "kids-tee (t-shirt gcu_kids)", "baby-onesie (gca_onesie gcu_baby)", "tank-top (B+C 3480)", "long-sleeve tee brand", "heavy-tee brand", "travel-mug 15oz material"],
+    "allCatalogsDumped": true
+  },
+  "embroideryNote": "Hats + apron print via embroidery (gpr_*-emb) — use the mono CK badge / simplified art, not the detailed full-colour designs."
+}

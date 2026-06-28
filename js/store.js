@@ -10,7 +10,10 @@ const CK = (() => {
   }
 
   const params = new URLSearchParams(location.search);
-  const gbp = n => '£' + n.toFixed(2);
+  /* Currency: prices stored in GBP base, displayed in the visitor's region currency via
+     region.js (fixed per-currency table). Falls back to £ if region.js isn't loaded.
+     `gbp`/`money` both format a number that's already in the active currency. */
+  const gbp = n => (window.CKRegion ? window.CKRegion.money(Number(n)) : '£' + Number(n).toFixed(2));
 
   /* ── basket (localStorage) ── */
   const KEY = 'ck-basket-v1';
@@ -24,8 +27,12 @@ const CK = (() => {
     saveBasket(b);
   }
   function removeFromBasket(i) { const b = getBasket(); b.splice(i, 1); saveBasket(b); }
-  const basketTotal = () => getBasket().reduce((s, x) => s + x.price * x.qty, 0);
-  const basketCount = () => getBasket().reduce((s, x) => s + x.qty, 0);
+  /* active-currency unit price for a cart item (fixed per-currency table via region.js;
+     falls back to the item's stored GBP price). qty NOT included. */
+  const unit = item => (window.CKRegion ? window.CKRegion.priceOf(item) : (parseFloat(item.price) || 0));
+  const lineTotal = item => unit(item) * (parseInt(item.qty) || 1);
+  const basketTotal = () => getBasket().reduce((s, x) => s + lineTotal(x), 0);
+  const basketCount = () => getBasket().reduce((s, x) => s + (parseInt(x.qty) || 1), 0);
 
   function renderCount() {
     document.querySelectorAll('.basket-count').forEach(el => { el.textContent = basketCount(); });
@@ -38,6 +45,7 @@ const CK = (() => {
     wrap.innerHTML = `<span>${label || '🐾'}</span>`;
     const img = new Image();
     img.alt = label || 'design';
+    img.loading = 'lazy'; img.decoding = 'async';
     img.onload = () => { wrap.className = ''; wrap.innerHTML = ''; wrap.appendChild(img); };
     img.onerror = () => {};
     img.src = design.thumb;
@@ -226,5 +234,6 @@ const CK = (() => {
     analyticsBeacon();
   }
 
-  return { load, params, gbp, getBasket, saveBasket, addToBasket, removeFromBasket, basketTotal, basketCount, renderCount, designImg, reveals, mountChrome };
+  const money = gbp; // format a number already in the active currency
+  return { load, params, gbp, money, unit, lineTotal, getBasket, saveBasket, addToBasket, removeFromBasket, basketTotal, basketCount, renderCount, designImg, reveals, mountChrome };
 })();

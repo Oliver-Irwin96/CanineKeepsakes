@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "name": "CK International Launch Policy v1",
+    "principle": "Everything is configuration, not constants. No `if (country===...)` in code — code reads these tables. Expanding to a new market = editing this file, not rewriting.",
+    "decided": "2026-06-27 (owner). Tax-registration flags default OFF until accountant confirms thresholds; machinery is built so enabling is config-only.",
+    "currency_model": "base GBP cost -> live FX -> per-category margin -> regional retail. NEVER store fixed retail working backwards.",
+    "fallback_rule": "preferred provider -> secondary provider -> manual review. NEVER auto-reject a paid order."
+  },
+
+  "regions": {
+    "UK": { "enabled": true,  "currency": "GBP", "symbol": "£", "freeShipThreshold": 60,  "shipFlat": 3.99,  "returnDays": 30, "tax": { "type": "vat", "rate": 0.20, "enabled": false, "pricesIncludeTax": true, "_note": "VAT OFF until VAT-registered. Do NOT charge VAT before registering (illegal). Register only once turnover nears the UK ~£90k threshold, then set enabled:true." } },
+    "US": { "enabled": true,  "currency": "USD", "symbol": "$", "freeShipThreshold": 75,  "shipFlat": 5.99,  "returnDays": 30, "tax": { "type": "sales_tax", "enabled": false, "provider": "none", "_note": "OFF day one. Connect TaxJar/Avalara/Stripe Tax + enable once you cross a state economic-nexus threshold (commonly US$100k/yr in a state)." } },
+    "CA": { "enabled": true,  "currency": "CAD", "symbol": "$", "freeShipThreshold": 100, "shipFlat": 7.99,  "returnDays": 30, "tax": { "type": "gst_hst", "enabled": false, "_note": "accountant to confirm registration/threshold" } },
+    "AU": { "enabled": true,  "currency": "AUD", "symbol": "$", "freeShipThreshold": 110, "shipFlat": 8.99,  "returnDays": 30, "tax": { "type": "gst", "enabled": false, "_note": "register once legally required" } },
+    "NZ": { "enabled": true,  "currency": "NZD", "symbol": "$", "freeShipThreshold": 130, "shipFlat": 9.99,  "returnDays": 30, "tax": { "type": "gst", "enabled": false, "_note": "threshold 130 NZD placeholder — confirm" } },
+    "EU": { "enabled": false, "currency": "EUR", "symbol": "€", "freeShipThreshold": 70,  "shipFlat": 4.99,  "returnDays": 30, "tax": { "type": "vat", "enabled": false, "pricesIncludeTax": true }, "phase": 2 }
+  },
+
+  "ioss":  { "enabled": false, "registrationNumber": "", "_note": "EU Phase 2. Once registered: collectVat=true, provider receives IOSS number on customs declaration. No code rewrite." },
+  "gpsr":  { "enabled": false, "responsiblePerson": { "companyName": null, "address": null, "email": null, "phone": null }, "_note": "EU Phase 2. When enabled, product pages render the Responsible Person block." },
+
+  "excludedCountries": {
+    "_note": "Hard-disabled regardless of provider support (sanctions / fulfilment+payment complexity). Everything else depends on provider support.",
+    "codes": ["RU", "BY", "KP", "IR", "SY"],
+    "excludedSubregions": ["UA-43 (Crimea)"]
+  },
+
+  "marginsByCategory": {
+    "_note": "Target gross margin per category. retail = cost / (1 - margin), then round. Per-category, NOT global.",
+    "apparel": 0.60, "mug": 0.65, "sticker": 0.70, "bowl": 0.55,
+    "blanket": 0.50, "canvas": 0.50, "cards": 0.70, "default": 0.55
+  },
+
+  "pricing": {
+    "model": "cost_plus_margin",
+    "displayPriceRule": "owner decision: auto-compute base GBP from Gelato GB cost / (1 - category margin), THEN round to clean price points per category (charm .99, wall art to nearest £5). Owner may tweak individual prices after. Local currencies via FX; checkout re-quotes for the real region/cost.",
+    "rounding": { "strategy": "charm_then_nice", "endsWith": 0.99, "wallArtStep": 5 },
+    "fx": { "source": "TBD (e.g. exchangerate.host / ECB)", "updateCadence": "daily", "cacheTable": "currency_rates", "allowManualRetailOverride": true }
+  },
+
+  "shipping": { "model": "free_over_threshold_else_live_quote", "taxable": false, "thresholdsPerRegion": "regions[].freeShipThreshold (local currency)", "liveQuote": "provider quote API; cache briefly; show standard + express" },
+  "returns": { "globalPolicy": "30-day: damaged / wrong item / manufacturing defect -> replace or refund", "perRegionDays": "regions[].returnDays", "_note": "configurable text only; statutory rights (e.g. EU 14-day) honoured via legal Terms" },
+  "delivery": { "source": "live provider estimate", "displayOn": ["product", "checkout", "order_email"] },
+  "apparelBranding": {
+    "insideLabel": { "enabled": true, "_note": "DTG-printed CK label inside the collar (logo + care info). Gelato removes the maker's tag; small legal care/origin tag stays. Adds a small per-garment print cost. NEEDS a print-ready label asset (logo + size/care text) per garment.", "assetUrl": "" },
+    "outerLabel": { "enabled": false },
+    "hangTags": { "enabled": false, "_note": "Gelato+ subscription feature — revisit once earning." },
+    "packagingInserts": { "enabled": false, "_note": "Gelato+ subscription feature — revisit once earning." }
+  },
+  "currencyDetection": { "method": "geoip_suggest", "userOverride": true, "remember": "cookie" },
+  "policies": { "versioned": true, "tracked": ["privacy", "terms", "shipping", "returns"], "storeOnOrder": "accepted_policy_version" },
+  "providerRouting": { "default": "gelato", "order": ["gelato"], "onNoneAvailable": "manual_review" },
+  "productAvailability": { "rule": "per product: provider, providerProductId, supportedRegions, enabled. Unavailable in region -> hide, not error." },
+  "rolloutPhases": { "launch": ["UK", "US", "CA", "AU", "NZ"], "phase2": ["EU"], "phase3": ["rest_of_world_by_provider_support"] },
+
+  "taxProvider": "none",
+  "businessInfo": {
+    "status": "startup",
+    "annualTurnover": 0,
+    "vatRegistered": false,
+    "legalName": "TBD",
+    "tradingName": "Canine Keepsakes",
+    "companyNumber": "TBD",
+    "vatNumber": ""
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "purpose": "CK product/variant -> Gelato productUid mapping for the full-site migration.",
+    "status": "scaffold v1. Canvas is fully mapped (confirmed UIDs). Apparel/mug/card variant codes still need confirming against the live Gelato catalog API (product:search per catalog) before go-live.",
+    "auth": "server-side only via GELATO_API_SECRET",
+    "uid_notes": {
+      "canvas": "canvas_{SIZE-TOKEN}_canvas_wood-fsc-{slim|thick}_4-0_{hor|ver}. CK uses slim (38mm) as default. Orientation chosen from artwork aspect (portrait=ver, landscape=hor, square=either).",
+      "apparel": "apparel_product_gca_{garment}_gsc_{subcat}_gcu_{cut}_gqa_{quality}_gsi_{SIZE}_gco_{COLOUR}_gpr_{print}[_{brandsku}]. Garment colour+size+brand all encode into the UID -> must be pulled from catalog:search, do NOT hand-guess.",
+      "card": "pack_of_cards_with_envelopes / pack_of_folded_cards_with_envelopes etc. Gelato cards are PACK-based; CK must decide singles vs packs (see migration spec).",
+      "mug": "mug productUid from Mugs & Bottle catalog:search (e.g. White 11oz Ceramic Mug)."
+    }
+  },
+
+  "canvas": {
+    "catalog": "canvas",
+    "gelatoCatalogConfirmed": true,
+    "thickness": "wood-fsc-slim",
+    "sizeTokens": {
+      "8x10":  "8x10-inch-200x250-mm",
+      "11x14": "11x14-inch-270x350-mm",
+      "12x16": "12x16-inch-300x400-mm",
+      "16x20": "16x20-inch-400x500-mm",
+      "18x24": "18x24-inch-450x600-mm",
+      "20x28": "20x28-inch-500x700-mm",
+      "24x36": "24x36-inch-600x900-mm"
+    },
+    "uidBuilder": "canvas_{sizeToken}_canvas_wood-fsc-slim_4-0_{orientation}",
+    "orientationFromAspect": { "portrait": "ver", "landscape": "hor", "square": "ver" },
+    "minResolutionPx": { "8x10": 1500, "11x14": 2100, "16x20": 3000, "20x28": 4200, "note": "~150dpi floor; current R2 masters are 1254px -> only safe to ~8in until upscaled (see migration spec blocker)." },
+    "exampleConfirmedUid": "canvas_11x14-inch-270x350-mm_canvas_wood-fsc-slim_4-0_hor"
+  },
+
+  "ck_products": {
+    "_note": "Existing CK catalog (currently fulfilled by Printful via catalogProductId). Each needs a Gelato catalog + confirmed productUid template. status=todo means pull exact variant UIDs from Gelato catalog:search.",
+    "summer-tee":        { "gelatoCatalog": "t-shirts",   "garment": "t-shirt classic crewneck unisex", "status": "todo-confirm-uids" },
+    "summer-long-sleeve":{ "gelatoCatalog": "apparel",    "garment": "long-sleeve crewneck unisex",     "status": "todo-confirm-uids" },
+    "winter-tee":        { "gelatoCatalog": "t-shirts",   "garment": "t-shirt heavyweight unisex",      "status": "todo-confirm-uids" },
+    "winter-long-sleeve":{ "gelatoCatalog": "apparel",    "garment": "long-sleeve unisex",              "status": "todo-confirm-uids" },
+    "hoodie":            { "gelatoCatalog": "hoodies",    "garment": "hoodie unisex",                   "status": "todo-confirm-uids" },
+    "sweatshirt":        { "gelatoCatalog": "sweatshirts","garment": "sweatshirt unisex",               "status": "todo-confirm-uids" },
+    "mug":               { "gelatoCatalog": "mugs",       "garment": "white 11oz ceramic mug",          "status": "todo-confirm-uids" },
+    "tote":              { "gelatoCatalog": "tote-bags",  "garment": "tote bag",                        "status": "todo-confirm-uids" },
+    "sticker":           { "gelatoCatalog": "stickers",   "garment": "die-cut/kiss-cut sticker",        "status": "todo-confirm-uids" }
+  },
+
+  "new_products": {
+    "canvas":  { "gelatoCatalog": "canvas", "status": "mapped" },
+    "framed-canvas": { "gelatoCatalog": "framed-canvas", "status": "todo-confirm-uids" },
+    "poster":  { "gelatoCatalog": "posters", "status": "todo-confirm-uids" },
+    "framed-poster": { "gelatoCatalog": "framed-posters", "status": "todo-confirm-uids" },
+    "greeting-card": { "gelatoCatalog": "cards-us | cards-eu (region-split) / pack-of-cards-envelopes", "status": "todo-decide-singles-vs-packs" }
+  },
+
+  "size_map_apparel": {
+    "_note": "CK sizes -> Gelato GarmentSize tokens. Confirm the exact garment (brand/quality) supports each size via catalog:search.",
+    "S": "s", "M": "m", "L": "l", "XL": "xl", "2XL": "2xl", "3XL": "3xl"
+  },
+  "colour_map_apparel": {
+    "_note": "CK colour label -> Gelato GarmentColor token. Populate from catalog:search GarmentColor hits (e.g. black, white, navy, ash, red, forest, maroon, military-green, heather-dust, mauve, athletic-heather, dark-grey-heather). Names must match Gelato's tokens exactly.",
+    "Black": "black", "White": "white", "Navy": "navy", "Ash": "ash", "Red": "red",
+    "Forest": "forest", "Maroon": "maroon", "Military Green": "military-green",
+    "Heather Dust": "heather-dust", "Mauve": "mauve", "Athletic Heather": "athletic-heather",
+    "Dark Grey Heather": "dark-grey-heather"
+  },
+
+  "launchProductsConfirmed": {
+    "_note": "Exact Gelato productUids validated against the live API (200/activated). {SIZE} lowercase per size_map_apparel; {COLOUR} per colour_map_apparel. Front DTG print = gpr_4-0. Inside label adds a separate print position when enabled.",
+    "tshirt":    { "blank": "Bella+Canvas 3001 (premium unisex crewneck)", "uid": "apparel_product_gca_t-shirt_gsc_crewneck_gcu_unisex_gqa_prm_gsi_{SIZE}_gco_{COLOUR}_gpr_4-0_bella-and-canvas_3001", "sizes": ["s","m","l","xl","2xl","3xl"], "verifyRegions": "PENDING quote-check GB/US/CA/AU/NZ" },
+    "womensTee": { "blank": "Bella+Canvas 6400 (women's premium)", "uid": "apparel_product_gca_t-shirt_gsc_crewneck_gcu_womens_gqa_prm_gsi_{SIZE}_gco_{COLOUR}_gpr_4-0_bella-and-canvas_6400", "sizes": ["s","m","l","xl","2xl"], "verifyRegions": "same family — local production" },
+    "hoodie":    { "blank": "Gildan 18500 (classic pullover unisex)", "uid": "apparel_product_gca_hoodie_gsc_pullover_gcu_unisex_gqa_classic_gsi_{SIZE}_gco_{COLOUR}_gpr_4-0_gildan_18500", "sizes": ["s","m","l","xl","2xl"], "verifyRegions": "PENDING quote-check" },
+    "sweatshirt":{ "blank": "Gildan 18000 (classic crewneck unisex)", "uid": "apparel_product_gca_sweatshirt_gsc_crewneck_gcu_unisex_gqa_classic_gsi_{SIZE}_gco_{COLOUR}_gpr_4-0_gildan_18000", "sizes": ["s","m","l","xl","2xl"], "verifyRegions": "produces locally (same family as hoodie/tee, both quote-verified)" },
+    "mug":       { "blank": "11oz ceramic (white)", "uid": "mug_product_msz_11-oz_mmat_ceramic-white_cl_4-0", "colourRimVariants": ["ceramic-black","ceramic-blue","ceramic-green","ceramic-pink","ceramic-red"], "regions": "broad (GB/US/CA/AU/NZ confirmed in availability list)" },
+    "canvas":    { "blank": "Stretched canvas, slim 38mm", "uidBuilder": "canvas_{sizeToken}_canvas_wood-fsc-slim_4-0_{orientation}", "regions": "all (prints locally per region, verified by quote)" },
+    "greetingCard": { "blank": "Folded/flat card pack — region-split catalogs cards-us / cards-eu", "status": "decide singles vs packs; pull exact pack UID per region" }
+  },
+
+  "moreProductsConfirmed": {
+    "waterBottle": { "uid": "bottle_product_bsz_17-oz_bmat_stainless-steel-white_cl_4-0", "regions": "broad (GB/US/CA/AU/NZ)" },
+    "toteBag": { "uidBuilder": "bag_product_bsc_tote-bag_bqa_clc_bsi_std-t_bco_{colour}_bpr_0-4", "defaultColour": "natural", "regions": "broad" },
+    "hats": { "status": "IN (owner confirmed embroidery-safe designs are easy to produce)", "format": "apparel_product_gca_hat_gsc_{beanie|bucket|dad|trucker|snapback}_gcu_unisex_gqa_classic_gsi_onesize_gco_{colour}_gpr_4-0-emb_{brand}_{sku}", "PRINT": "EMBROIDERY (4-0-emb)", "artwork": "needs embroidery-safe art (mono CK badge or simplified high-contrast silhouettes), NOT the detailed full-colour designs", "todo": "pick one blank per style (beechfield/yupoong), onesize; map gco colour set" },
+    "dumpFindings": {
+      "acrylic": { "uidBuilder": "acrylic_{format}_4-mm_4-0_{orient}", "formats": "UnifiedAcrylicFormat tokens (8x8 .. 28x40)", "status": "mappable" },
+      "beanie": { "uidBuilder": "apparel_product_gca_hat_gsc_beanie_gcu_unisex_gqa_classic_gsi_onesize_gco_{colour}_gpr_4-0-emb_{brand}_{sku}", "brands": ["beechfield","yupoong"], "print": "embroidery", "status": "needs one brand+sku pick" },
+      "apron": { "uidSample": "apparel_product_gca_home-and-living_gsc_apron_gcu_kids_gqa_prm_gsi_onesize_gco_{colour}_gpr_chstc-emb_sols_00599", "print": "EMBROIDERY (chstc-emb) — badge only, not detailed art", "colours": ["black","white","apple-green","orchid-pink"] },
+      "baby": { "category": "gca_onesie", "brands": ["rabbit-skins","sols","babybugz"], "subcats": ["short-sleeve","crewneck"], "status": "construct + validate" },
+      "apparelUmbrella": "catalog 'apparel' lists ALL: categories t-shirt/hoodie/sweatshirt/polo/onesie/hat/home-and-living/tank(subcat tank-top); brands incl bella-and-canvas, gildan, sols, etc."
+    },
+    "flatPrintFamily": {
+      "note": "posters / fine-art / cards / photo-prints share a flat-product UID: {model}_pf_{format}_pt_{paperType}_cl_4-0_{hor|ver}. Format uses UnifiedPaperFormat tokens (e.g. 11x14-inch-270x350-mm, 16x20-inch-400x500-mm, A2). Choose a paper per product.",
+      "paperPicks": { "poster": "200-gsm-80lb-coated-silk", "fine-art": "250-gsm-100lb-uncoated-offwhite-archival" },
+      "todo": "confirm exact model prefix for posters vs fine-art via one product lookup, then build size list from UnifiedPaperFormat tokens"
+    },
+    "stillToMap": ["posters","framed-posters","fine-art","acrylic","metallic","wood-prints","framed-canvas (sizes)","phone-cases","aprons","calendars","notebooks","greeting-card pack UID (cards-us/cards-eu)","apparel: sweatshirt(gildan 18000)/tank(bella+canvas 3480)/polo/kids-tee/baby-bodysuit"]
+  },
+
+  "apparelAvailabilityFlag": "RESOLVED for the tee: order quotes confirm the Bella+Canvas 3001 produces LOCALLY in GB (£8.77, made GB), US ($10.69, made US) and AU (A$20.01, made AU). The product-detail supportedCountries/notSupportedCountries field is unreliable during Gelato's apparel-v2 migration — trust QUOTES (production/fulfilment country), not that field. Still to spot-check: hoodie + CA/NZ for apparel."
+}

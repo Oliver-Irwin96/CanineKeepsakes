@@ -20,7 +20,8 @@
   </div>
 </div>
 
-<script src="js/store.js?v=6"></script>
+<script src="js/region.js?v=1"></script>
+<script src="js/store.js?v=7"></script>
 <script>
 (() => {
   CK.mountChrome();
@@ -48,24 +49,24 @@
       row.insertAdjacentHTML('beforeend', `
         <div>
           <div class="bi-name">${esc(item.collectionName)} — ${esc(item.productName)}</div>
-          <div class="bi-meta">${esc(item.designLabel)} · ${esc(item.colour)} · ${esc(item.size)} · qty ${esc(item.qty)}</div>
+          <div class="bi-meta">${[item.designLabel, item.colour, item.size, 'qty ' + item.qty].filter(v => v && String(v).trim() && String(v) !== 'undefined').map(esc).join(' · ')}</div>
           <button class="rm" data-i="${i}">Remove</button>
         </div>
-        <div class="bi-price">${CK.gbp((parseFloat(item.price) || 0) * (parseInt(item.qty) || 1))}</div>`);
+        <div class="bi-price">${CK.money(CK.lineTotal(item))}</div>`);
       list.appendChild(row);
     });
     list.querySelectorAll('.rm').forEach(btn => btn.onclick = () => { CK.removeFromBasket(+btn.dataset.i); render(); });
 
     const sub = CK.basketTotal();
     box.innerHTML = `
-      <div class="row"><span>Subtotal</span><span>${CK.gbp(sub)}</span></div>
-      <div class="row"><span>Shipping</span><span>calculated at checkout</span></div>
-      <div class="row total"><span>Total</span><span>${CK.gbp(sub)}</span></div>
+      <div class="row"><span>Subtotal</span><span>${CK.money(sub)}</span></div>
+      <div class="row"><span>Delivery</span><span>calculated at checkout</span></div>
+      <div class="row total"><span>Total (${CKRegion.currency})</span><span>${CK.money(sub)}</span></div>
       <div style="display:grid;gap:6px;margin-top:14px;font-size:.86rem">
-        <span>✓ Secure PayPal checkout</span><span>✓ Printed to order</span><span>✓ UK delivery</span><span>✓ Order confirmation by email</span>
+        <span>✓ Secure PayPal checkout</span><span>✓ Printed to order</span><span>✓ Worldwide delivery</span><span>✓ Order confirmation by email</span>
       </div>
       <a class="btn-gold" style="display:block;text-align:center;margin-top:18px" href="checkout.html">Continue to Checkout</a>
-      <div class="notice" style="margin-bottom:0">UK delivery only at launch. Made to order — please allow 2–5 working days for printing.</div>`;
+      <div class="notice" style="margin-bottom:0">Made to order — please allow 2–5 working days for printing, plus delivery. Prices shown in ${CKRegion.currency}.</div>`;
   }
   render();
 })();

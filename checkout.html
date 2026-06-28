@@ -31,7 +31,13 @@
           <div class="field"><label>Town / City</label><input required name="city" autocomplete="address-level2"></div>
           <div class="field"><label>Postcode</label><input required name="zip" autocomplete="postal-code"></div>
         </div>
-        <div class="field"><label>Country</label><select name="country_code" disabled><option value="GB" selected>United Kingdom</option></select></div>
+        <div class="field"><label>Country</label><select name="country_code" id="country-select">
+          <option value="GB" selected>United Kingdom (GBP)</option>
+          <option value="US">United States (USD)</option>
+          <option value="CA">Canada (CAD)</option>
+          <option value="AU">Australia (AUD)</option>
+          <option value="NZ">New Zealand (NZD)</option>
+        </select></div>
       </form>
 
       <button class="btn-add" id="btn-rates" style="margin-top:8px">Calculate Delivery</button>
@@ -48,14 +54,21 @@
   </div>
 </div>
 
-<script src="js/store.js?v=6"></script>
+<script src="js/region.js?v=1"></script>
+<script src="js/store.js?v=7"></script>
 <script src="js/auth.js?v=2"></script>
 <script>
 (() => {
   CK.mountChrome();
   const box = document.getElementById('summary-box');
+  const form = document.getElementById('ship-form');
+  const countrySel = document.getElementById('country-select');
   const esc = s => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
-  let shipping = null;
+  let shipping = null;            // { id, name, rate } in the active currency
+  let clientId = null;            // PayPal client id (from /api/paypal-config)
+
+  /* active currency follows the chosen shipping country (server enforces the same) */
+  CKRegion.setRegionByCountry(countrySel.value);
 
   /* Login is required to check out. Bounce anonymous visitors to the login
      page, then prefill the form from their account. */
@@ -76,42 +89,49 @@
     if (!b.length) { box.innerHTML = '<p>Your basket is empty. Head back to the collections to choose your dog artwork.</p><a class="btn-gold" style="display:block;text-align:center;margin-top:12px" href="index.html#collections">Explore Collections</a>'; return; }
     const sub = CK.basketTotal();
     const total = sub + (shipping ? shipping.rate : 0);
+    const shipText = shipping ? (shipping.rate ? CK.money(shipping.rate) : 'Free') + ' · ' + esc(shipping.name) : 'calculated below';
     box.innerHTML = `
-      ${b.map(i => `<div class="row"><span>${esc(i.collectionName)} ${esc(i.productName)} ×${esc(i.qty)}</span><span>${CK.gbp((parseFloat(i.price) || 0) * (parseInt(i.qty) || 1))}</span></div>`).join('')}
-      <div class="row"><span>Shipping</span><span>${shipping ? CK.gbp(shipping.rate) + ' · ' + shipping.name : 'select rate'}</span></div>
-      <div class="row total"><span>Total</span><span>${CK.gbp(total)}</span></div>`;
+      ${b.map(i => `<div class="row"><span>${esc(i.collectionName)} ${esc(i.productName)} ×${esc(i.qty)}</span><span>${CK.money(CK.lineTotal(i))}</span></div>`).join('')}
+      <div class="row"><span>Delivery</span><span>${shipText}</span></div>
+      <div class="row total"><span>Total (${CKRegion.currency})</span><span>${CK.money(total)}</span></div>`;
   }
   renderSummary();
 
-  /* shipping rates via Netlify function (Printful shipping API) */
+  /* delivery: fixed flat rate per region (free over threshold) — the customer is
+     charged exactly this; server computes the same figure. */
   document.getElementById('btn-rates').onclick = async () => {
-    const form = document.getElementById('ship-form');
     if (!form.reportValidity()) return;
     const fd = Object.fromEntries(new FormData(form));
     const area = document.getElementById('rates-area');
-    area.innerHTML = '<div class="notice">Fetching live rates from Printful…</div>';
+    area.innerHTML = '<div class="notice">Checking delivery…</div>';
     try {
       const res = await fetch('/api/shipping-rates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipient: { ...fd, country_code: 'GB' }, items: CK.getBasket() })
+        body: JSON.stringify({ recipient: fd, items: CK.getBasket() })
       });
-      if (!res.ok) throw new Error('rates unavailable');
-      const rates = await res.json();
-      area.innerHTML = '<p style="font-weight:600;margin:14px 0 6px">Choose your delivery option</p><div class="swatches" style="margin-top:6px">' + rates.map((r, i) =>
-        `<button type="button" class="swatch" data-i="${i}">${r.name} — ${CK.gbp(parseFloat(r.rate))}</button>`).join('') + '</div>';
-      area.querySelectorAll('.swatch').forEach(btn => btn.onclick = () => {
-        area.querySelectorAll('.swatch').forEach(x => x.classList.remove('sel'));
-        btn.classList.add('sel');
-        const r = rates[+btn.dataset.i];
-        shipping = { id: r.id, name: r.name, rate: parseFloat(r.rate) };
-        renderSummary();
-      });
+      const data = await res.json();
+      if (!data.available) { area.innerHTML = '<div class="notice">⚠️ We don\'t ship to that country yet.</div>'; shipping = null; renderSummary(); return; }
+      const opt = (data.options || [])[0] || { id: 'STANDARD', name: 'Standard delivery', rate: CKRegion.shipFlat };
+      shipping = { id: opt.id, name: opt.name, rate: opt.rate };
+      const line = opt.rate ? `${esc(opt.name)} — ${CK.money(opt.rate)}` : `${esc(opt.name)} — Free`;
+      const hint = (!data.freeQualified && data.freeShippingThreshold) ? ` · Free over ${CK.money(data.freeShippingThreshold)}` : '';
+      area.innerHTML = `<div class="notice">✓ ${line}${hint}</div>`;
+      renderSummary();
     } catch {
-      area.innerHTML = '<div class="notice">⚠️ Could not fetch live shipping rates. Using flat-rate placeholder: Standard UK £3.99.</div>';
-      shipping = { id: 'STANDARD', name: 'Standard UK (placeholder)', rate: 3.99 };
+      shipping = { id: 'STANDARD', name: 'Standard delivery', rate: CKRegion.shipFlat };
+      area.innerHTML = '<div class="notice">Standard delivery applied. Final delivery confirmed on your order.</div>';
       renderSummary();
     }
+  };
+
+  /* changing country switches currency + delivery and reloads PayPal in the new currency */
+  countrySel.onchange = () => {
+    CKRegion.setRegionByCountry(countrySel.value);
+    shipping = null;
+    document.getElementById('rates-area').innerHTML = '';
+    renderSummary();
+    if (clientId) loadPayPal();
   };
 
   /* Authenticated POST helper — attaches the Supabase access token so the
@@ -128,23 +148,30 @@
     });
   }
 
-  /* Load PayPal SDK dynamically — client ID fetched from server to avoid secret scanner */
-  function mountPayPal(clientId) {
+  /* Load the PayPal SDK for the ACTIVE currency and mount the buttons. PayPal fixes the
+     currency at SDK load, so when the country (currency) changes we remove the old SDK and
+     reload. Client id comes from the server (keeps it out of the secret scanner). */
+  function loadPayPal() {
+    const cur = CKRegion.currency;
+    document.querySelectorAll('script[data-ppsdk]').forEach(s => s.remove());
+    if (window.paypal) { try { delete window.paypal; } catch (_) { window.paypal = undefined; } }
+    const cont = document.getElementById('paypal-button-container');
+    const notice = document.getElementById('paypal-notice');
+    cont.innerHTML = '';
+    notice.style.display = ''; notice.textContent = 'Loading payment options…';
     const script = document.createElement('script');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=GBP`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=${cur}`;
+    script.setAttribute('data-ppsdk', '1');
     script.onload = () => {
-      document.getElementById('paypal-notice').style.display = 'none';
+      notice.style.display = 'none';
       paypal.Buttons({
         createOrder: () => authPost('/api/create-order', {
-          items: CK.getBasket(),
-          shipping,
-          recipient: Object.fromEntries(new FormData(document.getElementById('ship-form')))
-        }).then(r => r.json()).then(d => d.id),
+          items: CK.getBasket(), shipping,
+          recipient: Object.fromEntries(new FormData(form))
+        }).then(r => r.json()).then(d => { if (!d.id) throw new Error(d.error || 'create failed'); return d.id; }),
         onApprove: data => authPost('/api/capture-order', {
-          orderID: data.orderID,
-          items: CK.getBasket(),
-          shipping,
-          recipient: Object.fromEntries(new FormData(document.getElementById('ship-form')))
+          orderID: data.orderID, items: CK.getBasket(), shipping,
+          recipient: Object.fromEntries(new FormData(form))
         }).then(r => r.json()).then(d => {
           if (d.status === 'COMPLETED') {
             CK.saveBasket([]);
@@ -159,13 +186,14 @@
         })
       }).render('#paypal-button-container');
     };
+    script.onerror = () => { notice.textContent = '⚠️ Could not load payment options. Please refresh.'; };
     document.head.appendChild(script);
   }
 
   fetch('/api/paypal-config')
     .then(r => r.json())
     .then(d => {
-      if (d.clientId) mountPayPal(d.clientId);
+      if (d.clientId) { clientId = d.clientId; loadPayPal(); }
       else document.getElementById('paypal-notice').textContent = '⚠️ Payment unavailable — config missing.';
     })
     .catch(() => {

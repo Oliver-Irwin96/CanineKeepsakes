@@ -230,13 +230,17 @@
   </div>
 </section>
 
-<script src="js/store.js?v=6"></script>
+<script src="js/region.js?v=1"></script>
+<script src="js/store.js?v=7"></script>
 <script src="js/auth.js?v=2"></script>
 <script>
 (async () => {
   CK.mountChrome('submit');
 
   const PRICES = { base: 9.99, extraDog: 6.99, extraRevision: 3.99, priority: 6.99 };
+  /* Custom-artwork commission is a GBP service — always show £ here regardless of the
+     shop's active region currency (this flow is charged in GBP). */
+  const gbpLocal = n => '£' + Number(n).toFixed(2);
   const $ = id => document.getElementById(id);
   const form = $('submit-form');
   let photoFile = null, paid = false;
@@ -270,11 +274,11 @@
   function total() { const a=addons(); return Math.round((PRICES.base + (a.extraDog?PRICES.extraDog:0) + (a.extraRevision?PRICES.extraRevision:0) + (a.priority?PRICES.priority:0))*100)/100; }
   function updateSummary() {
     const a = addons();
-    let rows = `<div class="sumline"><span>Custom dog conversion</span><span>${CK.gbp(PRICES.base)}</span></div>`;
-    if (a.extraDog) rows += `<div class="sumline"><span>Extra dog</span><span>${CK.gbp(PRICES.extraDog)}</span></div>`;
-    if (a.extraRevision) rows += `<div class="sumline"><span>Extra revision</span><span>${CK.gbp(PRICES.extraRevision)}</span></div>`;
-    if (a.priority) rows += `<div class="sumline"><span>Priority (48h)</span><span>${CK.gbp(PRICES.priority)}</span></div>`;
-    rows += `<div class="sumline total"><span>Total today</span><span>${CK.gbp(total())}</span></div>`;
+    let rows = `<div class="sumline"><span>Custom dog conversion</span><span>${gbpLocal(PRICES.base)}</span></div>`;
+    if (a.extraDog) rows += `<div class="sumline"><span>Extra dog</span><span>${gbpLocal(PRICES.extraDog)}</span></div>`;
+    if (a.extraRevision) rows += `<div class="sumline"><span>Extra revision</span><span>${gbpLocal(PRICES.extraRevision)}</span></div>`;
+    if (a.priority) rows += `<div class="sumline"><span>Priority (48h)</span><span>${gbpLocal(PRICES.priority)}</span></div>`;
+    rows += `<div class="sumline total"><span>Total today</span><span>${gbpLocal(total())}</span></div>`;
     $('summary').innerHTML = rows;
   }
   ['ad-dog','ad-rev','ad-pri'].forEach(id => $(id).addEventListener('change', updateSummary));

@@ -24,3 +24,9 @@ deploy-*.zip
 # Session notes saved to root (Knowledge/ & Handoffs/ dirs broken on mount)
 2026-*_CK_*.md
 notes2/
+
+# Gelato migration working/reference files (NOT for the live site)
+CK_Pricing_for_Team.xlsx
+data/*.gelato.json
+_gelato_test_highres.png
+.~lock.*#
