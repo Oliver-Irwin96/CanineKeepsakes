@@ -58,6 +58,62 @@ exports.handler = async (event) => {
       const body = { limit: parseInt(q.limit) || 20 };
       return j(200, await getJSON(`${PROD}/catalogs/${encodeURIComponent(q.uid)}/products:search`, { method:'POST', headers:H(), body: JSON.stringify(body) }));
     }
+    /* DUMP: master catalogue reference. For a page of catalogs, return each catalog's
+       attribute OPTIONS (every size/colour/format/etc.) + product count + a sample UID.
+       This is the recipe to build any product ID without listing 100k+ variants.
+       Paged to avoid timeout: ?action=dump&offset=0&limit=10
+       Noisy attributes are skipped; each option list capped. */
+    if (q.action === 'dump') {
+      const offset = parseInt(q.offset) || 0;
+      const limit = parseInt(q.limit) || 10;
+      const SKIP = new Set(['GarmentPrint','ApparelManufacturerSKU','ProductStatus','State','ProductModel']);
+      const CAP = 80;
+      const list = await getJSON(`${PROD}/catalogs`);
+      const cats = ((list.data && list.data.data) || []).map(c => c.catalogUid);
+      const page = cats.slice(offset, offset + limit);
+      const out = {};
+      for (const uid of page) {
+        try {
+          const s = await getJSON(`${PROD}/catalogs/${encodeURIComponent(uid)}/products:search`, { method:'POST', headers:H(), body: JSON.stringify({ limit: 1 }) });
+          const hits = (s.data && s.data.hits && s.data.hits.attributeHits) || {};
+          const attrs = {};
+          for (const k of Object.keys(hits)) {
+            if (SKIP.has(k)) continue;
+            attrs[k] = Object.keys(hits[k]).slice(0, CAP);
+          }
+          const sample = s.data && s.data.products && s.data.products[0] && s.data.products[0].productUid;
+          out[uid] = { count: (s.data && s.data.pagination && s.data.pagination.total) || null, attributes: attrs, sampleUid: sample };
+        } catch (e) { out[uid] = { error: e.message }; }
+      }
+      return j(200, { offset, limit, totalCatalogs: cats.length, returned: page.length, nextOffset: offset + page.length < cats.length ? offset + page.length : null, catalogs: out });
+    }
+    /* BATCH cost scan: for each catalog, pick the first activated product and return its
+       item price per country. Compact output. Keep cats list small (<=7) to avoid timeout.
+       GET ...?action=scan&cats=canvas,mugs,t-shirts&countries=GB,US */
+    if (q.action === 'scan') {
+      const cats = (q.cats || '').split(',').map(s=>s.trim()).filter(Boolean).slice(0, 8);
+      const countries = (q.countries || 'GB,US').split(',').map(s=>s.trim()).filter(Boolean);
+      const rows = [];
+      for (const cat of cats) {
+        let uid = null;
+        try {
+          const s = await getJSON(`${PROD}/catalogs/${encodeURIComponent(cat)}/products:search`, { method:'POST', headers:H(), body: JSON.stringify({ limit: 60 }) });
+          const prods = (s.data && s.data.products) || [];
+          const act = prods.find(p => p.attributes && p.attributes.ProductStatus === 'activated') || prods[0];
+          uid = act && act.productUid;
+        } catch (_) {}
+        const row = { category: cat, productUid: uid, itemPrice: {} };
+        if (uid) for (const c of countries) {
+          try {
+            const pr = await getJSON(`${PROD}/products/${encodeURIComponent(uid)}/prices?country=${encodeURIComponent(c)}`);
+            const f = (pr.data || [])[0];
+            row.itemPrice[c] = f ? `${Number(f.price).toFixed(2)} ${f.currency}` : null;
+          } catch (_) { row.itemPrice[c] = 'err'; }
+        }
+        rows.push(row);
+      }
+      return j(200, { scanned: cats.length, countries, rows });
+    }
     if (q.action === 'quote') {
       const country = (q.country || 'GB').toUpperCase();
       const addr = ADDR[country] || ADDR.GB;
