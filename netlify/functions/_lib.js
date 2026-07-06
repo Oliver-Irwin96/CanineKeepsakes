@@ -21,9 +21,20 @@ function paypalBase() {
     : 'https://api-m.sandbox.paypal.com';
 }
 
+/* PayPal credentials toggle on PAYPAL_ENV, mirroring paypalBase():
+     live    -> PAYPAL_LIVE_CLIENT_ID / PAYPAL_LIVE_CLIENT_SECRET
+     sandbox -> PAYPAL_SANDBOX_CLIENT_ID / PAYPAL_SANDBOX_CLIENT_SECRET
+   Falls back to legacy PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET so nothing breaks
+   before the split keys are added. Flip the whole environment by changing PAYPAL_ENV. */
+function paypalCreds() {
+  const live = process.env.PAYPAL_ENV === 'live';
+  const id = (live ? process.env.PAYPAL_LIVE_CLIENT_ID : process.env.PAYPAL_SANDBOX_CLIENT_ID) || process.env.PAYPAL_CLIENT_ID;
+  const secret = (live ? process.env.PAYPAL_LIVE_CLIENT_SECRET : process.env.PAYPAL_SANDBOX_CLIENT_SECRET) || process.env.PAYPAL_CLIENT_SECRET;
+  return { id, secret, live };
+}
+
 async function paypalToken() {
-  const id = process.env.PAYPAL_CLIENT_ID;
-  const secret = process.env.PAYPAL_CLIENT_SECRET;
+  const { id, secret } = paypalCreds();
   if (!id || !secret) throw new Error('PayPal credentials not configured');
   const res = await fetch(`${paypalBase()}/v1/oauth2/token`, {
     method: 'POST',
@@ -514,7 +525,7 @@ function buildPrintFiles(item) {
 }
 
 module.exports = {
-  PF_BASE, pfHeaders, paypalBase, paypalToken, priceBasket, json,
+  PF_BASE, pfHeaders, paypalBase, paypalToken, paypalCreds, priceBasket, json,
   printfulShippingRates, authoritativeShipping, FLAT_SHIP_FALLBACK,
   supabaseEnv, verifyUser, findOrderByPaypalId, recordOrder,
   findDesignByPaypalId, recordDesignSubmission, sendBrandedEmail,

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- noindex until quiz copy is approved by the copy owner — remove this line after sign-off -->
+  <meta name="robots" content="noindex">
+  <title>Find Your Dog's Alter Ego | Canine Keepsakes</title>
+  <meta name="description" content="Three quick questions to match your dog's personality to a Canine Keepsakes artwork collection.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Alter-ego quiz (deploy candidate) — matches current site design language */
+    .quiz-wrap{max-width:660px;margin:0 auto;padding:12px 0 90px}
+    .quiz-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:38px 36px;position:relative;overflow:hidden;border:1px solid rgba(22,24,31,.06)}
+    .quiz-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-soft))}
+    .q-num{text-transform:uppercase;letter-spacing:.18em;font-size:.72rem;font-weight:700;color:var(--gold);margin-bottom:10px}
+    .quiz-card h2{font-family:var(--font-display);font-size:1.55rem;font-weight:600;line-height:1.15;margin-bottom:22px}
+    .q-opt{display:block;width:100%;text-align:left;background:var(--cream);border:2px solid transparent;border-radius:14px;padding:15px 18px;font-size:.98rem;font-weight:600;margin-bottom:11px;transition:border-color .18s,transform .18s;cursor:pointer}
+    .q-opt:hover{border-color:var(--gold);transform:translateX(5px)}
+    .q-key{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold-soft));color:var(--ink);font-weight:800;font-size:.78rem;margin-right:11px}
+    .q-bar{height:6px;background:var(--cream-deep);border-radius:99px;margin-bottom:24px;overflow:hidden}
+    .q-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-soft));transition:width .4s ease}
+    .q-result{text-align:center;display:none}
+    .q-result .art{width:min(300px,78%);margin:0 auto 20px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg)}
+    .q-result .rname{font-family:var(--font-display);font-size:2rem;font-weight:700;line-height:1.08}
+    .q-result .rname em{color:var(--gold);font-style:italic}
+    .q-result p{color:var(--ink-soft);max-width:400px;margin:10px auto 22px}
+    .q-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .q-line{background:transparent;border:1.5px solid rgba(22,24,31,.25);border-radius:999px;padding:12px 24px;font-weight:600;font-size:.9rem;cursor:pointer;transition:border-color .2s}
+    .q-line:hover{border-color:var(--ink)}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="page-title">Find your dog's alter ego</h1>
+  <p class="muted" style="margin:-16px 0 26px">Three ridiculous questions. One suspiciously accurate answer.</p>
+  <div class="quiz-wrap">
+    <div class="q-bar"><i id="q-bar"></i></div>
+    <div class="quiz-card">
+      <div id="q-body"><p class="muted">Loading…</p></div>
+      <div class="q-result" id="q-result">
+        <div class="art" id="r-art"></div>
+        <div class="rname" id="r-name"></div>
+        <p id="r-blurb"></p>
+        <div class="q-actions">
+          <a class="btn-gold" id="r-shop" href="#">Shop this collection</a>
+          <button class="q-line" id="r-share" type="button">Share result</button>
+          <button class="q-line" id="r-again" type="button">Go again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/region.js?v=1"></script>
+<script src="js/store.js?v=7"></script>
+<script src="js/pack.js?v=1"></script>
+<script>
+(async () => {
+  CK.mountChrome('collections');
+  const cat = await CK.load();
+  const dogName = (window.CKPack && CKPack.dog()) ? CKPack.dog().name : 'Your dog';
+  const has = s => cat.collections.some(c => c.slug === s);
+
+  /* answer → collection-slug weights (all quiz copy = placeholder pending copy review) */
+  const QS = [
+    { q: "It's 7am on a Sunday. Where's " + dogName + "?", o: [
+      ["Dead centre of the bed, snoring like a diesel engine", { "snorefather": 3, "work-like-a-dog": 1 }],
+      ["Standing on your chest demanding the walk. NOW.", { "whos-walking-who": 3, "fmx-dog": 1 }],
+      ["Silently watching the front door for the postman", { "got-mail": 3, "ninja": 1 }],
+      ["In the kitchen, collecting breakfast tax", { "bbq-cheeseburger-tax": 3, "scooz-me-hooman": 1 }]]},
+    { q: "You call their name at the park. They…", o: [
+      ["Hear nothing. Absolutely nothing. Ever.", { "hear-no-bell": 3, "redneck": 1 }],
+      ["Are already at top speed in the opposite direction", { "fmx-dog": 3, "football-dog": 1 }],
+      ["Come back immediately — covered in something terrible", { "dirty-dog": 3, "hog-dogs": 1 }],
+      ["Finish their current business meeting, then trot over", { "woof-business": 3, "and-beyond": 1 }]]},
+    { q: "Their love language is…", o: [
+      ["Aggressive, relentless affection", { "love-you": 3, "ill-be-bark": 1 }],
+      ["Chaos. The love language is chaos.", { "ninja": 2, "fmx-dog": 2 }],
+      ["Sitting ON you. Not near you. On you.", { "snorefather": 2, "whos-walking-who": 2 }],
+      ["Whatever you're currently eating", { "bbq-cheeseburger-tax": 3, "scooz-me-hooman": 2 }]]}
+  ];
+  let step = 0, score = {};
+  const bar = document.getElementById('q-bar'), body = document.getElementById('q-body'), result = document.getElementById('q-result');
+
+  function ask(){
+    bar.style.width = (step / QS.length * 100) + '%';
+    const q = QS[step];
+    body.innerHTML = '<div class="q-num">Question ' + (step + 1) + ' of ' + QS.length + '</div><h2>' + q.q + '</h2>'
+      + q.o.map((o, i) => '<button type="button" class="q-opt" data-i="' + i + '"><span class="q-key">' + String.fromCharCode(65 + i) + '</span>' + o[0] + '</button>').join('');
+  }
+  body.addEventListener('click', e => {
+    const b = e.target.closest('.q-opt'); if (!b) return;
+    Object.entries(QS[step].o[b.dataset.i][1]).forEach(([s, v]) => { if (has(s)) score[s] = (score[s] || 0) + v; });
+    step++; step < QS.length ? ask() : done();
+  });
+  function done(){
+    bar.style.width = '100%';
+    const ranked = Object.entries(score).sort((a, b) => b[1] - a[1]);
+    const col = cat.collections.find(c => c.slug === (ranked.length ? ranked[0][0] : 'snorefather')) || cat.collections[0];
+    const myBreed = window.CKPack ? CKPack.breed() : null;
+    const design = (myBreed && col.designs.find(d => d.breed === myBreed)) || col.designs[0];
+    body.style.display = 'none'; result.style.display = 'block';
+    document.getElementById('r-art').innerHTML = '';
+    document.getElementById('r-art').appendChild(CK.designImg(design, col.name));
+    document.getElementById('r-name').innerHTML = ((window.CKPack && CKPack.dog()) ? CKPack.dog().name + ' is' : 'Your dog is') + '<br><em>' + col.name + '</em>';
+    document.getElementById('r-blurb').textContent = (col.description || '') + (myBreed && design.breed === myBreed ? ' Shown in ' + myBreed + ' — your breed.' : '');
+    document.getElementById('r-shop').href = 'collection.html?c=' + col.slug;
+    document.getElementById('r-share').onclick = async () => {
+      const text = 'Apparently ' + ((window.CKPack && CKPack.dog()) ? CKPack.dog().name : 'my dog') + ' belongs in ' + col.name + '. Find yours → caninekeepsakes.co.uk/quiz.html';
+      try { if (navigator.share) await navigator.share({ text }); else { await navigator.clipboard.writeText(text); alert('Copied to clipboard'); } } catch (_) {}
+    };
+    document.getElementById('r-again').onclick = () => { step = 0; score = {}; result.style.display = 'none'; body.style.display = 'block'; ask(); };
+  }
+  ask();
+  CK.reveals();
+})();
+</script>
+</body>
+</html>

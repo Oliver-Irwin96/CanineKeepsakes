@@ -40,6 +40,13 @@
     @keyframes uline{to{transform:scaleX(1)}}
     .hero .lead,.hero .cta-row{opacity:0;animation:rise .9s ease 1s forwards}
     .hero .cta-row{animation-delay:1.2s}
+    /* breed confirmer (deploy candidate) */
+    .ck-breedbox{background:rgba(250,246,239,.06);border:1px solid rgba(236,192,106,.32);border-radius:16px;padding:16px 18px;max-width:470px;margin:0 0 26px}
+    .ck-breedbox label{display:block;font-weight:700;font-size:.85rem;color:var(--gold-soft);margin-bottom:9px}
+    .ck-breedbox .bb-row{display:flex;gap:10px}
+    .ck-breedbox select{flex:1;padding:11px 13px;border-radius:11px;border:1.5px solid rgba(250,246,239,.25);background:rgba(22,24,31,.5);color:var(--cream);font-size:.92rem;font-family:inherit}
+    .ck-breedbox button{background:var(--gold);color:var(--ink);border:none;border-radius:11px;padding:11px 18px;font-weight:700;cursor:pointer}
+    .ck-breedbox button:hover{background:var(--gold-soft)}
   </style>
 </head>
 <body class="home">
@@ -55,8 +62,12 @@
       <img class="hero-badge" src="images/logo.png" alt="Canine Keepsakes">
       <span class="eyebrow">🐾 Original dog art · printed in the UK</span>
       <h1 id="head"></h1>
-      <p class="lead">Original dog artwork collections for people who know their dog isn't "just a dog". From sofa bosses and mud magnets to rock stars and professional troublemakers, every Canine Keepsakes collection is built around the personalities dog owners recognise instantly.</p>
+      <p class="lead">Original dog artwork collections for people who know their dog isn't "just a dog". From sofa bosses and mud magnets to rock stars and professional troublemakers, every Canine Keepsakes collection captures the little personality traits dog owners instantly recognise.</p>
       <p style="font-weight:600;color:var(--cream);margin:0 0 8px;font-size:1.05rem">Choose the collection. Find your breed. Turn it into something worth keeping.</p>
+      <div class="ck-breedbox" id="ck-breedbox" hidden>
+        <label for="ck-breed-sel">Which breed are we shopping for today?</label>
+        <div class="bb-row"><select id="ck-breed-sel"></select><button id="ck-breed-go" type="button" data-mag>Show matching collections</button></div>
+      </div>
       <div class="cta-row">
         <a class="btn-gold" href="#collections" data-mag>Explore Collections</a>
         <a class="btn-ghost" href="submit-design.html" data-mag>Customise With My Dog</a>
@@ -72,10 +83,10 @@
 </section>
 
 <section class="stats"><div class="wrap"><div class="row">
-  <div class="stat"><div class="num" data-count="21">0</div><div class="lab">Original collections</div></div>
-  <div class="stat"><div class="num" data-count="20">0</div><div class="lab">Breeds per design</div></div>
-  <div class="stat"><div class="num" data-count="13">0</div><div class="lab">Products</div></div>
-  <div class="stat"><div class="num" data-count="100" data-suffix="%">0</div><div class="lab">UK printed</div></div>
+  <div class="stat"><div class="num" id="stat-collections" data-count="21">0</div><div class="lab">Original collections</div></div>
+  <div class="stat"><div class="num" id="stat-designs" data-count="20" data-suffix="+">0</div><div class="lab">Designs</div></div>
+  <div class="stat"><div class="num" id="stat-products" data-count="13">0</div><div class="lab">Products</div></div>
+  <div class="stat"><div class="num" data-count="100" data-suffix="%">0</div><div class="lab">Made locally</div></div>
 </div></div></section>
 
 <section class="section">
@@ -104,6 +115,17 @@
       <p>Not sure where to begin? These are the collections most likely to make dog people say "that is absolutely my dog."</p>
     </div>
     <div class="grid cols-3" id="bestseller-grid"></div>
+  </div>
+</section>
+
+<section class="section" style="padding:56px 0">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="kicker">New</div>
+      <h2>Not sure which collection? Find your dog's alter ego.</h2>
+      <p>Three ridiculous questions. One suspiciously accurate answer.</p>
+      <div class="cta-row" style="justify-content:center;margin-top:18px;animation:none;opacity:1"><a class="btn-gold" href="quiz.html" data-mag>Take the quiz</a></div>
+    </div>
   </div>
 </section>
 
@@ -166,6 +188,7 @@
 
 <script src="js/region.js?v=1"></script>
 <script src="js/store.js?v=7"></script>
+<script src="js/pack.js?v=1"></script>
 <script>
 (async () => {
   CK.mountChrome('collections');
@@ -212,33 +235,74 @@
   wall2.innerHTML=(cat.collections.slice().reverse().map(c=>`<div class="tile"><img src="${c.designs[Math.min(1,c.designs.length-1)].thumb}" alt="" loading="lazy"></div>`).join('')).repeat(2);
 
   const grid=document.getElementById('collection-grid');
-  cat.collections.forEach(c=>{
-    const a=document.createElement('a');
-    a.className='card reveal';
-    a.href=`collection.html?c=${c.slug}`;
-    const thumb=document.createElement('div'); thumb.className='thumb';
-    thumb.appendChild(CK.designImg(c.designs[0], c.name.split(' ')[0]));
-    const badge=document.createElement('span'); badge.className='badge'; badge.textContent=`${c.designCount} breeds`;
-    thumb.appendChild(badge);
-    a.appendChild(thumb);
-    a.insertAdjacentHTML('beforeend',`<div class="body"><div class="title">${c.name}</div><div class="meta">13 products · from £4.99</div><div class="price">Shop ${c.name} →</div></div>`);
-    grid.appendChild(a);
-  });
+  /* real product count + lowest price (active currency), instead of hardcoded text.
+     Exclude embroidery-only items (hats/polo/apron) — not offered until embroidery-safe art exists. */
+  const _avail = cat.products.filter(p => !p.embroidery);
+  const _prices = _avail.map(p => (window.CKRegion ? CKRegion.priceOf(p) : (p.retailGBP ?? p.retailPrice))).filter(v => Number.isFinite(v) && v > 0);
+  const metaLine = `${_avail.length} products${_prices.length ? ' · from ' + CK.money(Math.min(..._prices)) : ''}`;
 
-  /* curated best sellers (filtered from the real catalog so links never break) */
+  /* live, auto-computed banner stats — never hand-maintained, always accurate from the catalogue */
+  {
+    const totalDesigns = cat.collections.reduce((n,c)=>n+(c.designs ? c.designs.length : 0),0);
+    const setStat=(id,val)=>{const el=document.getElementById(id); if(el){el.setAttribute('data-count',String(val)); el.dataset.count=String(val);}};
+    setStat('stat-collections', cat.collections.length);
+    setStat('stat-designs', totalDesigns);
+    setStat('stat-products', _avail.length);
+  }
+  /* ── breed-aware rendering (deploy candidate: breed confirmer + My Pack) ──
+     Renders BOTH grids for a chosen breed: each collection shows its design in
+     that breed (real thumb, from catalogue breed field); collections without
+     the breed sort last with an honest badge. No hardcoded counts/prices. */
+  const allBreeds = [...new Set(cat.collections.flatMap(c=>c.designs.map(d=>d.breed).filter(Boolean)))].sort();
+  const designFor = (c, breed) => breed ? (c.designs.find(d=>d.breed===breed) || null) : null;
   const featNames=["Snorefather","Who's Walking Who","Hear No Bell","Woof Business","I'll Be Bark","Work Like A Dog"];
   const featBadges={"Snorefather":"Fan Favourite","Who's Walking Who":"Most Relatable","Hear No Bell":"Big Personality","Woof Business":"Best Gift Pick","I'll Be Bark":"Fan Favourite","Work Like A Dog":"Big Personality"};
-  const bsGrid=document.getElementById('bestseller-grid');
-  if(bsGrid){featNames.forEach(nm=>{
-    const c=cat.collections.find(x=>x.name===nm); if(!c) return;
-    const a=document.createElement('a'); a.className='card reveal'; a.href=`collection.html?c=${c.slug}`;
+
+  function collectionCard(c, breed, featBadge){
+    const match = designFor(c, breed);
+    const design = match || c.designs[0];
+    const a=document.createElement('a');
+    a.className='card reveal in';
+    a.href=`collection.html?c=${c.slug}`;
     const thumb=document.createElement('div'); thumb.className='thumb';
-    thumb.appendChild(CK.designImg(c.designs[0], c.name.split(' ')[0]));
-    const badge=document.createElement('span'); badge.className='badge'; badge.textContent=featBadges[nm]||'Fan Favourite';
-    thumb.appendChild(badge); a.appendChild(thumb);
-    a.insertAdjacentHTML('beforeend',`<div class="body"><div class="title">${c.name}</div><div class="meta">13 products · from £4.99</div><div class="price">Shop ${c.name} →</div></div>`);
-    bsGrid.appendChild(a);
-  });}
+    thumb.appendChild(CK.designImg(design, c.name.split(' ')[0]));
+    const badge=document.createElement('span'); badge.className='badge';
+    badge.textContent = breed ? (match ? breed+' ✓' : `Available in ${c.designCount} breeds`) : (featBadge || `${c.designCount} breeds`);
+    thumb.appendChild(badge);
+    a.appendChild(thumb);
+    a.insertAdjacentHTML('beforeend',`<div class="body"><div class="title">${c.name}</div><div class="meta">${metaLine}</div><div class="price">Shop ${c.name} →</div></div>`);
+    return a;
+  }
+  const bsGrid=document.getElementById('bestseller-grid');
+  function renderGrids(breed){
+    grid.innerHTML='';
+    const cols = breed ? [...cat.collections].sort((a,b)=>(designFor(b,breed)?1:0)-(designFor(a,breed)?1:0)) : cat.collections;
+    cols.forEach(c=>grid.appendChild(collectionCard(c, breed)));
+    if(bsGrid){
+      bsGrid.innerHTML='';
+      featNames.forEach(nm=>{
+        const c=cat.collections.find(x=>x.name===nm); if(!c) return;
+        bsGrid.appendChild(collectionCard(c, breed, featBadges[nm]||'Fan Favourite'));
+      });
+    }
+  }
+
+  /* breed confirmer widget wiring */
+  const bb=document.getElementById('ck-breedbox'), bbSel=document.getElementById('ck-breed-sel');
+  let startBreed = null;
+  if(bb && bbSel){
+    bbSel.innerHTML='<option value="">All breeds</option>'+allBreeds.map(b=>`<option>${b}</option>`).join('');
+    const saved = (window.CKPack && CKPack.breed()) || null;
+    if(saved && allBreeds.includes(saved)){ bbSel.value=saved; startBreed=saved; }
+    bb.hidden=false;
+    document.getElementById('ck-breed-go').addEventListener('click',()=>{
+      const br=bbSel.value||null;
+      if(br && window.CKPack) CKPack.quickSet(br);
+      renderGrids(br);
+      const sec=document.getElementById('collections'); if(sec) sec.scrollIntoView({behavior:'smooth'});
+    });
+  }
+  renderGrids(startBreed);
 
   CK.reveals();
 })();

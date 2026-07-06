@@ -193,11 +193,17 @@
 
   /* ── 1 · product picker, grouped by category ── */
   const pp = document.getElementById('product-picker');
+  /* Embroidery products (hats/polo/apron, flagged embroidery:true) only suit stitch-safe
+     artwork, so they're hidden unless the chosen design is flagged embroiderySafe.
+     Trucker hat is DTF (not embroidery-flagged) so it stays for full-colour graphics. */
+  const productAvailable = p => !(p.embroidery && !(design && design.embroiderySafe));
   function renderProductPicker() {
     pp.innerHTML = '';
     const cats = [];
-    cat.products.forEach(p => { if (!cats.includes(p.category)) cats.push(p.category); });
+    cat.products.forEach(p => { if (productAvailable(p) && !cats.includes(p.category)) cats.push(p.category); });
     cats.forEach(category => {
+      const items = cat.products.filter(p => p.category === category && productAvailable(p));
+      if (!items.length) return;
       const group = document.createElement('div');
       group.className = 'prod-group';
       const lbl = document.createElement('div');
@@ -206,7 +212,7 @@
       group.appendChild(lbl);
       const row = document.createElement('div');
       row.className = 'swatches';
-      cat.products.filter(p => p.category === category).forEach(p => {
+      items.forEach(p => {
         const b = document.createElement('button');
         b.type = 'button';
         b.className = 'swatch prod' + (p.slug === prod.slug ? ' sel' : '');
@@ -243,6 +249,13 @@
       design = d;
       strip.querySelectorAll('.d').forEach(x => x.classList.remove('sel'));
       cell.classList.add('sel');
+      /* product availability can depend on the design (embroidery-safe) — refresh picker.
+         If the current product is no longer offered for this design, fall back to the first available. */
+      if (!productAvailable(prod)) { const first = cat.products.find(productAvailable); if (first) prod = first; }
+      renderProductPicker();
+      renderColours();
+      renderSizes();
+      renderProductInfo();
       renderMain();
     };
     strip.appendChild(cell);

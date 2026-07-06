@@ -45,7 +45,7 @@ const CK = (() => {
     wrap.innerHTML = `<span>${label || '🐾'}</span>`;
     const img = new Image();
     img.alt = label || 'design';
-    img.loading = 'lazy'; img.decoding = 'async';
+    img.decoding = 'async';
     img.onload = () => { wrap.className = ''; wrap.innerHTML = ''; wrap.appendChild(img); };
     img.onerror = () => {};
     img.src = design.thumb;
@@ -108,6 +108,7 @@ const CK = (() => {
       <a class="logo" href="index.html"><img class="logo-badge" src="images/logo.png" alt="Canine Keepsakes" width="42" height="42"> Canine Keepsakes</a>
       <nav class="nav">
         <a href="index.html#collections" ${active==='collections'?'style="opacity:1"':''}>Collections</a>
+        <a href="quiz.html" ${active==='quiz'?'style="opacity:1"':''}>Alter-Ego Quiz</a>
         <a href="submit-design.html" ${active==='submit'?'style="opacity:1"':''}>Custom Dog Art</a>
         <a href="creators.html" ${active==='creators'?'style="opacity:1"':''}>Design for us</a>
         <a href="about.html" ${active==='about'?'style="opacity:1"':''}>About</a>
@@ -130,6 +131,7 @@ const CK = (() => {
           <h4>Shop</h4>
           <a href="index.html#collections">Collections</a>
           <a href="submit-design.html">Custom Dog Art</a>
+          <a href="quiz.html">Alter-Ego Quiz</a>
           <a href="creators.html">Design for us</a>
           <a href="basket.html">Basket</a>
           <a href="account.html">Account</a>
