@@ -37,3 +37,6 @@ data/*.bak
 DOWNLOAD_CHECKLIST.pdf
 TEMPLATE_CHECKLIST.pdf
 data/*.gelato.json
+
+# consolidated internal working docs (never publish)
+_internal/
