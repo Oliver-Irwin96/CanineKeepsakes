@@ -42,7 +42,7 @@ const CK = (() => {
   function designImg(design, label) {
     const wrap = document.createElement('div');
     wrap.className = 'ph-art';
-    wrap.innerHTML = `<span>${label || '🐾'}</span>`;
+    wrap.innerHTML = `<span>${label || ''}</span>`;
     const img = new Image();
     img.alt = label || 'design';
     img.decoding = 'async';

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- noindex until launch + copy approval; page is inert unless GIFTCARDS_ENABLED on the API -->
+  <meta name="robots" content="noindex">
+  <title>Gift Cards | Canine Keepsakes</title>
+  <meta name="description" content="Give a Canine Keepsakes gift card — original dog artwork, their breed, their choice.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .gc-wrap{max-width:640px;margin:0 auto;padding:10px 0 90px}
+    .gc-card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-md);padding:36px 34px;border:1px solid rgba(22,24,31,.06);position:relative;overflow:hidden}
+    .gc-card::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold-soft))}
+    .gc-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 20px}
+    .gc-tier{border:2px solid rgba(22,24,31,.15);border-radius:14px;padding:16px 8px;text-align:center;font-weight:700;font-size:1.15rem;cursor:pointer;background:var(--white);transition:all .15s;font-family:var(--font-display)}
+    .gc-tier:hover{border-color:var(--gold)}
+    .gc-tier.sel{background:var(--ink);color:var(--gold-soft);border-color:var(--ink)}
+    @media(max-width:480px){.gc-tiers{grid-template-columns:repeat(2,1fr)}}
+    #gc-paypal{margin-top:16px;min-height:48px}
+    .gc-done{display:none;text-align:center}
+    .gc-done .code{font-family:var(--font-display);font-size:1.5rem;letter-spacing:2px;background:var(--ink);color:var(--gold-soft);padding:16px;border-radius:14px;margin:16px 0}
+    .gc-offline{background:var(--cream-deep);border-radius:14px;padding:18px;text-align:center;display:none}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="page-title">Give the gift every dog lover chooses differently.</h1>
+  <p class="muted" style="margin:-16px 0 26px">Some people fall in love with the funny ones. Others find the one that reminds them of their best friend. Give them the freedom to choose the Canine Keepsakes they'll treasure most.</p>
+  <div class="gc-wrap">
+    <div class="gc-card">
+      <div id="gc-form">
+        <div class="picker"><label>Gift card value <small id="gc-cur"></small></label>
+          <div class="gc-tiers" id="gc-tiers"></div>
+        </div>
+        <div class="field"><label>Send to</label><input type="email" id="gc-email" placeholder="them@example.com">
+          <small class="muted" style="display:block;margin-top:4px">Their email — or yours if you'd rather surprise them yourself.</small></div>
+        <div class="field"><label>Your message <small>(optional)</small></label><textarea id="gc-msg" rows="2" maxlength="300" placeholder="Happy Birthday! I couldn't decide which one you'd love most... so now you can."></textarea></div>
+        <div id="gc-paypal"></div>
+        <p class="muted" style="font-size:.82rem;margin-top:12px">Delivered by email after payment. Redeem at checkout in the same currency. Any remaining balance stays safely on your gift card. Expiry details are included in the email.</p>
+        <div class="gc-why" style="background:var(--cream-deep,#f4eddd);border-radius:14px;padding:16px 18px;margin-top:18px">
+          <p style="font-weight:600;margin:0 0 8px">Why people love gift cards</p>
+          <p style="margin:0 0 5px">🐾 They choose their favourite design</p>
+          <p style="margin:0 0 5px">🎁 Perfect for birthdays, gotcha days and Christmas</p>
+          <p style="margin:0">💛 Delivered instantly by email</p>
+        </div>
+      </div>
+      <div class="gc-done" id="gc-done">
+        <h2 style="font-family:var(--font-display)">It's on its way! 🐾</h2>
+        <p class="muted">Your gift card has been sent by email. Keep a copy of the code just in case:</p>
+        <div class="code" id="gc-code"></div>
+        <a class="btn-gold" href="index.html#collections" style="display:inline-block">Explore collections</a>
+      </div>
+      <div class="gc-offline" id="gc-offline">Gift cards are almost here. 🐾 We're putting the finishing touches on them.</div>
+    </div>
+  </div>
+</div>
+<script src="js/region.js?v=1"></script>
+<script src="js/store.js?v=9"></script>
+<script>
+(async () => {
+  CK.mountChrome();
+  const CURRENCY = (window.CKRegion && CKRegion.currency && CKRegion.currency()) || 'GBP';
+  const SYM = { GBP:'£', USD:'US$', CAD:'CA$', AUD:'A$', NZD:'NZ$', EUR:'€' }[CURRENCY] || '£';
+  document.getElementById('gc-cur').textContent = '· in ' + CURRENCY;
+  let tier = '25';
+  const tiers = document.getElementById('gc-tiers');
+  tiers.innerHTML = ['10','25','50','100'].map(t =>
+    '<button type="button" class="gc-tier' + (t === tier ? ' sel' : '') + '" data-t="' + t + '">' + SYM + t + '</button>').join('');
+  tiers.addEventListener('click', e => {
+    const b = e.target.closest('.gc-tier'); if (!b) return;
+    tier = b.dataset.t;
+    tiers.querySelectorAll('.gc-tier').forEach(x => x.classList.toggle('sel', x === b));
+  });
+
+  /* probe the flag: if the API 404s, show the coming-soon state */
+  const probe = await fetch('/api/giftcard', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({ action: 'validate', code: 'PROBE' }) });
+  if (probe.status === 404) {
+    document.getElementById('gc-form').style.display = 'none';
+    document.getElementById('gc-offline').style.display = 'block';
+    return;
+  }
+
+  /* PayPal buttons — same SDK pattern as the rest of checkout */
+  const cfg = await fetch('/api/paypal-config').then(r => r.json());
+  await new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(cfg.clientId) + '&currency=' + CURRENCY;
+    s.onload = res; s.onerror = rej; document.head.appendChild(s);
+  });
+  paypal.Buttons({
+    createOrder: async () => {
+      const email = document.getElementById('gc-email').value.trim();
+      if (!email) { alert('Who are we sending it to? Add an email address first.'); throw new Error('no email'); }
+      const r = await fetch('/api/giftcard', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create', tier, currency: CURRENCY, recipient_email: email, message: document.getElementById('gc-msg').value })
+      });
+      const d = await r.json();
+      if (!d.id) throw new Error(d.error || 'could not start payment');
+      return d.id;
+    },
+    onApprove: async (data) => {
+      const r = await fetch('/api/giftcard', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'capture', orderID: data.orderID })
+      });
+      const d = await r.json();
+      if (d.status === 'COMPLETED') {
+        document.getElementById('gc-form').style.display = 'none';
+        document.getElementById('gc-code').textContent = d.code;
+        document.getElementById('gc-done').style.display = 'block';
+      } else alert('We couldn\'t complete your payment (' + (d.error || d.status || 'unknown') + '). Nothing has been charged twice. If you\'re unsure, get in touch and we\'ll help.');
+    }
+  }).render('#gc-paypal');
+})();
+</script>
+</body>
+</html>

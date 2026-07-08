@@ -8,7 +8,7 @@
   <meta name="description" content="Secure checkout for Canine Keepsakes printed-to-order dog artwork products.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
   <!-- PayPal SDK loaded dynamically via /api/paypal-config -->
 </head>
 <body>
@@ -55,7 +55,7 @@
 </div>
 
 <script src="js/region.js?v=1"></script>
-<script src="js/store.js?v=8"></script>
+<script src="js/store.js?v=9"></script>
 <script src="js/auth.js?v=2"></script>
 <script>
 (() => {
@@ -111,7 +111,7 @@
         body: JSON.stringify({ recipient: fd, items: CK.getBasket() })
       });
       const data = await res.json();
-      if (!data.available) { area.innerHTML = '<div class="notice">⚠️ We don\'t ship to that country yet.</div>'; shipping = null; renderSummary(); return; }
+      if (!data.available) { area.innerHTML = '<div class="notice">We don\'t ship to that country yet.</div>'; shipping = null; renderSummary(); return; }
       const opt = (data.options || [])[0] || { id: 'STANDARD', name: 'Standard delivery', rate: CKRegion.shipFlat };
       shipping = { id: opt.id, name: opt.name, rate: opt.rate };
       const line = opt.rate ? `${esc(opt.name)} — ${CK.money(opt.rate)}` : `${esc(opt.name)} — Free`;
@@ -177,7 +177,7 @@
             CK.saveBasket([]);
             const review = d.fulfilment === 'MANUAL_REVIEW_REQUIRED' || d.fulfilment === 'MANUAL_FOLLOWUP_REQUIRED';
             document.querySelector('.two-col').innerHTML =
-              '<div class="empty-state" style="grid-column:1/-1"><div class="big">🎉</div><h2>Order confirmed — thank you!</h2><p>' +
+              '<div class="empty-state" style="grid-column:1/-1"><div class="big"><img src="/images/icons/verified.svg" class="ck-ic" alt=""></div><h2>Order confirmed — thank you!</h2><p>' +
               (review
                 ? 'Thanks — your payment went through. We\'re giving this order a quick manual check and will email you shortly.'
                 : 'Thanks — your keepsake is heading to print. Confirmation email on its way.') +
@@ -186,7 +186,7 @@
         })
       }).render('#paypal-button-container');
     };
-    script.onerror = () => { notice.textContent = '⚠️ Could not load payment options. Please refresh.'; };
+    script.onerror = () => { notice.textContent = 'Could not load payment options. Please refresh.'; };
     document.head.appendChild(script);
   }
 
@@ -194,10 +194,10 @@
     .then(r => r.json())
     .then(d => {
       if (d.clientId) { clientId = d.clientId; loadPayPal(); }
-      else document.getElementById('paypal-notice').textContent = '⚠️ Payment unavailable — config missing.';
+      else document.getElementById('paypal-notice').textContent = 'Payment unavailable — config missing.';
     })
     .catch(() => {
-      document.getElementById('paypal-notice').textContent = '⚠️ Could not load payment options. Please refresh.';
+      document.getElementById('paypal-notice').textContent = 'Could not load payment options. Please refresh.';
     });
 })();
 </script>

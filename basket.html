@@ -8,7 +8,7 @@
   <meta name="description" content="Review your Canine Keepsakes basket before secure checkout.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
 </div>
 
 <script src="js/region.js?v=1"></script>
-<script src="js/store.js?v=8"></script>
+<script src="js/store.js?v=9"></script>
 <script>
 (() => {
   CK.mountChrome();
@@ -32,7 +32,7 @@
   function render() {
     const b = CK.getBasket();
     if (!b.length) {
-      area.innerHTML = `<div class="empty-state"><div class="big">🐾</div><h3 style="font-family:var(--font-display);margin:0 0 8px">Looks like the dog ran off with your basket.</h3><p>Ready to find the collection that feels most like your dog?</p><p style="margin-top:18px"><a class="btn-gold" href="index.html#collections">Explore Collections</a> <a class="btn-ghost" href="submit-design.html" style="margin-left:8px">Customise With My Dog</a></p></div>`;
+      area.innerHTML = `<div class="empty-state"><div class="big"><img src="/images/icons/paw.svg" class="ck-ic" alt=""></div><h3 style="font-family:var(--font-display);margin:0 0 8px">Looks like the dog ran off with your basket.</h3><p>Ready to find the collection that feels most like your dog?</p><p style="margin-top:18px"><a class="btn-gold" href="index.html#collections">Explore Collections</a> <a class="btn-ghost" href="submit-design.html" style="margin-left:8px">Customise With My Dog</a></p></div>`;
       box.style.display = 'none';
       return;
     }
@@ -44,7 +44,7 @@
       row.className = 'basket-item';
       const thumb = document.createElement('div');
       thumb.className = 'bi-thumb';
-      thumb.appendChild(CK.designImg({ thumb: item.thumb }, '🐾'));
+      thumb.appendChild(CK.designImg({ thumb: item.thumb }, ''));
       row.appendChild(thumb);
       row.insertAdjacentHTML('beforeend', `
         <div>

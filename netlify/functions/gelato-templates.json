@@ -1,0 +1,78 @@
+{
+ "store": "0fd5afcd-5e26-43ff-a5c9-370c7d111b5b",
+ "ecBase": "https://ecommerce.gelatoapis.com/v1",
+ "products": {
+  "summer-tee": {
+   "templateId": "baf83b35-e036-421e-8300-5cfa1e3476ba",
+   "placeholder": "ImageFront"
+  },
+  "winter-tee": {
+   "templateId": "5be83840-6fd1-40b6-a9d8-82251b4fe966",
+   "placeholder": "ImageFront"
+  },
+  "womens-relaxed-tee": {
+   "templateId": "ea3840ba-4b43-415f-8899-280e5a03cb0f",
+   "placeholder": "ImageFront"
+  },
+  "sweatshirt": {
+   "templateId": "55c77e56-45c6-488f-818b-6022642b9a0d",
+   "placeholder": "ImageFront"
+  },
+  "hoodie": {
+   "templateId": "8088a47e-5898-43f2-9d1c-27d9fb380740",
+   "placeholder": "ImageFront"
+  },
+  "zip-hoodie": {
+   "templateId": "bf504218-0887-4c49-91fa-0ba41e604833",
+   "placeholder": "ImageFront"
+  },
+  "white-mug": {
+   "templateId": "6dc128c0-d02b-4d72-92e0-37d071d03228",
+   "placeholder": "ImageFront"
+  },
+  "canvas": {
+   "templateId": "2bcc9149-c47e-4dd7-8f73-1b3306945793",
+   "placeholder": "ImageFront"
+  },
+  "framed-canvas": {
+   "templateId": "520cb1c2-ceba-46c2-9cb7-6171536d6644",
+   "placeholder": "ImageFront"
+  },
+  "framed-poster": {
+   "templateId": "c6e1e358-a76e-43fc-82f1-27c7d9869a2c",
+   "placeholder": "ImageFront"
+  },
+  "metal-print": {
+   "templateId": "3e8461f3-2ab4-4868-bd34-ea9c025e6b83",
+   "placeholder": "ImageFront"
+  },
+  "kids-tee": {
+   "templateId": "18a183b2-dbf1-49ce-820f-26cb2f0a0ba4",
+   "placeholder": "ImageFront"
+  },
+  "baby-bodysuit": {
+   "templateId": "73fa2e0b-9b55-4fe6-816b-7387730a22fd",
+   "placeholder": "ImageFront"
+  },
+  "water-bottle": {
+   "templateId": "faba97c2-05e6-4c42-b1ef-32f7384da0b5",
+   "placeholder": "ImageFront"
+  },
+  "tote-bag": {
+   "templateId": "67d5cafe-92c4-458c-a193-d00bed722dc8",
+   "placeholder": "ImageFront"
+  },
+  "phone-case": {
+   "templateId": "125ee406-c123-465d-807e-e767b1fb8506",
+   "placeholder": "ImageFront"
+  },
+  "kids-hoodie": {
+   "templateId": "f8f15d2d-8016-4f4c-b16a-32e904267072",
+   "placeholder": "ImageFront"
+  },
+  "photo-book": {
+   "templateId": "f13c59e7-63f4-45f9-ac52-e2d47b5ea013",
+   "placeholder": "ImageFront"
+  }
+ }
+}

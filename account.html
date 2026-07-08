@@ -8,7 +8,7 @@
   <meta name="description" content="Manage your Canine Keepsakes account, saved delivery details and order history.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
   <style>
     /* Creator / account dashboard — premium branded UI (real data only) */
     .ck-creator-hero{position:relative;overflow:hidden;background:radial-gradient(120% 140% at 100% 0,#2a2d3a 0,#16181f 55%);color:#fff;border-radius:18px;padding:20px 22px;margin-bottom:14px;box-shadow:0 16px 32px -20px rgba(0,0,0,.55)}
@@ -121,14 +121,14 @@
         <div id="design-area"><p class="muted">Loading…</p></div>
       </div>
       <div style="margin-top:24px">
-        <h3 style="font-family:var(--font-display);margin-bottom:8px">🐾 Your creator kennel</h3>
+        <h3 style="font-family:var(--font-display);margin-bottom:8px"><img src="/images/icons/paw.svg" class="ck-ic" alt=""> Your creator kennel</h3>
         <div id="creator-area"><p class="muted">Loading…</p></div>
       </div>
     </div>
   </div>
 </div>
 
-<script src="js/store.js?v=8"></script>
+<script src="js/store.js?v=9"></script>
 <script src="js/auth.js?v=2"></script>
 <script src="js/pack.js?v=1"></script>
 <script>
@@ -209,7 +209,7 @@
     try {
       const subs = await CK.auth.designSubmissions();
       if (!subs.length) {
-        dArea.innerHTML = '<div class="ck-empty"><span class="pw">🎨</span><p>No custom artwork yet — turn your dog into a one-off, hand-finished piece.</p><a class="btn-gold" href="submit-design.html">Create your dog\'s artwork</a></div>';
+        dArea.innerHTML = '<div class="ck-empty"><span class="pw"><img src="/images/icons/palette.svg" class="ck-ic-xl" alt=""></span><p>No custom artwork yet — turn your dog into a one-off, hand-finished piece.</p><a class="btn-gold" href="submit-design.html">Create your dog\'s artwork</a></div>';
       } else {
         dArea.innerHTML = subs.map(s => {
           const when = new Date(s.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
@@ -232,7 +232,7 @@
     // ── creator design submissions ──
     const creatorLabel = {
       submitted: 'In review',
-      approved: 'Approved 🎉',
+      approved: 'Approved',
       published: 'Published — earning eligible',
       changes_requested: 'Changes requested',
       rejected: 'Not accepted',
@@ -240,18 +240,18 @@
     };
     // Kennel Rank tiers, by number of accepted (approved + published) designs.
     const RANKS = [
-      { min: 8, badge: '👑', name: 'Hall of Fame' },
-      { min: 5, badge: '🏆', name: 'Best in Show' },
-      { min: 3, badge: '🏅', name: 'Pack Leader' },
-      { min: 2, badge: '⭐', name: 'Top Dog' },
-      { min: 1, badge: '🦴', name: 'Good Boy' },
-      { min: 0, badge: '🐾', name: 'New Pup' }
+      { min: 8, badge: '<img src="/images/icons/crown.svg" class="ck-ic" alt="">', name: 'Hall of Fame' },
+      { min: 5, badge: '<img src="/images/icons/trophy.svg" class="ck-ic" alt="">', name: 'Best in Show' },
+      { min: 3, badge: '<img src="/images/icons/medal.svg" class="ck-ic" alt="">', name: 'Pack Leader' },
+      { min: 2, badge: '<img src="/images/icons/star.svg" class="ck-ic" alt="">', name: 'Top Dog' },
+      { min: 1, badge: '<img src="/images/icons/bone.svg" class="ck-ic" alt="">', name: 'Good Boy' },
+      { min: 0, badge: '<img src="/images/icons/paw.svg" class="ck-ic" alt="">', name: 'New Pup' }
     ];
     const cArea = document.getElementById('creator-area');
     try {
       const subs = await CK.auth.creatorSubmissions();
       if (!subs.length) {
-        cArea.innerHTML = '<div class="ck-empty"><span class="pw">🐾</span><p>Your kennel\'s empty — submit your first design to start earning your Creator rank.</p><a class="btn-gold" href="creators.html">Submit a design</a></div>';
+        cArea.innerHTML = '<div class="ck-empty"><span class="pw"><img src="/images/icons/paw.svg" class="ck-ic-xl" alt=""></span><p>Your kennel\'s empty — submit your first design to start earning your Creator rank.</p><a class="btn-gold" href="creators.html">Submit a design</a></div>';
       } else {
         const cnt = st => subs.filter(x => x.status === st).length;
         const inReview = cnt('submitted');
@@ -259,23 +259,23 @@
         const accepted = cnt('approved') + published;
         const rank = RANKS.find(r => accepted >= r.min);
         const next = [...RANKS].sort((a, b) => a.min - b.min).find(r => r.min > accepted);
-        const nx = next ? `${next.min - accepted} more accepted to reach ${next.name} ${next.badge}` : 'Top rank reached — Hall of Fame 🎉';
+        const nx = next ? `${next.min - accepted} more accepted to reach ${next.name} ${next.badge}` : 'Top rank reached — Hall of Fame <img src="/images/icons/verified.svg" class="ck-ic" alt="">';
         const earnings = 0;            // earnings pipeline not live yet — shown as "coming soon"
         const target = 50;
         const pct = Math.min(100, Math.round(earnings / target * 100));
 
         const ach = [
-          { on: subs.length >= 1, icon: '🎨', label: 'First Submission', hint: 'submit your first design' },
+          { on: subs.length >= 1, icon: '<img src="/images/icons/palette.svg" class="ck-ic" alt="">', label: 'First Submission', hint: 'submit your first design' },
           { on: accepted >= 1,    icon: '✅', label: 'First Approval', hint: 'get a design approved' },
-          { on: published >= 1,   icon: '🛍️', label: 'Went Live', hint: 'get a design published' },
-          { on: subs.length >= 5, icon: '📚', label: 'Prolific (5+)', hint: `submit ${Math.max(0, 5 - subs.length)} more` },
-          { on: accepted >= 5,    icon: '🏆', label: 'Pack of Five', hint: `get ${Math.max(0, 5 - accepted)} more accepted` }
+          { on: published >= 1,   icon: '<img src="/images/icons/bag.svg" class="ck-ic" alt="">', label: 'Went Live', hint: 'get a design published' },
+          { on: subs.length >= 5, icon: '<img src="/images/icons/books.svg" class="ck-ic" alt="">', label: 'Prolific (5+)', hint: `submit ${Math.max(0, 5 - subs.length)} more` },
+          { on: accepted >= 5,    icon: '<img src="/images/icons/trophy.svg" class="ck-ic" alt="">', label: 'Pack of Five', hint: `get ${Math.max(0, 5 - accepted)} more accepted` }
         ];
         const earned = ach.filter(a => a.on).length;
         const nextAch = ach.find(a => !a.on);
         const nudge = nextAch
           ? `<div class="ck-nudge">Next up: ${nextAch.icon} <b>${esc(nextAch.label)}</b> — ${esc(nextAch.hint)}.</div>`
-          : `<div class="ck-nudge">🎉 Every achievement unlocked — top of the pack!</div>`;
+          : `<div class="ck-nudge"><img src="/images/icons/verified.svg" class="ck-ic" alt=""> Every achievement unlocked — top of the pack!</div>`;
 
         const list = subs.map(s => {
           const when = new Date(s.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
@@ -294,7 +294,7 @@
               <div><div class="s">Kennel Rank</div><div class="t">${rank.name}</div><div class="nx">${esc(nx)}</div></div>
             </div>
             <div class="ck-jar">
-              <div class="lab"><span>🦴 Treat Jar <span class="ck-soon">Coming soon</span></span><span>${CK.gbp(earnings)} / ${CK.gbp(target)}</span></div>
+              <div class="lab"><span><img src="/images/icons/bone.svg" class="ck-ic" alt=""> Treat Jar <span class="ck-soon">Coming soon</span></span><span>${CK.gbp(earnings)} / ${CK.gbp(target)}</span></div>
               <div class="ck-bar"><span style="width:${pct}%"></span></div>
               <div class="ck-note">Earnings tracking launches soon — your treats fill up here as your designs sell, and payouts are made once you reach ${CK.gbp(target)}.</div>
             </div>
@@ -302,10 +302,10 @@
           <div class="ck-stats">
             <div class="ck-stat"><div class="ic">⏳</div><b>${inReview}</b><span>In review</span></div>
             <div class="ck-stat"><div class="ic">✅</div><b>${accepted}</b><span>Accepted</span></div>
-            <div class="ck-stat"><div class="ic">🛍️</div><b>${published}</b><span>Live</span></div>
+            <div class="ck-stat"><div class="ic"><img src="/images/icons/bag.svg" class="ck-ic" alt=""></div><b>${published}</b><span>Live</span></div>
           </div>
           <div class="ck-ach-wrap">
-            <div class="ck-ach-head"><span>🏅 Achievements</span><span class="cnt">${earned}/${ach.length} unlocked</span></div>
+            <div class="ck-ach-head"><span><img src="/images/icons/medal.svg" class="ck-ic" alt=""> Achievements</span><span class="cnt">${earned}/${ach.length} unlocked</span></div>
             <div class="ck-ach">${ach.map(a => `<span class="ck-chip ${a.on ? 'on' : 'off'}">${a.icon} ${esc(a.label)}</span>`).join('')}</div>
             ${nudge}
           </div>

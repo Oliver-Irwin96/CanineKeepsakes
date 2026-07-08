@@ -16,7 +16,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
   <style>
     /* product picker (grouped by category) — reuses .swatch look */
     .prod-group { margin-bottom: 14px; }
@@ -85,7 +85,7 @@
 </div>
 
 <script src="js/region.js?v=1"></script>
-<script src="js/store.js?v=8"></script>
+<script src="js/store.js?v=9"></script>
 <script>
 (async () => {
   CK.mountChrome();
@@ -143,30 +143,44 @@
     mainImg.appendChild(CK.designImg(design, col.name));
     document.getElementById('d-label').textContent = `— ${design.label}`;
   }
-  /* Ask Printful for a real product mockup of this design+product+colour.
-     Shows the flat design immediately, swaps in the mockup when ready.
-     A request id guards against out-of-order responses on rapid changes. */
-  async function requestMockup() {
-    /* Gelato mockups: instant path = pre-generated mockup on R2, keyed by product slug.
-       Tries the colour-specific mockup first, then a colour-agnostic default.
-       showFlat() already ran, so if neither exists the flat design simply stays. */
-    const id = ++mockReqId;
-    const tag0 = mainImg.querySelector('.mockup-tag'); if (tag0) tag0.remove();
+  /* Clean placeholder shown while the real Gelato mockup generates. NEVER the flat
+     design art — a design on nothing is not a product and must not appear on the site. */
+  function showPlaceholder() {
+    mainImg.innerHTML = '<div class="mockup-ph" style="display:flex;align-items:center;justify-content:center;min-height:340px;color:#9aa0ad;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;">Loading preview…</div>';
     mainImg.classList.add('mockup-loading');
-    const base = 'https://pub-11ab8f6c9a06485f86caac1425c43b27.r2.dev/mockups/v1';
-    const _slug = String(colour).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
-    const tryLoad = url => new Promise(r => { const t = new Image(); t.onload = () => r(t); t.onerror = () => r(null); t.src = url; });
-    let hit = await tryLoad(`${base}/${prod.slug}/${_slug}/${design.id}.png`);
-    if (id !== mockReqId) return;
-    if (!hit) hit = await tryLoad(`${base}/${prod.slug}/${design.id}.png`);
-    if (id !== mockReqId) return;
-    mainImg.classList.remove('mockup-loading');
-    if (hit) {
-      mainImg.innerHTML = ''; mainImg.appendChild(hit);
-      const tg = document.createElement('span'); tg.className = 'mockup-tag'; tg.textContent = 'Real product mockup'; mainImg.appendChild(tg);
+    document.getElementById('d-label').textContent = `— ${design.label}`;
+  }
+  /* Real Gelato mockup via the server function (/api/mockup). The function generates
+     it server-side (keys stay in Netlify) and caches it, so it's instant after the
+     first request. We poll until it's ready, then swap it in. If it can't be made we
+     keep the placeholder — we never fall back to flat art. */
+  async function requestMockup() {
+    const id = ++mockReqId;
+    for (let attempt = 0; attempt < 20; attempt++) {
+      let data;
+      try {
+        const res = await fetch('/api/mockup', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product: prod.slug, designId: design.id, printFileUrl: design.printFileUrl })
+        });
+        data = await res.json().catch(() => ({}));
+      } catch (_) { data = {}; }
+      if (id !== mockReqId) return;
+      if (data.status === 'completed' && data.url) {
+        const im = new Image();
+        im.onload = () => {
+          if (id !== mockReqId) return;
+          mainImg.classList.remove('mockup-loading'); mainImg.innerHTML = '';
+          mainImg.appendChild(im);
+          const tg = document.createElement('span'); tg.className = 'mockup-tag'; tg.textContent = 'Real product mockup'; mainImg.appendChild(tg);
+        };
+        im.src = data.url; return;
+      }
+      if (data.status === 'error' || data.error) return; // keep placeholder, never flat
+      await new Promise(r => setTimeout(r, 3000));
     }
   }
-  function renderMain() { showFlat(); requestMockup(); }
+  function renderMain() { showPlaceholder(); requestMockup(); }
 
   /* ── 1 · product picker, grouped by category ── */
   const pp = document.getElementById('product-picker');
@@ -221,7 +235,7 @@
     cell.type = 'button';
     cell.className = 'd' + (d.id === design.id ? ' sel' : '');
     cell.title = d.label;
-    cell.appendChild(CK.designImg(d, '🐾'));
+    cell.appendChild(CK.designImg(d, ''));
     cell.onclick = () => {
       design = d;
       strip.querySelectorAll('.d').forEach(x => x.classList.remove('sel'));
@@ -324,3 +338,4 @@
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 

@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
   <style>
     .submit-intro { background:radial-gradient(140% 120% at 78% -10%,var(--ink-3) 0%,var(--ink-2) 45%,var(--ink) 100%); color:var(--cream); padding:96px 0 70px; text-align:center; position:relative; overflow:hidden; }
     .submit-intro .eyebrow{margin-bottom:18px}
@@ -85,7 +85,7 @@
     <div class="conv">
       <div class="c"><img src="images/designs/woof-business/06cfad06-762c-4727-b48f-5ec6fe75960f.jpg" alt=""><div class="l">Existing design</div></div>
       <div class="ar">→</div>
-      <div class="ph">🐾<br>Your dog<br>dropped in</div>
+      <div class="ph"><img src="/images/icons/paw.svg" class="ck-ic-xl" alt=""><br>Your dog<br>dropped in</div>
     </div>
   </div>
 </section>
@@ -141,7 +141,7 @@
           <li>JPG, PNG or WebP · up to 8 MB</li>
         </ul>
         <div class="file-drop" id="file-drop">
-          <div id="file-prompt">📸 Tap to choose a photo</div>
+          <div id="file-prompt"><img src="/images/icons/camera.svg" class="ck-ic" alt=""> Tap to choose a photo</div>
           <div id="file-preview"></div>
         </div>
         <input type="file" id="photo-input" accept="image/png,image/jpeg,image/webp,image/heic" style="display:none">
@@ -231,7 +231,7 @@
 </section>
 
 <script src="js/region.js?v=1"></script>
-<script src="js/store.js?v=8"></script>
+<script src="js/store.js?v=9"></script>
 <script src="js/auth.js?v=2"></script>
 <script>
 (async () => {
@@ -336,7 +336,7 @@
             if (d.status !== 'COMPLETED') { showMsg('Payment could not be completed. You have not been charged.', false); return; }
             paid = true;
             form.style.display='none';
-            showMsg('Payment received — thank you! 🐾 We’ve got your photo and we’ll email your design preview to '+submission.email+' within 3–5 working days'+(addons().priority?' (priority: ~48h)':'')+'.', true);
+            showMsg('Payment received — thank you! We’ve got your photo and we’ll email your design preview to '+submission.email+' within 3–5 working days'+(addons().priority?' (priority: ~48h)':'')+'.', true);
           } catch (err) {
             showMsg('We hit a snag preparing your order'+(err && err.message ? ' ('+err.message+')' : '')+'. If you were charged, email caninekeepsakes.admin@gmail.com and we\'ll sort it right away.', false);
           }
@@ -345,8 +345,8 @@
     };
     document.head.appendChild(s);
   }
-  fetch('/api/paypal-config').then(r=>r.json()).then(d=>{ if(d.clientId) mountPayPal(d.clientId); else $('pay-notice').textContent='⚠️ Payment unavailable — config missing.'; })
-    .catch(()=>{ $('pay-notice').textContent='⚠️ Could not load payment options. Please refresh.'; });
+  fetch('/api/paypal-config').then(r=>r.json()).then(d=>{ if(d.clientId) mountPayPal(d.clientId); else $('pay-notice').textContent='Payment unavailable — config missing.'; })
+    .catch(()=>{ $('pay-notice').textContent='Could not load payment options. Please refresh.'; });
 })();
 </script>
 </body>

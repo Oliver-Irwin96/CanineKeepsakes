@@ -398,3 +398,9 @@ button { font-family: inherit; cursor: pointer; }
 .foot-logo{height:64px;width:64px;background:#faf6ef;border-radius:50%;padding:4px;margin-bottom:12px;display:block}
 .hero-badge{height:96px;width:96px;display:block;margin:0 0 16px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.3))}
 @media(max-width:560px){.hero-badge{height:74px;width:74px}.logo-badge{height:32px;width:32px}}
+
+/* ── custom CK icon set (replaces all emoji) ── */
+.ck-ic { display:inline-block; width:1.15em; height:1.15em; vertical-align:-0.18em; }
+.ck-ic-xl { display:inline-block; width:52px; height:52px; }
+.float-paw img { width:2rem; height:2rem; display:block; opacity:.55; }
+.empty-state .big img { width:60px; height:60px; }

@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
   <style>
     .submit-intro { background:radial-gradient(140% 120% at 78% -10%,var(--ink-3) 0%,var(--ink-2) 45%,var(--ink) 100%); color:var(--cream); padding:96px 0 70px; text-align:center; position:relative; overflow:hidden; }
     .submit-intro .eyebrow{margin-bottom:18px}
@@ -104,7 +104,7 @@
         <div class="field"><label>Design title</label><input required name="title"></div>
         <div class="field"><label>Design concept</label><textarea name="description" placeholder="Tell us the idea, mood, joke, character or story behind the design. Example: a sleepy boss dog in a mafia-style chair, or a dramatic boxing dog who refuses to quit."></textarea></div>
         <p style="font-weight:600;margin:0 0 8px">Artwork upload</p>
-        <div class="file-drop" id="file-drop"><div id="file-prompt">🎨 Tap to choose your artwork</div><div id="file-preview"></div></div>
+        <div class="file-drop" id="file-drop"><div id="file-prompt"><img src="/images/icons/palette.svg" class="ck-ic" alt=""> Tap to choose your artwork</div><div id="file-preview"></div></div>
         <input type="file" id="art-input" accept="image/png,image/jpeg,image/webp" style="display:none">
         <p class="muted" style="font-size:.84rem;margin-top:8px">Upload your original artwork, sketch or concept image. JPG, PNG or WebP preferred · up to 8 MB.</p>
         <div class="field" style="margin:14px 0 0"><label>Notes <small class="muted">(optional)</small></label><textarea name="notes" placeholder="Tell us anything useful about the design style, breed suitability or collection idea."></textarea></div>
@@ -166,7 +166,7 @@
 </section>
 
 <script src="js/region.js?v=1"></script>
-<script src="js/store.js?v=8"></script>
+<script src="js/store.js?v=9"></script>
 <script src="js/auth.js?v=2"></script>
 <script>
 (async () => {
@@ -223,7 +223,7 @@
         fetch('/api/notify', { method:'POST', headers:h, body: JSON.stringify({ type:'creator', name: fd.get('name'), title: fd.get('title') }) });
       } catch(_) {}
       form.style.display = 'none';
-      showMsg('Thanks! Your design has been submitted for review. We\'ll be in touch by email if it\'s a fit. 🐾', true);
+      showMsg('Thanks! Your design has been submitted for review. We\'ll be in touch by email if it\'s a fit.', true);
     } catch (err) {
       showMsg('Sorry, something went wrong submitting your design: ' + (err.message||err) + '. Please try again, or email caninekeepsakes.admin@gmail.com.', false);
       btn.disabled = false; btn.textContent = orig;

@@ -18,7 +18,7 @@
   <meta name="twitter:description" content="Discover original dog-themed collections packed with humour, personality and gifts worth keeping.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
 </head>
 <body>
 
@@ -57,7 +57,7 @@
 </section>
 
 <script src="js/region.js?v=1"></script>
-<script src="js/store.js?v=8"></script>
+<script src="js/store.js?v=9"></script>
 <script>
 (async () => {
   CK.mountChrome();
@@ -98,7 +98,7 @@
     cell.className = 'd';
     cell.href = `product.html?c=${col.slug}&d=${d.id}`;
     cell.title = d.label;
-    cell.appendChild(CK.designImg(d, '🐾'));
+    cell.appendChild(CK.designImg(d, ''));
     strip.appendChild(cell);
   });
 
