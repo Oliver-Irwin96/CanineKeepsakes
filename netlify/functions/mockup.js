@@ -60,7 +60,7 @@ exports.handler = async (event) => {
     let row = await cacheGet(key);
     if (row && row.status === 'completed' && row.mockup_url) return json(200, { status: 'completed', url: row.mockup_url });
 
-    const stalePending = row && row.task_key && row.status !== 'completed' && row.updated_at && (Date.now() - Date.parse(row.updated_at) > 180000);
+    const stalePending = row && row.task_key && row.status !== 'completed' && row.updated_at && (Date.now() - Date.parse(row.updated_at) > 1200000); // 20 min — must exceed Gelato's first-render time so we never abandon+recreate a still-rendering mockup
     if (!row || (!row.task_key && row.status !== 'completed') || row.status === 'failed' || stalePending) {
       const cr = await fetch(`${EC}/stores/${STORE}/products:create-from-template`, {
         method: 'POST', headers: gHeaders,
