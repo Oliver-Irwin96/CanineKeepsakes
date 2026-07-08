@@ -1,32 +1,39 @@
-# Secrets & env
-*.env
-ck-secrets.env
-.github-token
-
-# Dependencies
-node_modules/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Internal session notes — must NOT be served publicly (publish = ".")
+# ── internal working files: NEVER publish to the live site ──
+_design-preview/
+_deploy-candidates/
+_design_audit/
+notes2/
 Handoffs/
 Knowledge/
+pipeline/
+_bg_preview.png
+_bg_transparent.png
+Unconfirmed*.crdownload
 
-# Backups / scratch
-*.bak
-ck_test.js
-
-# Netlify deploy build artifacts
-deploy-*.zip
-
-# Session notes saved to root (Knowledge/ & Handoffs/ dirs broken on mount)
+# internal docs & planning (root)
+CK_*.md
+CK_*.xlsx
+AI_CHANGE_CONTROL.md
+PROJECT_OWNERSHIP_MATRIX.md
+GO_LIVE_CHECKLIST.md
+DESIGN_BUCKETS.md
+DESIGN_LIBRARY_STATUS.md
+REFERRAL_PROGRAM_SPEC.md
+GIFT_CARD_SPEC.md
+SOCIAL_WARMUP_PLAN.md
+TO_DOWNLOAD.md
+LAUNCH_TASKBOARD.*
 2026-*_CK_*.md
-notes2/
 
-# Gelato migration working/reference files (NOT for the live site)
-CK_Pricing_for_Team.xlsx
+# local tooling noise
+node_modules/
+*.log
+
+# catalog backups (local safety copies, not for the site)
+data/*.bak
+
+# internal PDFs & alternate data exports — never publish to the live site
+*.pdf
+DOWNLOAD_CHECKLIST.pdf
+TEMPLATE_CHECKLIST.pdf
 data/*.gelato.json
-_gelato_test_highres.png
-.~lock.*#

@@ -533,6 +533,16 @@
      "printFileUrl": "https://cdn.caninekeepsakes.co.uk/51451aad-f0ee-4104-b573-aa50b54e563c.png",
      "breed": "Staffordshire Bull Terrier",
      "label": "Staffordshire Bull Terrier"
+    },
+    {
+     "id": "woof-business-21",
+     "localFile": "0197ab1c-7492-4cdb-b52f-7f28364ed051",
+     "thumb": "/images/designs/woof-business/0197ab1c-7492-4cdb-b52f-7f28364ed051.jpg",
+     "printFileUrl": "https://cdn.caninekeepsakes.co.uk/0197ab1c-7492-4cdb-b52f-7f28364ed051.png",
+     "breed": "Old English Sheepdog",
+     "label": "Old English Sheepdog",
+     "_test": true,
+     "_note": "TEST design uploaded 2026-07-07 to prove R2 upload->display->order. Breed is visual read; verify against Neil board before keeping."
     }
    ],
    "seoTitle": "Woof Business Collection | Funny Boss Dog Art & Gifts",
