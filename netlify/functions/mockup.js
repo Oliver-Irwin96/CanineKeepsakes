@@ -77,9 +77,22 @@ exports.handler = async (event) => {
     if (row.task_key && row.status !== 'completed') {
       const gr = await fetch(`${EC}/stores/${STORE}/products/${row.task_key}`, { headers: gHeaders });
       const gd = await gr.json().catch(() => ({}));
-      const url = gd && (gd.previewUrl || (gd.media && gd.media[0] && gd.media[0].url));
+      // Gelato returns the rendered mockup across several fields (previewUrl / productImages / variants),
+      // NOT always top-level previewUrl. Accept only Gelato-hosted mockup URLs; NEVER the print file (that's flat art).
+      const isMock = (s) => typeof s === 'string' && /^https?:\/\//.test(s) && /(amazonaws|gelato|cloudfront)/i.test(s) && !/caninekeepsakes|r2\.dev/i.test(s) && !/secret|api.?key/i.test(s);
+      const scan = (o, d) => {
+        if (d > 6 || o == null) return null;
+        if (typeof o === 'string') return isMock(o) ? o : null;
+        if (Array.isArray(o)) { for (const x of o) { const r = scan(x, d + 1); if (r) return r; } return null; }
+        if (typeof o === 'object') {
+          for (const k of ['previewUrl', 'mockupUrl', 'externalPreviewUrl', 'externalThumbnailUrl', 'imageUrl', 'fileUrl', 'url']) { if (o[k] != null) { const r = scan(o[k], d + 1); if (r) return r; } }
+          for (const k in o) { if (k === 'imagePlaceholders') continue; const r = scan(o[k], d + 1); if (r) return r; }
+        }
+        return null;
+      };
+      const url = scan(gd.productImages, 0) || scan(gd.variants, 0) || scan(gd, 0);
       if (url) { await cacheUpdate(key, { status: 'completed', mockup_url: url }); return json(200, { status: 'completed', url }); }
-      return json(200, { status: 'pending', _g: { gStatus: gd && gd.status, hasPreview: !!(gd && gd.previewUrl), keys: gd ? Object.keys(gd) : [], previewUrl: (gd && gd.previewUrl) || null } }); // TEMP diagnostic: surface raw Gelato product shape
+      return json(200, { status: 'pending', _g: { gStatus: gd.status, productImages: gd.productImages, variant0: gd.variants && gd.variants[0] } });
     }
     return json(200, { status: row.status || 'pending' });
   } catch (err) {
