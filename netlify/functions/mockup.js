@@ -1,43 +1,27 @@
 /* POST /api/mockup  { product, designId, printFileUrl }
-   SELF-HOSTED mockup compositor (no third-party render, no per-image fee).
-   Flow: fetch Gelato blank product image (template previewUrl) + our design ->
-   composite the design onto the blank with jimp (pure JS) -> upload the finished
-   mockup to Supabase Storage (public bucket 'mockups') -> cache the URL.
-   Synchronous: composites and returns { status:'completed', url } in one call.
-   Cache table: public.mockups (service-role only). Storage: public bucket 'mockups'. */
+   SELF-HOSTED mockup generator (no third-party render, no per-image fee, no external blanks).
+   Renders each design as a premium framed art-print mockup with jimp (pure JS): warm wall
+   background, white mat, dark frame, soft drop shadow. Uploads the finished mockup to
+   Supabase Storage (public bucket 'mockups') and caches the URL.
+   Synchronous: generates and returns { status:'completed', url } in one call (~2-4s first time,
+   instant from cache after). Cache table: public.mockups. Storage: public bucket 'mockups'.
+
+   UPGRADE PATH (per-product photoreal): drop a blank product photo per product into the repo /
+   Storage and set BLANKS[product] to its URL + PLACE[product] rectangle; the generator will then
+   composite the design onto the real product photo instead of the framed default. */
 const Jimp = require('jimp');
 const {
   json, corsHeaders, isOriginAllowed, rateLimit, isAllowedPrintFile, supabaseEnv
 } = require('./_lib');
 const TEMPLATES = require('./gelato-templates.json');
-
-const GKEY = process.env.GELATO_API_SECRET || process.env.GELATO_API_KEY;
-const EC = process.env.GELATO_EC_BASE || (TEMPLATES.ecBase || 'https://ecommerce.gelatoapis.com/v1');
-const gHeaders = { 'X-API-KEY': GKEY || '', 'Content-Type': 'application/json' };
 const SB = supabaseEnv();
 
-/* Per-product print placement on the blank, as fractions of the blank image.
-   cx/cy = centre of the print; w = print width as a fraction of blank width.
-   Starting values — tuned by product family; refined after first render. */
+/* Optional per-product real blank photo + print rectangle (fractions of blank).
+   Empty for now (Gelato's API doesn't expose blanks); fill to enable photoreal per product. */
+const BLANKS = {};
 const PLACE = {
-  'summer-tee':        { cx: 0.50, cy: 0.44, w: 0.34 },
-  'winter-tee':        { cx: 0.50, cy: 0.44, w: 0.34 },
-  'womens-relaxed-tee':{ cx: 0.50, cy: 0.44, w: 0.32 },
-  'sweatshirt':        { cx: 0.50, cy: 0.46, w: 0.32 },
-  'hoodie':            { cx: 0.50, cy: 0.50, w: 0.30 },
-  'zip-hoodie':        { cx: 0.50, cy: 0.50, w: 0.26 },
-  'kids-tee':          { cx: 0.50, cy: 0.44, w: 0.30 },
-  'kids-hoodie':       { cx: 0.50, cy: 0.48, w: 0.28 },
-  'baby-bodysuit':     { cx: 0.50, cy: 0.44, w: 0.26 },
-  'white-mug':         { cx: 0.50, cy: 0.50, w: 0.30 },
-  'water-bottle':      { cx: 0.50, cy: 0.50, w: 0.20 },
-  'tote-bag':          { cx: 0.50, cy: 0.54, w: 0.40 },
-  'phone-case':        { cx: 0.50, cy: 0.50, w: 0.55 },
-  'canvas':            { cx: 0.50, cy: 0.50, w: 0.66 },
-  'framed-canvas':     { cx: 0.50, cy: 0.50, w: 0.48 },
-  'framed-poster':     { cx: 0.50, cy: 0.50, w: 0.46 },
-  'metal-print':       { cx: 0.50, cy: 0.50, w: 0.66 },
-  'photo-book':        { cx: 0.50, cy: 0.50, w: 0.50 }
+  'white-mug': { cx: 0.50, cy: 0.50, w: 0.30 }, 'summer-tee': { cx: 0.50, cy: 0.44, w: 0.34 },
+  'tote-bag': { cx: 0.50, cy: 0.54, w: 0.40 }, 'phone-case': { cx: 0.50, cy: 0.50, w: 0.55 }
 };
 const DEFAULT_PLACE = { cx: 0.5, cy: 0.5, w: 0.4 };
 
@@ -54,21 +38,13 @@ async function cacheGet(key) {
 async function cacheUpsert(key, fields) {
   fields.updated_at = new Date().toISOString();
   const existing = await cacheGet(key);
-  if (existing) {
-    await fetch(`${SB.url}/rest/v1/mockups?cache_key=eq.${encodeURIComponent(key)}`, { method: 'PATCH', headers: sbHeaders({ Prefer: 'return=minimal' }), body: JSON.stringify(fields) });
-  } else {
-    await fetch(`${SB.url}/rest/v1/mockups`, { method: 'POST', headers: sbHeaders({ Prefer: 'return=minimal' }), body: JSON.stringify({ cache_key: key, ...fields }) });
-  }
+  if (existing) await fetch(`${SB.url}/rest/v1/mockups?cache_key=eq.${encodeURIComponent(key)}`, { method: 'PATCH', headers: sbHeaders({ Prefer: 'return=minimal' }), body: JSON.stringify(fields) });
+  else await fetch(`${SB.url}/rest/v1/mockups`, { method: 'POST', headers: sbHeaders({ Prefer: 'return=minimal' }), body: JSON.stringify({ cache_key: key, ...fields }) });
 }
 async function fetchBuf(url, headers) {
   const r = await fetch(url, headers ? { headers } : undefined);
   if (!r.ok) throw new Error(`fetch ${r.status} for ${String(url).slice(0, 80)}`);
   return Buffer.from(await r.arrayBuffer());
-}
-async function templateBlank(templateId) {
-  const r = await fetch(`${EC}/templates/${templateId}`, { headers: gHeaders });
-  const td = await r.json().catch(() => ({}));
-  return (td && td.previewUrl) || null;
 }
 async function storageUpload(path, buf) {
   const r = await fetch(`${SB.url}/storage/v1/object/mockups/${path}`, {
@@ -76,18 +52,43 @@ async function storageUpload(path, buf) {
     headers: { apikey: SB.serviceKey, Authorization: `Bearer ${SB.serviceKey}`, 'Content-Type': 'image/png', 'x-upsert': 'true' },
     body: buf
   });
-  if (!r.ok && r.status !== 409) { const t = await r.text().catch(() => ''); throw new Error(`storage ${r.status} ${t.slice(0, 120)}`); }
+  if (!r.ok && r.status !== 409) { const t = await r.text().catch(() => ''); throw new Error(`storage ${r.status} ${t.slice(0, 140)}`); }
   return `${SB.url}/storage/v1/object/public/mockups/${path}`;
 }
-async function composite(blankBuf, designBuf, place) {
+
+/* Premium framed art-print mockup — self-contained, no external blank needed. */
+async function framedMockup(designBuf) {
+  const design = await Jimp.read(designBuf);
+  const W = 1100, H = 1100;
+  const bg = new Jimp(W, H, 0xefe9dfff);           // warm gallery wall
+  // soft top-down light: lighten upper area a touch
+  const light = new Jimp(W, Math.round(H * 0.55), 0xffffff22); bg.composite(light, 0, 0);
+  const artW = Math.round(W * 0.58);
+  design.resize(artW, Jimp.AUTO);
+  const artH = design.bitmap.height;
+  const matPad = Math.round(W * 0.055);
+  const mat = new Jimp(artW + matPad * 2, artH + matPad * 2, 0xffffffff);
+  const frameB = Math.round(W * 0.02);
+  const fw = mat.bitmap.width + frameB * 2, fh = mat.bitmap.height + frameB * 2;
+  const frame = new Jimp(fw, fh, 0x2b2620ff);       // dark wood frame
+  const shadow = new Jimp(fw, fh, 0x0000004d); shadow.blur(14);
+  const fx = Math.round((W - fw) / 2), fy = Math.round((H - fh) / 2);
+  bg.composite(shadow, fx + 8, fy + 18);
+  bg.composite(frame, fx, fy);
+  bg.composite(mat, fx + frameB, fy + frameB);
+  bg.composite(design, fx + frameB + matPad, fy + frameB + matPad);
+  return bg.getBufferAsync(Jimp.MIME_PNG);
+}
+
+/* Composite onto a real product photo (used only when BLANKS[product] is set). */
+async function photoMockup(blankBuf, designBuf, place) {
   const blank = await Jimp.read(blankBuf);
   const design = await Jimp.read(designBuf);
   const bw = blank.bitmap.width, bh = blank.bitmap.height;
   const targetW = Math.max(16, Math.round((place.w || 0.4) * bw));
   design.resize(targetW, Jimp.AUTO);
-  const dw = design.bitmap.width, dh = design.bitmap.height;
-  const x = Math.round((place.cx || 0.5) * bw - dw / 2);
-  const y = Math.round((place.cy || 0.5) * bh - dh / 2);
+  const x = Math.round((place.cx || 0.5) * bw - design.bitmap.width / 2);
+  const y = Math.round((place.cy || 0.5) * bh - design.bitmap.height / 2);
   blank.composite(design, x, y, { mode: Jimp.BLEND_SOURCE_OVER, opacitySource: 1, opacityDest: 1 });
   return blank.getBufferAsync(Jimp.MIME_PNG);
 }
@@ -98,30 +99,25 @@ exports.handler = async (event) => {
   if (!rateLimit(event, 60, 60000)) return json(429, { error: 'too many requests' });
   if (event.httpMethod !== 'POST') return json(405, { error: 'POST only' });
   try {
-    const { product, designId, printFileUrl, action } = JSON.parse(event.body || '{}');
+    const { product, designId, printFileUrl } = JSON.parse(event.body || '{}');
     const cfg = TEMPLATES.products && TEMPLATES.products[product];
-
-    if (action === 'inspect') {
-      if (!cfg || !cfg.templateId) return json(404, { error: `no template for ${product}` });
-      const blank = await templateBlank(cfg.templateId);
-      return json(200, { env: { hasSupabaseServiceKey: !!SB.serviceKey, hasSupabaseUrl: !!SB.url }, blank, place: PLACE[product] || DEFAULT_PLACE });
-    }
-
     if (!product || !designId || !printFileUrl) return json(400, { error: 'product, designId, printFileUrl required' });
-    if (!cfg || !cfg.templateId) return json(404, { status: 'error', detail: `no template for product ${product}` });
+    if (!cfg) return json(404, { status: 'error', detail: `unknown product ${product}` });
     if (!isAllowedPrintFile(printFileUrl)) return json(400, { error: 'image url not allowed' });
-    if (!GKEY) return json(503, { status: 'error', detail: 'GELATO_API_SECRET missing (needed for blank image)' });
     if (!SB.serviceKey) return json(503, { status: 'error', detail: 'Supabase service key missing' });
 
     const key = `g1:${product}:${designId}`;
     const cached = await cacheGet(key);
     if (cached && cached.status === 'completed' && cached.mockup_url) return json(200, { status: 'completed', url: cached.mockup_url });
 
-    const blankUrl = await templateBlank(cfg.templateId);
-    if (!blankUrl) return json(502, { status: 'error', detail: 'no blank image from Gelato template' });
-
-    const [blankBuf, designBuf] = await Promise.all([fetchBuf(blankUrl), fetchBuf(printFileUrl)]);
-    const outBuf = await composite(blankBuf, designBuf, PLACE[product] || DEFAULT_PLACE);
+    const designBuf = await fetchBuf(printFileUrl);
+    let outBuf;
+    if (BLANKS[product]) {
+      const blankBuf = await fetchBuf(BLANKS[product]);
+      outBuf = await photoMockup(blankBuf, designBuf, PLACE[product] || DEFAULT_PLACE);
+    } else {
+      outBuf = await framedMockup(designBuf);
+    }
     const path = `v1/${product}/${designId}.png`;
     const url = await storageUpload(path, outBuf);
     await cacheUpsert(key, { catalog_product_id: product, colour: 'default', design_id: designId, image_url: printFileUrl, task_key: null, status: 'completed', mockup_url: url });
