@@ -50,9 +50,27 @@ exports.handler = async (event) => {
   try {
     if (!GKEY) return json(503, { status: 'error', detail: 'GELATO_API_SECRET not configured in Netlify env' });
     if (!STORE) return json(503, { status: 'error', detail: 'Gelato store id missing' });
-    const { product, designId, printFileUrl } = JSON.parse(event.body || '{}');
-    if (!product || !designId || !printFileUrl) return json(400, { error: 'product, designId, printFileUrl required' });
+    const { product, designId, printFileUrl, action } = JSON.parse(event.body || '{}');
     const cfg = TEMPLATES.products && TEMPLATES.products[product];
+    // TEMP read-only harvest: inspect Gelato template shape (blank image + geometry) + which storage env vars exist
+    if (action === 'inspect') {
+      if (!cfg || !cfg.templateId) return json(404, { error: `no template for ${product}` });
+      const tr = await fetch(`${EC}/templates/${cfg.templateId}`, { headers: gHeaders });
+      const td = await tr.json().catch(() => ({}));
+      const v0 = td && td.variants && td.variants[0];
+      return json(200, {
+        env: {
+          hasR2: !!(process.env.R2_ACCESS_KEY_ID && process.env.R2_SECRET_ACCESS_KEY && process.env.R2_ACCOUNT_ID),
+          hasSupabaseServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+          hasSupabaseUrl: !!process.env.SUPABASE_URL
+        },
+        tStatus: tr.status,
+        templateKeys: td ? Object.keys(td) : [],
+        variantCount: (td && td.variants) ? td.variants.length : 0,
+        variant0: v0 ? JSON.stringify(v0).slice(0, 2500) : null
+      });
+    }
+    if (!product || !designId || !printFileUrl) return json(400, { error: 'product, designId, printFileUrl required' });
     if (!cfg || !cfg.templateId) return json(404, { status: 'error', detail: `no template for product ${product}` });
     if (!isAllowedPrintFile(printFileUrl)) return json(400, { error: 'image url not allowed' });
 
