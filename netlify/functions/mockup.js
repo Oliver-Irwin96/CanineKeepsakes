@@ -64,7 +64,7 @@ exports.handler = async (event) => {
     if (!row || (!row.task_key && row.status !== 'completed') || row.status === 'failed' || stalePending) {
       const cr = await fetch(`${EC}/stores/${STORE}/products:create-from-template`, {
         method: 'POST', headers: gHeaders,
-        body: JSON.stringify({ templateId: cfg.templateId, title: `CK ${product} ${designId}`, isVisibleInTheOnlineStore: false, tags: ['ck-mockup'], imagePlaceholders: [{ name: cfg.placeholder || 'ImageFront', fileUrl: printFileUrl }] })
+        body: JSON.stringify({ templateId: cfg.templateId, title: `CK ${product} ${designId}`, isVisibleInTheOnlineStore: true, tags: ['ck-mockup'], imagePlaceholders: [{ name: cfg.placeholder || 'ImageFront', fileUrl: printFileUrl }] })
       });
       const cd = await cr.json().catch(() => ({}));
       const gid = cd && cd.id;
@@ -79,7 +79,7 @@ exports.handler = async (event) => {
       const gd = await gr.json().catch(() => ({}));
       const url = gd && (gd.previewUrl || (gd.media && gd.media[0] && gd.media[0].url));
       if (url) { await cacheUpdate(key, { status: 'completed', mockup_url: url }); return json(200, { status: 'completed', url }); }
-      return json(200, { status: 'pending' });
+      return json(200, { status: 'pending', _g: { gStatus: gd && gd.status, hasPreview: !!(gd && gd.previewUrl), keys: gd ? Object.keys(gd) : [], previewUrl: (gd && gd.previewUrl) || null } }); // TEMP diagnostic: surface raw Gelato product shape
     }
     return json(200, { status: row.status || 'pending' });
   } catch (err) {
