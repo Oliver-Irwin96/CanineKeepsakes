@@ -40,3 +40,18 @@ data/*.gelato.json
 
 # consolidated internal working docs (never publish)
 _internal/
+
+# ── DEPLOY SAFETY: never commit non-site file types (belt-and-braces) ──
+# Internal working formats — the live site is only HTML/JS/CSS/JSON/images.
+*.xlsx
+*.xls
+*.docx
+*.zip
+*.bak
+*.stale
+*.crdownload
+# Loose markdown notes: ignore all .md EXCEPT the two the site/repo legitimately needs
+*.md
+!README.md
+!_deploy-candidates/README.md
+# Session/handoff/knowledge/pipeline working areas
