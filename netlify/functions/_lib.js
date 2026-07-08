@@ -468,7 +468,7 @@ function rateLimit(event, max = 30, windowMs = 60000) {
 --------------------------------------------------------------------------- */
 const PRINT_FILE_HOSTS = ((process.env.PRINT_FILE_ALLOWED_HOSTS ||
   'drive.google.com,drive.usercontent.google.com,lh3.googleusercontent.com,caninekeepsakes.co.uk,www.caninekeepsakes.co.uk')
-  + ',pub-11ab8f6c9a06485f86caac1425c43b27.r2.dev')   // R2 print-file host (always allowed, even if env override is set)
+  + ',pub-11ab8f6c9a06485f86caac1425c43b27.r2.dev,cdn.caninekeepsakes.co.uk')   // R2 + CDN print-file hosts (always allowed, even if env override is set)
   .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
 
 function isAllowedPrintFile(url) {
