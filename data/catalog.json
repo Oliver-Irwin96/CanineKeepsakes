@@ -196,167 +196,239 @@
         "The Snorefather collection celebrates the four-legged bosses of the family. The dogs who demand tribute in treats, insist on the best seat in the house, and somehow manage to look innocent every time they break the rules.",
         "Available across multiple breeds and products, this collection is perfect for dog owners who know exactly who is really in charge."
       ],
-      "designCount": 20,
+      "designCount": 29,
       "designs": [
         {
           "id": "snorefather-01",
-          "localFile": "066c4b6a-7d3b-42fa-ae69-ea0830a93756",
-          "thumb": "/images/designs/snorefather/066c4b6a-7d3b-42fa-ae69-ea0830a93756.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/066c4b6a-7d3b-42fa-ae69-ea0830a93756.png",
-          "breed": "English Springer Spaniel",
-          "label": "English Springer Spaniel"
+          "localFile": "2b978804",
+          "thumb": "/images/designs/snorefather/snorefather-01.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-01.png",
+          "breed": "Afghan Hound",
+          "label": "Afghan Hound"
         },
         {
           "id": "snorefather-02",
-          "localFile": "522af7ea-1140-40e4-b18c-41695df4cfc0",
-          "thumb": "/images/designs/snorefather/522af7ea-1140-40e4-b18c-41695df4cfc0.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/522af7ea-1140-40e4-b18c-41695df4cfc0.png",
-          "breed": "Labradoodle",
-          "label": "Labradoodle"
+          "localFile": "47ad254b",
+          "thumb": "/images/designs/snorefather/snorefather-02.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-02.png",
+          "breed": "American Bulldog",
+          "label": "American Bulldog"
         },
         {
           "id": "snorefather-03",
-          "localFile": "48834b2b-a7c7-4509-b719-c8c830eb532f",
-          "thumb": "/images/designs/snorefather/48834b2b-a7c7-4509-b719-c8c830eb532f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/48834b2b-a7c7-4509-b719-c8c830eb532f.png",
-          "breed": "Chihuahua",
-          "label": "Chihuahua"
+          "localFile": "a9976adb",
+          "thumb": "/images/designs/snorefather/snorefather-03.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-03.png",
+          "breed": "Australian Shepherd",
+          "label": "Australian Shepherd"
         },
         {
           "id": "snorefather-04",
-          "localFile": "49994449-717e-4a11-bdd6-4ca155bc7211",
-          "thumb": "/images/designs/snorefather/49994449-717e-4a11-bdd6-4ca155bc7211.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/49994449-717e-4a11-bdd6-4ca155bc7211.png",
+          "localFile": "b3540cf7",
+          "thumb": "/images/designs/snorefather/snorefather-04.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-04.png",
           "breed": "Beagle",
           "label": "Beagle"
         },
         {
           "id": "snorefather-05",
-          "localFile": "01543db4-1ab7-418c-bece-0030163b756a",
-          "thumb": "/images/designs/snorefather/01543db4-1ab7-418c-bece-0030163b756a.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/01543db4-1ab7-418c-bece-0030163b756a.png",
-          "breed": "Cavalier King Charles Spaniel",
-          "label": "Cavalier King Charles Spaniel"
+          "localFile": "ccbde15b",
+          "thumb": "/images/designs/snorefather/snorefather-05.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-05.png",
+          "breed": "Bearded Collie",
+          "label": "Bearded Collie"
         },
         {
           "id": "snorefather-06",
-          "localFile": "0a81ad49-aed1-418f-8cc6-16b6ad76c43c",
-          "thumb": "/images/designs/snorefather/0a81ad49-aed1-418f-8cc6-16b6ad76c43c.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/0a81ad49-aed1-418f-8cc6-16b6ad76c43c.png",
-          "breed": "Boxer",
-          "label": "Boxer"
-        },
-        {
-          "id": "snorefather-07",
-          "localFile": "530d75c5-fe08-4dc4-a01d-0c5a47c36a26",
-          "thumb": "/images/designs/snorefather/530d75c5-fe08-4dc4-a01d-0c5a47c36a26.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/530d75c5-fe08-4dc4-a01d-0c5a47c36a26.png",
+          "localFile": "0af0d73d",
+          "thumb": "/images/designs/snorefather/snorefather-06.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-06.png",
           "breed": "Bloodhound",
           "label": "Bloodhound"
         },
         {
+          "id": "snorefather-07",
+          "localFile": "38a8c4dc",
+          "thumb": "/images/designs/snorefather/snorefather-07.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-07.png",
+          "breed": "Border Collie",
+          "label": "Border Collie"
+        },
+        {
           "id": "snorefather-08",
-          "localFile": "1bb67a30-79c9-4de0-b142-c35336524447",
-          "thumb": "/images/designs/snorefather/1bb67a30-79c9-4de0-b142-c35336524447.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/1bb67a30-79c9-4de0-b142-c35336524447.png",
-          "breed": "Golden Retriever",
-          "label": "Golden Retriever"
+          "localFile": "9b2cbc6b",
+          "thumb": "/images/designs/snorefather/snorefather-08.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-08.png",
+          "breed": "Boxer",
+          "label": "Boxer"
         },
         {
           "id": "snorefather-09",
-          "localFile": "426d883f-2ea9-4d77-bd6a-65416e78b073",
-          "thumb": "/images/designs/snorefather/426d883f-2ea9-4d77-bd6a-65416e78b073.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/426d883f-2ea9-4d77-bd6a-65416e78b073.png",
-          "breed": "Jack Russell Terrier",
-          "label": "Jack Russell Terrier"
+          "localFile": "19195815",
+          "thumb": "/images/designs/snorefather/snorefather-09.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-09.png",
+          "breed": "Cane Corso",
+          "label": "Cane Corso"
         },
         {
           "id": "snorefather-10",
-          "localFile": "be67c118-f8dc-424e-b722-a52eb9c6ad8c",
-          "thumb": "/images/designs/snorefather/be67c118-f8dc-424e-b722-a52eb9c6ad8c.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/be67c118-f8dc-424e-b722-a52eb9c6ad8c.png",
-          "breed": "French Bulldog",
-          "label": "French Bulldog"
+          "localFile": "11a758f1",
+          "thumb": "/images/designs/snorefather/snorefather-10.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-10.png",
+          "breed": "Cavalier King Charles Spaniel",
+          "label": "Cavalier King Charles Spaniel"
         },
         {
           "id": "snorefather-11",
-          "localFile": "8537f784-6316-4f48-8d8f-e038c692ac27",
-          "thumb": "/images/designs/snorefather/8537f784-6316-4f48-8d8f-e038c692ac27.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/8537f784-6316-4f48-8d8f-e038c692ac27.png",
-          "breed": "Pug",
-          "label": "Pug"
+          "localFile": "e3fdc30a",
+          "thumb": "/images/designs/snorefather/snorefather-11.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-11.png",
+          "breed": "Chihuahua",
+          "label": "Chihuahua"
         },
         {
           "id": "snorefather-12",
-          "localFile": "aa04105f-11ee-4efd-b684-057c25a8af4d",
-          "thumb": "/images/designs/snorefather/aa04105f-11ee-4efd-b684-057c25a8af4d.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/aa04105f-11ee-4efd-b684-057c25a8af4d.png",
+          "localFile": "442411ee",
+          "thumb": "/images/designs/snorefather/snorefather-12.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-12.png",
           "breed": "Cocker Spaniel",
           "label": "Cocker Spaniel"
         },
         {
           "id": "snorefather-13",
-          "localFile": "c3f83919-25fc-44b6-9451-f3694d2ea14e",
-          "thumb": "/images/designs/snorefather/c3f83919-25fc-44b6-9451-f3694d2ea14e.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/c3f83919-25fc-44b6-9451-f3694d2ea14e.png",
-          "breed": "German Shepherd",
-          "label": "German Shepherd"
-        },
-        {
-          "id": "snorefather-14",
-          "localFile": "d7685f87-bdf8-49c4-a72a-b8df98d155cd",
-          "thumb": "/images/designs/snorefather/d7685f87-bdf8-49c4-a72a-b8df98d155cd.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/d7685f87-bdf8-49c4-a72a-b8df98d155cd.png",
-          "breed": "Vizsla",
-          "label": "Vizsla"
-        },
-        {
-          "id": "snorefather-15",
-          "localFile": "a648e200-9199-46c4-94af-a22496110362",
-          "thumb": "/images/designs/snorefather/a648e200-9199-46c4-94af-a22496110362.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/a648e200-9199-46c4-94af-a22496110362.png",
-          "breed": "Siberian Husky",
-          "label": "Siberian Husky"
-        },
-        {
-          "id": "snorefather-16",
-          "localFile": "a4d419c2-b435-4184-a526-d1a2d84c6d5e",
-          "thumb": "/images/designs/snorefather/a4d419c2-b435-4184-a526-d1a2d84c6d5e.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/a4d419c2-b435-4184-a526-d1a2d84c6d5e.png",
-          "breed": "Labrador Retriever",
-          "label": "Labrador Retriever"
-        },
-        {
-          "id": "snorefather-17",
-          "localFile": "82cf4abd-a498-48f7-a5e4-23dd1ac590af",
-          "thumb": "/images/designs/snorefather/82cf4abd-a498-48f7-a5e4-23dd1ac590af.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/82cf4abd-a498-48f7-a5e4-23dd1ac590af.png",
+          "localFile": "b8575e38",
+          "thumb": "/images/designs/snorefather/snorefather-13.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-13.png",
           "breed": "Dachshund",
           "label": "Dachshund"
         },
         {
+          "id": "snorefather-14",
+          "localFile": "dcea92b0",
+          "thumb": "/images/designs/snorefather/snorefather-14.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-14.png",
+          "breed": "Doberman Pincher",
+          "label": "Doberman Pincher"
+        },
+        {
+          "id": "snorefather-15",
+          "localFile": "cf20a15f",
+          "thumb": "/images/designs/snorefather/snorefather-15.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-15.png",
+          "breed": "English Bulldog",
+          "label": "English Bulldog"
+        },
+        {
+          "id": "snorefather-16",
+          "localFile": "bbe5a4b2",
+          "thumb": "/images/designs/snorefather/snorefather-16.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-16.png",
+          "breed": "English Springer Spaniel",
+          "label": "English Springer Spaniel"
+        },
+        {
+          "id": "snorefather-17",
+          "localFile": "b9c51c97",
+          "thumb": "/images/designs/snorefather/snorefather-17.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-17.png",
+          "breed": "French Bulldog",
+          "label": "French Bulldog"
+        },
+        {
           "id": "snorefather-18",
-          "localFile": "c9744e94-7202-46d2-be75-3654fda025ca",
-          "thumb": "/images/designs/snorefather/c9744e94-7202-46d2-be75-3654fda025ca.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/c9744e94-7202-46d2-be75-3654fda025ca.png",
+          "localFile": "724ed128",
+          "thumb": "/images/designs/snorefather/snorefather-18.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-18.png",
+          "breed": "German Shepherd",
+          "label": "German Shepherd"
+        },
+        {
+          "id": "snorefather-19",
+          "localFile": "7923e81d",
+          "thumb": "/images/designs/snorefather/snorefather-19.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-19.png",
+          "breed": "Golden Retriever",
+          "label": "Golden Retriever"
+        },
+        {
+          "id": "snorefather-20",
+          "localFile": "2ed52ce6",
+          "thumb": "/images/designs/snorefather/snorefather-20.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-20.png",
+          "breed": "Jack Russell Terrier",
+          "label": "Jack Russell Terrier"
+        },
+        {
+          "id": "snorefather-21",
+          "localFile": "b0f1834e",
+          "thumb": "/images/designs/snorefather/snorefather-21.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-21.png",
+          "breed": "Labradoodle",
+          "label": "Labradoodle"
+        },
+        {
+          "id": "snorefather-22",
+          "localFile": "f8293379",
+          "thumb": "/images/designs/snorefather/snorefather-22.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-22.png",
+          "breed": "Labrador Retriever",
+          "label": "Labrador Retriever"
+        },
+        {
+          "id": "snorefather-23",
+          "localFile": "4b24c42d",
+          "thumb": "/images/designs/snorefather/snorefather-23.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-23.png",
+          "breed": "Old English Sheepdog",
+          "label": "Old English Sheepdog"
+        },
+        {
+          "id": "snorefather-24",
+          "localFile": "4d26f25a",
+          "thumb": "/images/designs/snorefather/snorefather-24.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-24.png",
+          "breed": "Pug",
+          "label": "Pug"
+        },
+        {
+          "id": "snorefather-25",
+          "localFile": "632da718",
+          "thumb": "/images/designs/snorefather/snorefather-25.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-25.png",
           "breed": "Rottweiler",
           "label": "Rottweiler"
         },
         {
-          "id": "snorefather-19",
-          "localFile": "8e0d3c9c-dfff-451f-af9e-02310f1c0d1a",
-          "thumb": "/images/designs/snorefather/8e0d3c9c-dfff-451f-af9e-02310f1c0d1a.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/8e0d3c9c-dfff-451f-af9e-02310f1c0d1a.png",
+          "id": "snorefather-26",
+          "localFile": "74a3b7fe",
+          "thumb": "/images/designs/snorefather/snorefather-26.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-26.png",
+          "breed": "Siberian Husky",
+          "label": "Siberian Husky"
+        },
+        {
+          "id": "snorefather-27",
+          "localFile": "74a31ebd",
+          "thumb": "/images/designs/snorefather/snorefather-27.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-27.png",
           "breed": "Staffordshire Bull Terrier",
           "label": "Staffordshire Bull Terrier"
         },
         {
-          "id": "snorefather-20",
-          "localFile": "94fcfe75-12f0-499c-a678-e496931cbaa5",
-          "thumb": "/images/designs/snorefather/94fcfe75-12f0-499c-a678-e496931cbaa5.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/94fcfe75-12f0-499c-a678-e496931cbaa5.png",
-          "breed": "Border Collie",
-          "label": "Border Collie"
+          "id": "snorefather-28",
+          "localFile": "fc3b2a02",
+          "thumb": "/images/designs/snorefather/snorefather-28.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-28.png",
+          "breed": "Vizsla",
+          "label": "Vizsla"
+        },
+        {
+          "id": "snorefather-29",
+          "localFile": "1ba2e3d6",
+          "thumb": "/images/designs/snorefather/snorefather-29.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/snorefather/snorefather-29.png",
+          "breed": "Weimaraner",
+          "label": "Weimaraner"
         }
       ],
       "seoTitle": "Snorefather Collection | Funny Mafia Dog Artwork & Gifts",
