@@ -161,7 +161,7 @@
       try {
         const res = await fetch('/api/mockup', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ product: prod.slug, designId: design.id, printFileUrl: design.printFileUrl })
+          body: JSON.stringify({ product: prod.slug, designId: design.id, printFileUrl: design.printFileUrl, colour })
         });
         data = await res.json().catch(() => ({}));
       } catch (_) { data = {}; }

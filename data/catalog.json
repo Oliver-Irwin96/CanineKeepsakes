@@ -380,177 +380,79 @@
         "Woof Business is for the confident dogs with CEO energy. The dogs who supervise everything, judge everyone and somehow always look like they're in charge of the operation.",
         "Professional. Powerful. Slightly ridiculous. Exactly as intended."
       ],
-      "designCount": 20,
+      "designCount": 9,
       "designs": [
         {
           "id": "woof-business-01",
-          "localFile": "84e6d90e-2c8b-45c2-bd37-faa46f9cff0a",
-          "thumb": "/images/designs/woof-business/84e6d90e-2c8b-45c2-bd37-faa46f9cff0a.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/84e6d90e-2c8b-45c2-bd37-faa46f9cff0a.png",
-          "breed": "Jack Russell Terrier",
-          "label": "Jack Russell Terrier"
+          "localFile": "6159c341-509c-471c-8c60-f24286e6c159",
+          "thumb": "/images/designs/woof-business/woof-business-01.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-01.png",
+          "breed": "Afghan Hound",
+          "label": "Afghan Hound"
         },
         {
           "id": "woof-business-02",
-          "localFile": "914696c3-f754-4dca-a071-94e3000f2b8f",
-          "thumb": "/images/designs/woof-business/914696c3-f754-4dca-a071-94e3000f2b8f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/914696c3-f754-4dca-a071-94e3000f2b8f.png",
-          "breed": "Golden Retriever",
-          "label": "Golden Retriever"
+          "localFile": "d15f82cd-3bb4-4aa1-8012-07f68b1d4727",
+          "thumb": "/images/designs/woof-business/woof-business-02.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-02.png",
+          "breed": "American Bulldog",
+          "label": "American Bulldog"
         },
         {
           "id": "woof-business-03",
-          "localFile": "99483852-6785-48bf-8148-1a6886efb456",
-          "thumb": "/images/designs/woof-business/99483852-6785-48bf-8148-1a6886efb456.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/99483852-6785-48bf-8148-1a6886efb456.png",
-          "breed": "Chihuahua",
-          "label": "Chihuahua"
+          "localFile": "3f38e8a8-3017-48c6-bfd8-c695295c52b0",
+          "thumb": "/images/designs/woof-business/woof-business-03.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-03.png",
+          "breed": "Australian Shepherd",
+          "label": "Australian Shepherd"
         },
         {
           "id": "woof-business-04",
-          "localFile": "ab8afa92-f3b7-4f69-9150-7839aadf0597",
-          "thumb": "/images/designs/woof-business/ab8afa92-f3b7-4f69-9150-7839aadf0597.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/ab8afa92-f3b7-4f69-9150-7839aadf0597.png",
-          "breed": "Border Collie",
-          "label": "Border Collie"
+          "localFile": "4913a574-0b63-4936-96bb-d084b3433375",
+          "thumb": "/images/designs/woof-business/woof-business-04.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-04.png",
+          "breed": "Bearded Collie",
+          "label": "Bearded Collie"
         },
         {
           "id": "woof-business-05",
-          "localFile": "92b81fac-9676-436c-97d7-9269afb8273f",
-          "thumb": "/images/designs/woof-business/92b81fac-9676-436c-97d7-9269afb8273f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/92b81fac-9676-436c-97d7-9269afb8273f.png",
-          "breed": "Labradoodle",
-          "label": "Labradoodle"
+          "localFile": "de8ba417-09c7-431c-9bb5-67fdd9698cab",
+          "thumb": "/images/designs/woof-business/woof-business-05.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-05.png",
+          "breed": "Cane Corso",
+          "label": "Cane Corso"
         },
         {
           "id": "woof-business-06",
-          "localFile": "f664d8cc-7947-4c57-9e15-c4b7200a83f7",
-          "thumb": "/images/designs/woof-business/f664d8cc-7947-4c57-9e15-c4b7200a83f7.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/f664d8cc-7947-4c57-9e15-c4b7200a83f7.png",
-          "breed": "Boxer",
-          "label": "Boxer"
+          "localFile": "a221ef46-0193-45fe-8f6d-5dc946e9ceac",
+          "thumb": "/images/designs/woof-business/woof-business-06.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-06.png",
+          "breed": "Doberman Pincher",
+          "label": "Doberman Pincher"
         },
         {
           "id": "woof-business-07",
-          "localFile": "e747cb95-1dde-456a-b39b-e8bfeaf40f4d",
-          "thumb": "/images/designs/woof-business/e747cb95-1dde-456a-b39b-e8bfeaf40f4d.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/e747cb95-1dde-456a-b39b-e8bfeaf40f4d.png",
-          "breed": "Beagle",
-          "label": "Beagle"
+          "localFile": "0fee32d9-5f9f-4715-bd4b-ebc8c0e9b305",
+          "thumb": "/images/designs/woof-business/woof-business-07.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-07.png",
+          "breed": "English Bulldog",
+          "label": "English Bulldog"
         },
         {
           "id": "woof-business-08",
-          "localFile": "e2004072-796d-43f5-80bf-74b0b699a871",
-          "thumb": "/images/designs/woof-business/e2004072-796d-43f5-80bf-74b0b699a871.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/e2004072-796d-43f5-80bf-74b0b699a871.png",
-          "breed": "French Bulldog",
-          "label": "French Bulldog"
+          "localFile": "0197ab1c-7492-4cdb-b52f-7f28364ed051",
+          "thumb": "/images/designs/woof-business/woof-business-08.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-08.png",
+          "breed": "Old English Sheepdog",
+          "label": "Old English Sheepdog"
         },
         {
           "id": "woof-business-09",
-          "localFile": "7a2932b1-1864-4ca1-9f9a-30ebfe5b202e",
-          "thumb": "/images/designs/woof-business/7a2932b1-1864-4ca1-9f9a-30ebfe5b202e.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/7a2932b1-1864-4ca1-9f9a-30ebfe5b202e.png",
-          "breed": "Rottweiler",
-          "label": "Rottweiler"
-        },
-        {
-          "id": "woof-business-10",
-          "localFile": "83a512ae-182c-4ce3-ad85-95afd4cedbb2",
-          "thumb": "/images/designs/woof-business/83a512ae-182c-4ce3-ad85-95afd4cedbb2.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/83a512ae-182c-4ce3-ad85-95afd4cedbb2.png",
-          "breed": "Vizsla",
-          "label": "Vizsla"
-        },
-        {
-          "id": "woof-business-11",
-          "localFile": "adfe0e81-c5e0-4b9f-90b3-4704c983d346",
-          "thumb": "/images/designs/woof-business/adfe0e81-c5e0-4b9f-90b3-4704c983d346.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/adfe0e81-c5e0-4b9f-90b3-4704c983d346.png",
-          "breed": "Bloodhound",
-          "label": "Bloodhound"
-        },
-        {
-          "id": "woof-business-12",
-          "localFile": "bb163694-a9a4-4063-afec-6deeed758d8a",
-          "thumb": "/images/designs/woof-business/bb163694-a9a4-4063-afec-6deeed758d8a.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/bb163694-a9a4-4063-afec-6deeed758d8a.png",
-          "breed": "Pug",
-          "label": "Pug"
-        },
-        {
-          "id": "woof-business-13",
-          "localFile": "9d954748-73f9-478a-b133-03865425c7f7",
-          "thumb": "/images/designs/woof-business/9d954748-73f9-478a-b133-03865425c7f7.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/9d954748-73f9-478a-b133-03865425c7f7.png",
-          "breed": "Labrador Retriever",
-          "label": "Labrador Retriever"
-        },
-        {
-          "id": "woof-business-14",
-          "localFile": "268b9605-ca0c-4b46-bca2-00661aa359c6",
-          "thumb": "/images/designs/woof-business/268b9605-ca0c-4b46-bca2-00661aa359c6.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/268b9605-ca0c-4b46-bca2-00661aa359c6.png",
-          "breed": "Siberian Husky",
-          "label": "Siberian Husky"
-        },
-        {
-          "id": "woof-business-15",
-          "localFile": "06cfad06-762c-4727-b48f-5ec6fe75960f",
-          "thumb": "/images/designs/woof-business/06cfad06-762c-4727-b48f-5ec6fe75960f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/06cfad06-762c-4727-b48f-5ec6fe75960f.png",
-          "breed": "Cocker Spaniel",
-          "label": "Cocker Spaniel"
-        },
-        {
-          "id": "woof-business-16",
-          "localFile": "342c98af-f2cf-46b3-aaa9-9a2b2d3b9030",
-          "thumb": "/images/designs/woof-business/342c98af-f2cf-46b3-aaa9-9a2b2d3b9030.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/342c98af-f2cf-46b3-aaa9-9a2b2d3b9030.png",
-          "breed": "English Springer Spaniel",
-          "label": "English Springer Spaniel"
-        },
-        {
-          "id": "woof-business-17",
-          "localFile": "34c462f3-80c2-46a5-9ef4-216d9d5a3a6c",
-          "thumb": "/images/designs/woof-business/34c462f3-80c2-46a5-9ef4-216d9d5a3a6c.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/34c462f3-80c2-46a5-9ef4-216d9d5a3a6c.png",
-          "breed": "German Shepherd",
-          "label": "German Shepherd"
-        },
-        {
-          "id": "woof-business-18",
-          "localFile": "50c67d58-40a4-4cfc-a6f2-627e6b8dae43",
-          "thumb": "/images/designs/woof-business/50c67d58-40a4-4cfc-a6f2-627e6b8dae43.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/50c67d58-40a4-4cfc-a6f2-627e6b8dae43.png",
-          "breed": "Dachshund",
-          "label": "Dachshund"
-        },
-        {
-          "id": "woof-business-19",
-          "localFile": "19d5b61a-c22c-455e-bf77-2031e95a2a39",
-          "thumb": "/images/designs/woof-business/19d5b61a-c22c-455e-bf77-2031e95a2a39.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/19d5b61a-c22c-455e-bf77-2031e95a2a39.png",
-          "breed": "Cavalier King Charles Spaniel",
-          "label": "Cavalier King Charles Spaniel"
-        },
-        {
-          "id": "woof-business-20",
-          "localFile": "51451aad-f0ee-4104-b573-aa50b54e563c",
-          "thumb": "/images/designs/woof-business/51451aad-f0ee-4104-b573-aa50b54e563c.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/51451aad-f0ee-4104-b573-aa50b54e563c.png",
-          "breed": "Staffordshire Bull Terrier",
-          "label": "Staffordshire Bull Terrier"
-        },
-        {
-          "id": "woof-business-21",
-          "localFile": "0197ab1c-7492-4cdb-b52f-7f28364ed051",
-          "thumb": "/images/designs/woof-business/0197ab1c-7492-4cdb-b52f-7f28364ed051.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/0197ab1c-7492-4cdb-b52f-7f28364ed051.png",
-          "breed": "Old English Sheepdog",
-          "label": "Old English Sheepdog",
-          "_test": true,
-          "_note": "TEST design uploaded 2026-07-07 to prove R2 upload->display->order. Breed is visual read; verify against Neil board before keeping."
+          "localFile": "e79acc50-415f-4f84-b600-d112c8cdd4d6",
+          "thumb": "/images/designs/woof-business/woof-business-09.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/woof-business/woof-business-09.png",
+          "breed": "Weimaraner",
+          "label": "Weimaraner"
         }
       ],
       "seoTitle": "Woof Business Collection | Funny Boss Dog Art & Gifts",
@@ -566,175 +468,79 @@
         "This collection celebrates the dogs who pull, drag, negotiate and generally take charge of every walk. Whether it's a quick trip around the block or a full-scale adventure, some dogs have very strong opinions about where they're going.",
         "If your dog thinks the lead is merely a suggestion, this collection was made for you."
       ],
-      "designCount": 21,
+      "designCount": 9,
       "designs": [
         {
           "id": "whos-walking-who-01",
-          "localFile": "chatgpt image may 20, 2026, 02_49_41 am",
-          "thumb": "/images/designs/whos-walking-who/chatgpt image may 20, 2026, 02_49_41 am.jpg",
-          "printFileUrl": null,
-          "breed": "Boxer",
-          "label": "Boxer"
+          "localFile": "b09b9ec3-8632-41dd-b050-4361ed60ce0d",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-01.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-01.png",
+          "breed": "Afghan Hound",
+          "label": "Afghan Hound"
         },
         {
           "id": "whos-walking-who-02",
-          "localFile": "a9f31125-8035-478c-9c4f-c9bae220a22f",
-          "thumb": "/images/designs/whos-walking-who/a9f31125-8035-478c-9c4f-c9bae220a22f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/a9f31125-8035-478c-9c4f-c9bae220a22f.png",
-          "breed": "Labrador Retriever",
-          "label": "Labrador Retriever"
+          "localFile": "837b9128-83fb-4efb-b924-b556d14dbb6f",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-02.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-02.png",
+          "breed": "American Bulldog",
+          "label": "American Bulldog"
         },
         {
           "id": "whos-walking-who-03",
-          "localFile": "85ace743-0113-4694-ad10-5231bb6e2cfa",
-          "thumb": "/images/designs/whos-walking-who/85ace743-0113-4694-ad10-5231bb6e2cfa.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/85ace743-0113-4694-ad10-5231bb6e2cfa.png",
-          "breed": "Labradoodle",
-          "label": "Labradoodle"
+          "localFile": "0adaa466-0e9c-4f28-9f19-7cd93a09246e",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-03.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-03.png",
+          "breed": "Australian Shepherd",
+          "label": "Australian Shepherd"
         },
         {
           "id": "whos-walking-who-04",
-          "localFile": "95042610-92f7-45b1-854e-b3e93a2ddb6f",
-          "thumb": "/images/designs/whos-walking-who/95042610-92f7-45b1-854e-b3e93a2ddb6f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/95042610-92f7-45b1-854e-b3e93a2ddb6f.png",
-          "breed": "Bloodhound",
-          "label": "Bloodhound"
+          "localFile": "f0d60ac9-2a59-458d-a804-74958a368b1d",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-04.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-04.png",
+          "breed": "Bearded Collie",
+          "label": "Bearded Collie"
         },
         {
           "id": "whos-walking-who-05",
-          "localFile": "59b4d1e5-2cd4-4010-bd78-4814219daa59",
-          "thumb": "/images/designs/whos-walking-who/59b4d1e5-2cd4-4010-bd78-4814219daa59.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/59b4d1e5-2cd4-4010-bd78-4814219daa59.png",
-          "breed": "Chihuahua",
-          "label": "Chihuahua"
+          "localFile": "7a531f10-ad0a-4aa9-a375-02915caa5ca8",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-05.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-05.png",
+          "breed": "Cane Corso",
+          "label": "Cane Corso"
         },
         {
           "id": "whos-walking-who-06",
-          "localFile": "8343fee7-d9c5-40ee-97a2-1e073d10df6e",
-          "thumb": "/images/designs/whos-walking-who/8343fee7-d9c5-40ee-97a2-1e073d10df6e.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/8343fee7-d9c5-40ee-97a2-1e073d10df6e.png",
-          "breed": "Dachshund",
-          "label": "Dachshund"
+          "localFile": "94a59095-7338-42bb-8a10-f407a53f648b",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-06.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-06.png",
+          "breed": "Doberman Pincher",
+          "label": "Doberman Pincher"
         },
         {
           "id": "whos-walking-who-07",
-          "localFile": "c4ae194e-7b62-45b5-b379-80d7c67df931",
-          "thumb": "/images/designs/whos-walking-who/c4ae194e-7b62-45b5-b379-80d7c67df931.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/c4ae194e-7b62-45b5-b379-80d7c67df931.png",
-          "breed": "Rottweiler",
-          "label": "Rottweiler"
+          "localFile": "b69b69f3-a203-4801-a1b3-90caec9846c9",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-07.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-07.png",
+          "breed": "English Bulldog",
+          "label": "English Bulldog"
         },
         {
           "id": "whos-walking-who-08",
-          "localFile": "9d535354-3c9d-4a60-b163-2342cbc2f855",
-          "thumb": "/images/designs/whos-walking-who/9d535354-3c9d-4a60-b163-2342cbc2f855.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/9d535354-3c9d-4a60-b163-2342cbc2f855.png",
-          "breed": "Border Collie",
-          "label": "Border Collie"
+          "localFile": "0ac9fb1c-c692-4d5a-b3db-6e84272ba9ef",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-08.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-08.png",
+          "breed": "Old English Sheepdog",
+          "label": "Old English Sheepdog"
         },
         {
           "id": "whos-walking-who-09",
-          "localFile": "efa39c2c-d5e8-44a3-88d7-de55ab13dd25",
-          "thumb": "/images/designs/whos-walking-who/efa39c2c-d5e8-44a3-88d7-de55ab13dd25.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/efa39c2c-d5e8-44a3-88d7-de55ab13dd25.png",
-          "breed": "Cocker Spaniel",
-          "label": "Cocker Spaniel"
-        },
-        {
-          "id": "whos-walking-who-10",
-          "localFile": "7adc8883-c638-4ed2-b6d8-f573b9453e88",
-          "thumb": "/images/designs/whos-walking-who/7adc8883-c638-4ed2-b6d8-f573b9453e88.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/7adc8883-c638-4ed2-b6d8-f573b9453e88.png",
-          "breed": "English Springer Spaniel",
-          "label": "English Springer Spaniel"
-        },
-        {
-          "id": "whos-walking-who-11",
-          "localFile": "abceba2c-c1b1-407e-9dba-143e822baf44",
-          "thumb": "/images/designs/whos-walking-who/abceba2c-c1b1-407e-9dba-143e822baf44.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/abceba2c-c1b1-407e-9dba-143e822baf44.png",
-          "breed": "Pug",
-          "label": "Pug"
-        },
-        {
-          "id": "whos-walking-who-12",
-          "localFile": "f4f3a92d-b7f5-4d51-9aab-904045d53019",
-          "thumb": "/images/designs/whos-walking-who/f4f3a92d-b7f5-4d51-9aab-904045d53019.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/f4f3a92d-b7f5-4d51-9aab-904045d53019.png",
-          "breed": "French Bulldog",
-          "label": "French Bulldog"
-        },
-        {
-          "id": "whos-walking-who-13",
-          "localFile": "5768c179-c7f9-4607-84d2-bc5a62c274f2",
-          "thumb": "/images/designs/whos-walking-who/5768c179-c7f9-4607-84d2-bc5a62c274f2.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/5768c179-c7f9-4607-84d2-bc5a62c274f2.png",
-          "breed": "Siberian Husky",
-          "label": "Siberian Husky"
-        },
-        {
-          "id": "whos-walking-who-14",
-          "localFile": "5ec830de-e61a-4fe4-8974-0295fabd1f70",
-          "thumb": "/images/designs/whos-walking-who/5ec830de-e61a-4fe4-8974-0295fabd1f70.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/5ec830de-e61a-4fe4-8974-0295fabd1f70.png",
-          "breed": "Boxer",
-          "label": "Boxer"
-        },
-        {
-          "id": "whos-walking-who-15",
-          "localFile": "6ed4e266-a469-40e8-8219-3e68aae91c5f",
-          "thumb": "/images/designs/whos-walking-who/6ed4e266-a469-40e8-8219-3e68aae91c5f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/6ed4e266-a469-40e8-8219-3e68aae91c5f.png",
-          "breed": "Beagle",
-          "label": "Beagle"
-        },
-        {
-          "id": "whos-walking-who-16",
-          "localFile": "41fb1d66-cb6b-416f-a4cb-5ded823d38c8",
-          "thumb": "/images/designs/whos-walking-who/41fb1d66-cb6b-416f-a4cb-5ded823d38c8.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/41fb1d66-cb6b-416f-a4cb-5ded823d38c8.png",
-          "breed": "German Shepherd",
-          "label": "German Shepherd"
-        },
-        {
-          "id": "whos-walking-who-17",
-          "localFile": "22d6ed02-7cc8-4051-ab05-2de564081d89",
-          "thumb": "/images/designs/whos-walking-who/22d6ed02-7cc8-4051-ab05-2de564081d89.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/22d6ed02-7cc8-4051-ab05-2de564081d89.png",
-          "breed": "Vizsla",
-          "label": "Vizsla"
-        },
-        {
-          "id": "whos-walking-who-18",
-          "localFile": "14c984cb-3670-4ba3-9339-131332393eb7",
-          "thumb": "/images/designs/whos-walking-who/14c984cb-3670-4ba3-9339-131332393eb7.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/14c984cb-3670-4ba3-9339-131332393eb7.png",
-          "breed": "Cavalier King Charles Spaniel",
-          "label": "Cavalier King Charles Spaniel"
-        },
-        {
-          "id": "whos-walking-who-19",
-          "localFile": "505e551d-4180-4dd0-887b-b7556f1091b3",
-          "thumb": "/images/designs/whos-walking-who/505e551d-4180-4dd0-887b-b7556f1091b3.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/505e551d-4180-4dd0-887b-b7556f1091b3.png",
-          "breed": "Staffordshire Bull Terrier",
-          "label": "Staffordshire Bull Terrier"
-        },
-        {
-          "id": "whos-walking-who-20",
-          "localFile": "210b29ae-8b63-4dcf-9533-8db97a55ee87",
-          "thumb": "/images/designs/whos-walking-who/210b29ae-8b63-4dcf-9533-8db97a55ee87.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/210b29ae-8b63-4dcf-9533-8db97a55ee87.png",
-          "breed": "Golden Retriever",
-          "label": "Golden Retriever"
-        },
-        {
-          "id": "whos-walking-who-21",
-          "localFile": "16e68faf-a371-4ffe-8408-ff55229aad43",
-          "thumb": "/images/designs/whos-walking-who/16e68faf-a371-4ffe-8408-ff55229aad43.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/16e68faf-a371-4ffe-8408-ff55229aad43.png",
-          "breed": "Jack Russell Terrier",
-          "label": "Jack Russell Terrier"
+          "localFile": "363c8ee0-7472-4d3a-8dd3-ba10f17d6058",
+          "thumb": "/images/designs/whos-walking-who/whos-walking-who-09.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/whos-walking-who/whos-walking-who-09.png",
+          "breed": "Weimaraner",
+          "label": "Weimaraner"
         }
       ],
       "seoTitle": "Who's Walking Who Collection | Funny Dog & Human Role Reversal",
@@ -751,151 +557,95 @@
         "Perfect for owners who appreciate simple pleasures, big personalities and a good sense of humour.",
         "No pretence. Just good dogs and good times."
       ],
-      "designCount": 18,
+      "designCount": 11,
       "designs": [
         {
           "id": "redneck-01",
-          "localFile": "532f1a5d-1a50-45b8-b682-49c233da812e",
-          "thumb": "/images/designs/redneck/532f1a5d-1a50-45b8-b682-49c233da812e.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/532f1a5d-1a50-45b8-b682-49c233da812e.png",
-          "breed": "Cocker Spaniel",
-          "label": "Cocker Spaniel"
+          "localFile": "867c7acb-0e47-4703-96b5-037952f9614f",
+          "thumb": "/images/designs/redneck/redneck-01.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-01.png",
+          "breed": "Afghan Hound",
+          "label": "Afghan Hound"
         },
         {
           "id": "redneck-02",
-          "localFile": "d47e3cd4-02f9-4bbc-8272-45ea83f2be4e",
-          "thumb": "/images/designs/redneck/d47e3cd4-02f9-4bbc-8272-45ea83f2be4e.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/d47e3cd4-02f9-4bbc-8272-45ea83f2be4e.png",
-          "breed": "Golden Retriever",
-          "label": "Golden Retriever"
-        },
-        {
-          "id": "redneck-03",
-          "localFile": "0440a78c-3f58-4fdb-8c5e-34685e673f4b",
-          "thumb": "/images/designs/redneck/0440a78c-3f58-4fdb-8c5e-34685e673f4b.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/0440a78c-3f58-4fdb-8c5e-34685e673f4b.png",
-          "breed": "Beagle",
-          "label": "Beagle"
-        },
-        {
-          "id": "redneck-04",
-          "localFile": "5f5be928-8440-4289-a0da-0eb917efa190",
-          "thumb": "/images/designs/redneck/5f5be928-8440-4289-a0da-0eb917efa190.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/5f5be928-8440-4289-a0da-0eb917efa190.png",
-          "breed": "Rottweiler",
-          "label": "Rottweiler"
-        },
-        {
-          "id": "redneck-05",
-          "localFile": "acdd6134-561a-4c46-8bd6-10efa4cf7d70",
-          "thumb": "/images/designs/redneck/acdd6134-561a-4c46-8bd6-10efa4cf7d70.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/acdd6134-561a-4c46-8bd6-10efa4cf7d70.png",
+          "localFile": "245c5daa-6792-453e-8533-7f809d415e9e",
+          "thumb": "/images/designs/redneck/redneck-02.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-02.png",
           "breed": "American Bulldog",
           "label": "American Bulldog"
         },
         {
+          "id": "redneck-03",
+          "localFile": "56794139-8e9f-4c37-baf2-d406c04a1877",
+          "thumb": "/images/designs/redneck/redneck-03.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-03.png",
+          "breed": "Australian Shepherd",
+          "label": "Australian Shepherd"
+        },
+        {
+          "id": "redneck-04",
+          "localFile": "f4c3f636-73f3-4bbc-846d-6de4164b0ee7",
+          "thumb": "/images/designs/redneck/redneck-04.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-04.png",
+          "breed": "Cavalier King Charles Spaniel",
+          "label": "Cavalier King Charles Spaniel"
+        },
+        {
+          "id": "redneck-05",
+          "localFile": "60009d05-304f-4f21-8dba-c731a45b270a",
+          "thumb": "/images/designs/redneck/redneck-05.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-05.png",
+          "breed": "Chihuahua",
+          "label": "Chihuahua"
+        },
+        {
           "id": "redneck-06",
-          "localFile": "ee53be0c-8c03-4734-a556-2bb7222a4528",
-          "thumb": "/images/designs/redneck/ee53be0c-8c03-4734-a556-2bb7222a4528.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/ee53be0c-8c03-4734-a556-2bb7222a4528.png",
-          "breed": "Staffordshire Bull Terrier",
-          "label": "Staffordshire Bull Terrier"
+          "localFile": "30cfb3e5-530e-4516-baf2-587261bea156",
+          "thumb": "/images/designs/redneck/redneck-06.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-06.png",
+          "breed": "Doberman Pincher",
+          "label": "Doberman Pincher"
         },
         {
           "id": "redneck-07",
-          "localFile": "f89ada3e-1c2d-4079-b312-d4a4edf0a192",
-          "thumb": "/images/designs/redneck/f89ada3e-1c2d-4079-b312-d4a4edf0a192.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/f89ada3e-1c2d-4079-b312-d4a4edf0a192.png",
-          "breed": "Cane Corso",
-          "label": "Cane Corso"
+          "localFile": "ca16fd6e-e75c-46d0-a7cc-1bec8c7ab8c2",
+          "thumb": "/images/designs/redneck/redneck-07.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-07.png",
+          "breed": "English Bulldog",
+          "label": "English Bulldog"
         },
         {
           "id": "redneck-08",
-          "localFile": "88574279-beb3-4b67-93fd-361643e8e25a",
-          "thumb": "/images/designs/redneck/88574279-beb3-4b67-93fd-361643e8e25a.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/88574279-beb3-4b67-93fd-361643e8e25a.png",
-          "breed": "Border Collie",
-          "label": "Border Collie"
+          "localFile": "6e74d39d-1254-4432-83d8-e23c6eab0c39",
+          "thumb": "/images/designs/redneck/redneck-08.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-08.png",
+          "breed": "Labradoodle",
+          "label": "Labradoodle"
         },
         {
           "id": "redneck-09",
-          "localFile": "4f6dffda-a854-476a-b416-4e58e5e0fe3f",
-          "thumb": "/images/designs/redneck/4f6dffda-a854-476a-b416-4e58e5e0fe3f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/4f6dffda-a854-476a-b416-4e58e5e0fe3f.png",
-          "breed": "Jack Russell Terrier",
-          "label": "Jack Russell Terrier"
+          "localFile": "5b690c53-1b50-4874-8af4-196df1368ebb",
+          "thumb": "/images/designs/redneck/redneck-09.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-09.png",
+          "breed": "Siberian Husky",
+          "label": "Siberian Husky"
         },
         {
           "id": "redneck-10",
-          "localFile": "6538e9e9-e8b5-4195-a337-fd7018ee0791",
-          "thumb": "/images/designs/redneck/6538e9e9-e8b5-4195-a337-fd7018ee0791.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/6538e9e9-e8b5-4195-a337-fd7018ee0791.png",
-          "breed": "Bloodhound",
-          "label": "Bloodhound"
+          "localFile": "59312db7-3fff-4f10-8741-9f10cee19ac9",
+          "thumb": "/images/designs/redneck/redneck-10.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-10.png",
+          "breed": "Vizsla",
+          "label": "Vizsla"
         },
         {
           "id": "redneck-11",
-          "localFile": "92aab79f-9c5a-4555-80b3-9138e7bc3d35",
-          "thumb": "/images/designs/redneck/92aab79f-9c5a-4555-80b3-9138e7bc3d35.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/92aab79f-9c5a-4555-80b3-9138e7bc3d35.png",
-          "breed": "Bearded Collie",
-          "label": "Bearded Collie"
-        },
-        {
-          "id": "redneck-12",
-          "localFile": "1a0b7749-c181-4853-ae2a-bc462791d473",
-          "thumb": "/images/designs/redneck/1a0b7749-c181-4853-ae2a-bc462791d473.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/1a0b7749-c181-4853-ae2a-bc462791d473.png",
-          "breed": "English Springer Spaniel",
-          "label": "English Springer Spaniel"
-        },
-        {
-          "id": "redneck-13",
-          "localFile": "8497cbbd-aa77-4a25-a5b1-19bb9eae19b8",
-          "thumb": "/images/designs/redneck/8497cbbd-aa77-4a25-a5b1-19bb9eae19b8.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/8497cbbd-aa77-4a25-a5b1-19bb9eae19b8.png",
-          "breed": "Dachshund",
-          "label": "Dachshund"
-        },
-        {
-          "id": "redneck-14",
-          "localFile": "a5596d85-03f6-4359-8712-836b9876b3ed",
-          "thumb": "/images/designs/redneck/a5596d85-03f6-4359-8712-836b9876b3ed.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/a5596d85-03f6-4359-8712-836b9876b3ed.png",
-          "breed": "German Shepherd",
-          "label": "German Shepherd"
-        },
-        {
-          "id": "redneck-15",
-          "localFile": "4d40d845-25aa-4d4b-bf56-908d8aa9aab3",
-          "thumb": "/images/designs/redneck/4d40d845-25aa-4d4b-bf56-908d8aa9aab3.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/4d40d845-25aa-4d4b-bf56-908d8aa9aab3.png",
-          "breed": "Old English Sheepdog",
-          "label": "Old English Sheepdog"
-        },
-        {
-          "id": "redneck-16",
-          "localFile": "fc79f59a-a3ae-4efd-b863-f59180385940",
-          "thumb": "/images/designs/redneck/fc79f59a-a3ae-4efd-b863-f59180385940.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/fc79f59a-a3ae-4efd-b863-f59180385940.png",
-          "breed": "Labrador Retriever",
-          "label": "Labrador Retriever"
-        },
-        {
-          "id": "redneck-17",
-          "localFile": "3c6ed192-f029-48c2-a78f-7b54d1679876",
-          "thumb": "/images/designs/redneck/3c6ed192-f029-48c2-a78f-7b54d1679876.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/3c6ed192-f029-48c2-a78f-7b54d1679876.png",
-          "breed": "Boxer",
-          "label": "Boxer"
-        },
-        {
-          "id": "redneck-18",
-          "localFile": "103dddf4-300e-4775-98c2-13dc088e2d3f",
-          "thumb": "/images/designs/redneck/103dddf4-300e-4775-98c2-13dc088e2d3f.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/103dddf4-300e-4775-98c2-13dc088e2d3f.png",
-          "breed": "Pug",
-          "label": "Pug"
+          "localFile": "7e905a90-b81b-4fbf-abe2-11121b08668f",
+          "thumb": "/images/designs/redneck/redneck-11.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/redneck/redneck-11.png",
+          "breed": "Weimaraner",
+          "label": "Weimaraner"
         }
       ],
       "seoTitle": "Redneck Dog Collection | Country Dog Artwork & Gifts",
@@ -911,167 +661,207 @@
         "The Worked Like A Dog collection celebrates hardworking dogs everywhere. The grafters, the supervisors and the dogs who somehow manage to look exhausted despite sleeping most of the day.",
         "For anyone who's ever felt overworked, underpaid and in desperate need of a treat."
       ],
-      "designCount": 20,
+      "designCount": 25,
       "designs": [
         {
           "id": "work-like-a-dog-01",
-          "localFile": "chatgpt image may 19, 2026, 04_14_02 am",
-          "thumb": "/images/designs/work-like-a-dog/chatgpt image may 19, 2026, 04_14_02 am.jpg",
-          "printFileUrl": null,
-          "breed": "Boxer",
-          "label": "Boxer"
+          "localFile": "ef42ed5e-ce1a-46af-accc-adf68ace5812",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-01.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-01.png",
+          "breed": "Afghan Hound",
+          "label": "Afghan Hound"
         },
         {
           "id": "work-like-a-dog-02",
-          "localFile": "c9e90cbd-7447-4f31-8e9f-3224c07609ca",
-          "thumb": "/images/designs/work-like-a-dog/c9e90cbd-7447-4f31-8e9f-3224c07609ca.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/c9e90cbd-7447-4f31-8e9f-3224c07609ca.png",
-          "breed": "French Bulldog",
-          "label": "French Bulldog"
+          "localFile": "2e38f45f-f17b-4a7a-8476-39cd015a29f2",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-02.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-02.png",
+          "breed": "American Bulldog",
+          "label": "American Bulldog"
         },
         {
           "id": "work-like-a-dog-03",
-          "localFile": "6694d22d-952b-42b7-a2ae-32156cf62917",
-          "thumb": "/images/designs/work-like-a-dog/6694d22d-952b-42b7-a2ae-32156cf62917.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/6694d22d-952b-42b7-a2ae-32156cf62917.png",
-          "breed": "Vizsla",
-          "label": "Vizsla"
-        },
-        {
-          "id": "work-like-a-dog-04",
-          "localFile": "d4a516cd-4d5a-4de9-a690-adbc426981e3",
-          "thumb": "/images/designs/work-like-a-dog/d4a516cd-4d5a-4de9-a690-adbc426981e3.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/d4a516cd-4d5a-4de9-a690-adbc426981e3.png",
-          "breed": "Golden Retriever",
-          "label": "Golden Retriever"
-        },
-        {
-          "id": "work-like-a-dog-05",
-          "localFile": "b80965b3-e0e4-4909-a848-5ab9eb085773",
-          "thumb": "/images/designs/work-like-a-dog/b80965b3-e0e4-4909-a848-5ab9eb085773.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/b80965b3-e0e4-4909-a848-5ab9eb085773.png",
-          "breed": "Staffordshire Bull Terrier",
-          "label": "Staffordshire Bull Terrier"
-        },
-        {
-          "id": "work-like-a-dog-06",
-          "localFile": "a7e0100b-1159-4501-accc-7e0b4219f76c",
-          "thumb": "/images/designs/work-like-a-dog/a7e0100b-1159-4501-accc-7e0b4219f76c.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/a7e0100b-1159-4501-accc-7e0b4219f76c.png",
-          "breed": "Chihuahua",
-          "label": "Chihuahua"
-        },
-        {
-          "id": "work-like-a-dog-07",
-          "localFile": "dec8a7a2-c5a0-414a-804b-6776d3f8c410",
-          "thumb": "/images/designs/work-like-a-dog/dec8a7a2-c5a0-414a-804b-6776d3f8c410.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/dec8a7a2-c5a0-414a-804b-6776d3f8c410.png",
-          "breed": "Border Collie",
-          "label": "Border Collie"
-        },
-        {
-          "id": "work-like-a-dog-08",
-          "localFile": "6f6d9332-5dd7-4b94-9ae1-d731dd2c6be1",
-          "thumb": "/images/designs/work-like-a-dog/6f6d9332-5dd7-4b94-9ae1-d731dd2c6be1.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/6f6d9332-5dd7-4b94-9ae1-d731dd2c6be1.png",
-          "breed": "Labrador Retriever",
-          "label": "Labrador Retriever"
-        },
-        {
-          "id": "work-like-a-dog-09",
-          "localFile": "6975726e-aede-4856-aadd-a828aff86e64",
-          "thumb": "/images/designs/work-like-a-dog/6975726e-aede-4856-aadd-a828aff86e64.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/6975726e-aede-4856-aadd-a828aff86e64.png",
-          "breed": "Jack Russell Terrier",
-          "label": "Jack Russell Terrier"
-        },
-        {
-          "id": "work-like-a-dog-10",
-          "localFile": "c4a04145-6a4b-4f27-bb99-9c00782f84b4",
-          "thumb": "/images/designs/work-like-a-dog/c4a04145-6a4b-4f27-bb99-9c00782f84b4.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/c4a04145-6a4b-4f27-bb99-9c00782f84b4.png",
-          "breed": "Pug",
-          "label": "Pug"
-        },
-        {
-          "id": "work-like-a-dog-11",
-          "localFile": "a844034b-b918-4fa3-91ed-6881d996b910",
-          "thumb": "/images/designs/work-like-a-dog/a844034b-b918-4fa3-91ed-6881d996b910.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/a844034b-b918-4fa3-91ed-6881d996b910.png",
-          "breed": "Siberian Husky",
-          "label": "Siberian Husky"
-        },
-        {
-          "id": "work-like-a-dog-12",
-          "localFile": "a7a6bbc9-bafc-4230-8033-b34b341b0a8c",
-          "thumb": "/images/designs/work-like-a-dog/a7a6bbc9-bafc-4230-8033-b34b341b0a8c.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/a7a6bbc9-bafc-4230-8033-b34b341b0a8c.png",
-          "breed": "Dachshund",
-          "label": "Dachshund"
-        },
-        {
-          "id": "work-like-a-dog-13",
-          "localFile": "dbec4ee8-071d-455a-a5ed-58398167f898",
-          "thumb": "/images/designs/work-like-a-dog/dbec4ee8-071d-455a-a5ed-58398167f898.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/dbec4ee8-071d-455a-a5ed-58398167f898.png",
-          "breed": "Labradoodle",
-          "label": "Labradoodle"
-        },
-        {
-          "id": "work-like-a-dog-14",
-          "localFile": "913e6a5e-6174-443c-96e8-2553b4d1957b",
-          "thumb": "/images/designs/work-like-a-dog/913e6a5e-6174-443c-96e8-2553b4d1957b.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/913e6a5e-6174-443c-96e8-2553b4d1957b.png",
-          "breed": "Bloodhound",
-          "label": "Bloodhound"
-        },
-        {
-          "id": "work-like-a-dog-15",
-          "localFile": "1614c18d-1f2a-4a82-9136-bc04b19f98a4",
-          "thumb": "/images/designs/work-like-a-dog/1614c18d-1f2a-4a82-9136-bc04b19f98a4.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/1614c18d-1f2a-4a82-9136-bc04b19f98a4.png",
-          "breed": "German Shepherd",
-          "label": "German Shepherd"
-        },
-        {
-          "id": "work-like-a-dog-16",
-          "localFile": "00dc5839-27b9-4f76-a6c4-a7d5b4633973",
-          "thumb": "/images/designs/work-like-a-dog/00dc5839-27b9-4f76-a6c4-a7d5b4633973.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/00dc5839-27b9-4f76-a6c4-a7d5b4633973.png",
+          "localFile": "35633602-3614-4dd8-9a68-64ffc9929bf4",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-03.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-03.png",
           "breed": "Beagle",
           "label": "Beagle"
         },
         {
-          "id": "work-like-a-dog-17",
-          "localFile": "41587b59-3c0e-4262-9a59-1087ec36a875",
-          "thumb": "/images/designs/work-like-a-dog/41587b59-3c0e-4262-9a59-1087ec36a875.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/41587b59-3c0e-4262-9a59-1087ec36a875.png",
-          "breed": "Rottweiler",
-          "label": "Rottweiler"
+          "id": "work-like-a-dog-04",
+          "localFile": "a7055e8e-ea9a-4d2a-afc7-a7154f3da94e",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-04.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-04.png",
+          "breed": "Bearded Collie",
+          "label": "Bearded Collie"
         },
         {
-          "id": "work-like-a-dog-18",
-          "localFile": "21e359d1-dede-47da-94fd-7215610990d4",
-          "thumb": "/images/designs/work-like-a-dog/21e359d1-dede-47da-94fd-7215610990d4.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/21e359d1-dede-47da-94fd-7215610990d4.png",
+          "id": "work-like-a-dog-05",
+          "localFile": "0dac1684-025b-4821-ac04-e63fabb45f89",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-05.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-05.png",
+          "breed": "Bloodhound",
+          "label": "Bloodhound"
+        },
+        {
+          "id": "work-like-a-dog-06",
+          "localFile": "a6f3de5b-e1ba-47d4-b559-051c2ac72f7f",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-06.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-06.png",
+          "breed": "Border Collie",
+          "label": "Border Collie"
+        },
+        {
+          "id": "work-like-a-dog-07",
+          "localFile": "6e9f1e25-9c4a-4d54-8367-3f1ed46c81ab",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-07.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-07.png",
+          "breed": "Boxer",
+          "label": "Boxer"
+        },
+        {
+          "id": "work-like-a-dog-08",
+          "localFile": "dad9e30d-5aed-4203-b605-3e609dc0c8a1",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-08.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-08.png",
+          "breed": "Cavalier King Charles Spaniel",
+          "label": "Cavalier King Charles Spaniel"
+        },
+        {
+          "id": "work-like-a-dog-09",
+          "localFile": "3c6f9dc9-49a1-441f-b0ef-026110073d08",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-09.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-09.png",
+          "breed": "Chihuahua",
+          "label": "Chihuahua"
+        },
+        {
+          "id": "work-like-a-dog-10",
+          "localFile": "198ed6c1-5a4f-47d5-9862-67a5a3145aab",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-10.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-10.png",
+          "breed": "Dachshund",
+          "label": "Dachshund"
+        },
+        {
+          "id": "work-like-a-dog-11",
+          "localFile": "9caad197-ab3d-43ed-b25a-38095839074b",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-11.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-11.png",
+          "breed": "Doberman Pincher",
+          "label": "Doberman Pincher"
+        },
+        {
+          "id": "work-like-a-dog-12",
+          "localFile": "71d42eb2-fb11-48a9-bf36-0d2277886964",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-12.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-12.png",
+          "breed": "English Bulldog",
+          "label": "English Bulldog"
+        },
+        {
+          "id": "work-like-a-dog-13",
+          "localFile": "8a3228c8-91f5-4c9f-9970-714bc2dc41fa",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-13.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-13.png",
           "breed": "English Springer Spaniel",
           "label": "English Springer Spaniel"
         },
         {
+          "id": "work-like-a-dog-14",
+          "localFile": "c8469d14-c1d8-4171-893f-9b7ce0605bfe",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-14.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-14.png",
+          "breed": "German Shepherd",
+          "label": "German Shepherd"
+        },
+        {
+          "id": "work-like-a-dog-15",
+          "localFile": "94dd8b6e-32bb-41d6-90b8-acfb4f40411c",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-15.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-15.png",
+          "breed": "Golden Retriever",
+          "label": "Golden Retriever"
+        },
+        {
+          "id": "work-like-a-dog-16",
+          "localFile": "d686cf09-f673-4b6e-ab29-97b592e8a9ae",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-16.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-16.png",
+          "breed": "Jack Russell Terrier",
+          "label": "Jack Russell Terrier"
+        },
+        {
+          "id": "work-like-a-dog-17",
+          "localFile": "aab06508-9770-4421-9c80-aa15d7bdb1e5",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-17.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-17.png",
+          "breed": "Labradoodle",
+          "label": "Labradoodle"
+        },
+        {
+          "id": "work-like-a-dog-18",
+          "localFile": "b34806b6-dd78-41ad-a5a2-323d0e2e3ba6",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-18.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-18.png",
+          "breed": "Labrador Retriever",
+          "label": "Labrador Retriever"
+        },
+        {
           "id": "work-like-a-dog-19",
-          "localFile": "4c82b5ff-de1f-4f44-8549-bc1a3210b9f9",
-          "thumb": "/images/designs/work-like-a-dog/4c82b5ff-de1f-4f44-8549-bc1a3210b9f9.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/4c82b5ff-de1f-4f44-8549-bc1a3210b9f9.png",
-          "breed": "Cocker Spaniel",
-          "label": "Cocker Spaniel"
+          "localFile": "04866ba6-9778-47d6-9019-f6bece40044c",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-19.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-19.png",
+          "breed": "Old English Sheepdog",
+          "label": "Old English Sheepdog"
         },
         {
           "id": "work-like-a-dog-20",
-          "localFile": "45f27d52-1d73-4174-a12f-29b603f07bc1",
-          "thumb": "/images/designs/work-like-a-dog/45f27d52-1d73-4174-a12f-29b603f07bc1.jpg",
-          "printFileUrl": "https://cdn.caninekeepsakes.co.uk/45f27d52-1d73-4174-a12f-29b603f07bc1.png",
-          "breed": "Cavalier King Charles Spaniel",
-          "label": "Cavalier King Charles Spaniel"
+          "localFile": "505de089-61cb-4c93-a18e-423747c6e8c9",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-20.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-20.png",
+          "breed": "Pug",
+          "label": "Pug"
+        },
+        {
+          "id": "work-like-a-dog-21",
+          "localFile": "43938211-ae39-4e20-b133-7625cf054aaf",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-21.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-21.png",
+          "breed": "Rottweiler",
+          "label": "Rottweiler"
+        },
+        {
+          "id": "work-like-a-dog-22",
+          "localFile": "7b665851-e8ad-4e8c-9ce0-98bc084a8c7b",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-22.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-22.png",
+          "breed": "Siberian Husky",
+          "label": "Siberian Husky"
+        },
+        {
+          "id": "work-like-a-dog-23",
+          "localFile": "c499c823-3934-451e-bc5c-bc86e7b0400a",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-23.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-23.png",
+          "breed": "Staffordshire Bull Terrier",
+          "label": "Staffordshire Bull Terrier"
+        },
+        {
+          "id": "work-like-a-dog-24",
+          "localFile": "31cb2043-8b59-4fb2-8bc0-177acef105e6",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-24.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-24.png",
+          "breed": "Vizsla",
+          "label": "Vizsla"
+        },
+        {
+          "id": "work-like-a-dog-25",
+          "localFile": "cabdecad-c9a4-47ef-8ce8-3dfa89d4ca74",
+          "thumb": "/images/designs/work-like-a-dog/work-like-a-dog-25.jpg",
+          "printFileUrl": "https://caninekeepsakes.co.uk/images/designs/work-like-a-dog/work-like-a-dog-25.png",
+          "breed": "Weimaraner",
+          "label": "Weimaraner"
         }
       ],
       "seoTitle": "Work Like A Dog Collection | Hardworking Dog Artwork",

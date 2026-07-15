@@ -58,9 +58,12 @@ async function storageUpload(path, buf) {
 
 const SITE = process.env.SITE_BASE || 'https://caninekeepsakes.co.uk';
 /* Auto-detect a real blank photo for this product: BLANKS override, then /blanks/<slug>.png|jpg. */
-async function tryBlank(product) {
+function colourSlug(c) { return String(c || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''); }
+async function tryBlank(product, colour) {
   const cands = [];
   if (BLANKS[product]) cands.push(BLANKS[product]);
+  const cs = colourSlug(colour);
+  if (cs && cs !== 'white') cands.push(`${SITE}/blanks/${product}-${cs}.png`);
   cands.push(`${SITE}/blanks/${product}.png`, `${SITE}/blanks/${product}.jpg`);
   for (const u of cands) {
     try { const r = await fetch(u); if (r.ok && (r.headers.get('content-type') || '').startsWith('image')) return Buffer.from(await r.arrayBuffer()); } catch (_) {}
@@ -124,14 +127,14 @@ exports.handler = async (event) => {
   if (!rateLimit(event, 60, 60000)) return json(429, { error: 'too many requests' });
   if (event.httpMethod !== 'POST') return json(405, { error: 'POST only' });
   try {
-    const { product, designId, printFileUrl } = JSON.parse(event.body || '{}');
+    const { product, designId, printFileUrl, colour } = JSON.parse(event.body || '{}');
     const cfg = TEMPLATES.products && TEMPLATES.products[product];
     if (!product || !designId || !printFileUrl) return json(400, { error: 'product, designId, printFileUrl required' });
     if (!cfg) return json(404, { status: 'error', detail: `unknown product ${product}` });
     if (!isAllowedPrintFile(printFileUrl)) return json(400, { error: 'image url not allowed' });
     if (!SB.serviceKey) return json(503, { status: 'error', detail: 'Supabase service key missing' });
 
-    const key = `g3:${product}:${designId}`;
+    const key = `g3:${product}:${colourSlug(colour) || 'default'}:${designId}`;
     const cached = await cacheGet(key);
     if (cached && cached.status === 'completed' && cached.mockup_url) return json(200, { status: 'completed', url: cached.mockup_url });
 
@@ -139,13 +142,13 @@ exports.handler = async (event) => {
     // (a replaced image keeps the same URL, so without this a stale cached copy is served).
     const bust = printFileUrl + (printFileUrl.includes('?') ? '&' : '?') + 'cb=' + Date.now();
     const designBuf = await fetchBuf(bust);
-    const blankBuf = await tryBlank(product);           // real product photo if one exists in /blanks/
+    const blankBuf = await tryBlank(product, colour);   // colour-specific product photo if one exists in /blanks/
     const outBuf = blankBuf
       ? await photoMockup(blankBuf, designBuf, PLACE[product] || DEFAULT_PLACE)
       : await framedMockup(designBuf);                  // fallback until a blank is provided
-    const path = `v1/${product}/${designId}.png`;
+    const path = `v1/${product}/${colourSlug(colour) || 'default'}/${designId}.png`;
     const url = await storageUpload(path, outBuf);
-    await cacheUpsert(key, { catalog_product_id: product, colour: 'default', design_id: designId, image_url: printFileUrl, task_key: null, status: 'completed', mockup_url: url });
+    await cacheUpsert(key, { catalog_product_id: product, colour: colourSlug(colour) || 'default', design_id: designId, image_url: printFileUrl, task_key: null, status: 'completed', mockup_url: url });
     return json(200, { status: 'completed', url });
   } catch (err) {
     return json(500, { status: 'error', detail: String(err && err.message || err) });
