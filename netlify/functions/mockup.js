@@ -131,7 +131,7 @@ exports.handler = async (event) => {
     if (!isAllowedPrintFile(printFileUrl)) return json(400, { error: 'image url not allowed' });
     if (!SB.serviceKey) return json(503, { status: 'error', detail: 'Supabase service key missing' });
 
-    const key = `g1:${product}:${designId}`;
+    const key = `g2:${product}:${designId}`;
     const cached = await cacheGet(key);
     if (cached && cached.status === 'completed' && cached.mockup_url) return json(200, { status: 'completed', url: cached.mockup_url });
 
