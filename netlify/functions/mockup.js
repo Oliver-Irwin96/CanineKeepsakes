@@ -131,11 +131,14 @@ exports.handler = async (event) => {
     if (!isAllowedPrintFile(printFileUrl)) return json(400, { error: 'image url not allowed' });
     if (!SB.serviceKey) return json(503, { status: 'error', detail: 'Supabase service key missing' });
 
-    const key = `g2:${product}:${designId}`;
+    const key = `g3:${product}:${designId}`;
     const cached = await cacheGet(key);
     if (cached && cached.status === 'completed' && cached.mockup_url) return json(200, { status: 'completed', url: cached.mockup_url });
 
-    const designBuf = await fetchBuf(printFileUrl);
+    // Always pull the latest file straight from R2, bypassing any Cloudflare CDN cache
+    // (a replaced image keeps the same URL, so without this a stale cached copy is served).
+    const bust = printFileUrl + (printFileUrl.includes('?') ? '&' : '?') + 'cb=' + Date.now();
+    const designBuf = await fetchBuf(bust);
     const blankBuf = await tryBlank(product);           // real product photo if one exists in /blanks/
     const outBuf = blankBuf
       ? await photoMockup(blankBuf, designBuf, PLACE[product] || DEFAULT_PLACE)
