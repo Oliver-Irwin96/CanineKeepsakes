@@ -55,3 +55,14 @@ _internal/
 !README.md
 !_deploy-candidates/README.md
 # Session/handoff/knowledge/pipeline working areas
+
+# ── large internal working folders (design staging + generated mockups) — NEVER deploy ──
+R2_upload/
+mockups_test/
+mockups_fixed/
+prepped/
+prepped_plan.json
+copy_all.sh
+outputs/
+sigs.json
+recon_state.json

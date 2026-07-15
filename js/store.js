@@ -139,8 +139,22 @@ const CK = (() => {
         <div class="foot-col">
           <h4>Help</h4>
           <a href="about.html">About</a>
-          <a href="privacy.html">Privacy Policy</a>
+          <a href="delivery.html">Delivery</a>
+          <a href="returns.html">Returns &amp; Refunds</a>
+          <a href="complaints.html">Complaints</a>
+          <a href="accessibility.html">Accessibility</a>
           <a href="mailto:caninekeepsakes.admin@gmail.com">Contact</a>
+        </div>
+        <div class="foot-col">
+          <h4>Legal</h4>
+          <a href="terms.html">Terms &amp; Conditions</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="cookies.html">Cookie Policy</a>
+          <a href="gift-card-terms.html">Gift Card Terms</a>
+          <a href="custom-artwork-terms.html">Custom Artwork Terms</a>
+          <a href="creator-terms.html">Creator Terms</a>
+          <a href="artist-referral-terms.html">Artist Referral</a>
+          <a href="acceptable-content.html">Acceptable Content</a>
         </div>
         <div class="foot-col">
           <h4>Trust</h4>
@@ -163,7 +177,7 @@ const CK = (() => {
     bar.className = 'ck-cookie';
     bar.setAttribute('role', 'note');
     bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#1c1c1c;color:#fff;padding:14px 18px;display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:.92rem';
-    bar.innerHTML = 'We use only essential storage to run the shop (your basket and login) — no tracking or ads. <a href="privacy.html" style="color:#9fd3ff">Learn more</a> <button type="button" class="ck-cookie-ok" style="margin-left:8px;padding:8px 16px;border:0;border-radius:8px;background:#fff;color:#1c1c1c;font-weight:600;cursor:pointer">OK</button>';
+    bar.innerHTML = 'We use only essential storage to run the shop (your basket and login) plus privacy-friendly, cookieless analytics — no advertising cookies and no cross-site tracking. <a href="cookies.html" style="color:#9fd3ff">Learn more</a> <button type="button" class="ck-cookie-ok" style="margin-left:8px;padding:8px 16px;border:0;border-radius:8px;background:#fff;color:#1c1c1c;font-weight:600;cursor:pointer">OK</button>';
     document.body.appendChild(bar);
     bar.querySelector('.ck-cookie-ok').onclick = () => { try { localStorage.setItem('ck-cookie-ok', '1'); } catch (_) {} bar.remove(); };
   }

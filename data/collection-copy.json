@@ -1,0 +1,189 @@
+{
+  "_meta": {
+    "purpose": "Canonical marketing copy + SEO for collections. Applied to designs.json/catalog.json via Knowledge/apply_new_collection_copy.js.",
+    "generated": "2026-07-09",
+    "count": 15
+  },
+  "collections": {
+    "hi": {
+      "name": "Hi",
+      "description": [
+        "Some dogs enter a room. This one arrives.",
+        "Front-and-centre hellos, tail-first greetings, and a four-legged extrovert who treats every doorway like a stage and every visitor like their own personal fan club.",
+        "Every street has a chief greeter. Yours said hello before you'd even got the lead on."
+      ],
+      "seoTitle": "Hi Collection | Friendly Dog Gifts & Dog Wall Art",
+      "seoDescription": "Funny dog gifts for the world's most enthusiastic greeter. Dog art, mugs and gifts for dog lovers who own the friendliest pup on the street.",
+      "ogTitle": "Hi Collection | Friendly Dog Gifts & Dog Wall Art",
+      "ogDescription": "Funny dog gifts for the world's most enthusiastic greeter. Dog art, mugs and gifts for dog lovers who own the friendliest pup on the street."
+    },
+    "play-with-ball": {
+      "name": "Play With Ball",
+      "description": [
+        "There are two states of being: ball, and waiting for ball.",
+        "Tennis-ball fanatics and fetch addicts — the walkies enthusiast who'd trade dinner for one more throw and stares at the drawer until it happens.",
+        "You've got a soggy tennis ball in your pocket right now, haven't you."
+      ],
+      "seoTitle": "Play With Ball | Funny Dog Gifts & Dog Wall Art",
+      "seoDescription": "Funny dog gifts for the ball-obsessed. Dog art, mugs and gifts for dog lovers whose best friend lives for one more throw.",
+      "ogTitle": "Play With Ball | Funny Dog Gifts & Dog Wall Art",
+      "ogDescription": "Funny dog gifts for the ball-obsessed. Dog art, mugs and gifts for dog lovers whose best friend lives for one more throw."
+    },
+    "iron-paws-gym": {
+      "name": "Iron Paws Gym",
+      "description": [
+        "Never skip walkies. Never skip leg day. And never, ever skip the treat afterwards.",
+        "The gains-chasing, snack-motivated, mirror-loving gym dog who counts every biscuit as a macro and every zoomie as cardio.",
+        "You'll know this one by the swagger before you've finished reading."
+      ],
+      "seoTitle": "Iron Paws Gym | Funny Gym Dog Gifts & Wall Art",
+      "seoDescription": "Funny dog gifts for the swolest good boy in the gym. Gym dog art, mugs and gifts for dog lovers who never skip walkies.",
+      "ogTitle": "Iron Paws Gym | Funny Gym Dog Gifts & Wall Art",
+      "ogDescription": "Funny dog gifts for the swolest good boy in the gym. Gym dog art, mugs and gifts for dog lovers who never skip walkies."
+    },
+    "too-glam": {
+      "name": "Too Glam",
+      "description": [
+        "Too glam to give a damn — and far too fabulous for the garden.",
+        "A certified drama queen and four-legged fashionista who wouldn't be seen dead in last season's collar and knows exactly which angle is their good side.",
+        "There's a full pose before every photo. You know the one."
+      ],
+      "seoTitle": "Too Glam | Diva Dog Gifts & Dog Wall Art",
+      "seoDescription": "Funny dog gifts for the four-legged fashionista. Diva dog art, mugs and gifts for dog lovers with a pup too fabulous for the garden.",
+      "ogTitle": "Too Glam | Diva Dog Gifts & Dog Wall Art",
+      "ogDescription": "Funny dog gifts for the four-legged fashionista. Diva dog art, mugs and gifts for dog lovers with a pup too fabulous for the garden."
+    },
+    "pampered-paws": {
+      "name": "Pampered Paws",
+      "description": [
+        "Some dogs have a routine. This one has a spa day.",
+        "Preened, pampered and professionally spoiled — the queen of the sofa who treats comfort as a bare minimum and the word 'no' as a personal insult.",
+        "Be honest: your dog is treated better than most people you know."
+      ],
+      "seoTitle": "Pampered Paws | Spoiled Dog Gifts & Dog Wall Art",
+      "seoDescription": "Funny dog gifts for the professionally spoiled. Luxury dog art, mugs and gifts for dog lovers whose pup lives their best pampered life.",
+      "ogTitle": "Pampered Paws | Spoiled Dog Gifts & Dog Wall Art",
+      "ogDescription": "Funny dog gifts for the professionally spoiled. Luxury dog art, mugs and gifts for dog lovers whose pup lives their best pampered life."
+    },
+    "dog-eastwood": {
+      "name": "Dog Eastwood",
+      "description": [
+        "Every town has a good boy. This one just walked into the wrong saloon.",
+        "Ponchos at dawn, standoffs over squirrels, and a strong, silent type who stares down the postman at high noon and has never once fetched on command.",
+        "All attitude, just enough mystery. Go on — make their day."
+      ],
+      "seoTitle": "Dog Eastwood | Cowboy Dog Gifts & Dog Wall Art",
+      "seoDescription": "Funny dog gifts for the strong, silent cowboy. Western dog art, mugs and gifts for dog lovers whose good boy rules the frontier.",
+      "ogTitle": "Dog Eastwood | Cowboy Dog Gifts & Dog Wall Art",
+      "ogDescription": "Funny dog gifts for the strong, silent cowboy. Western dog art, mugs and gifts for dog lovers whose good boy rules the frontier."
+    },
+    "rock-dogs-guitarist": {
+      "name": "Rock Dogs – Guitarist",
+      "description": [
+        "Every band has a hero. The guitarist is fairly sure it's them.",
+        "All swagger, solos and windswept ears — convinced the whole gig hinges on them. (It does. Ask them.)",
+        "Give them a spotlight and they'll play the solo twice."
+      ],
+      "seoTitle": "Rock Dogs Guitarist | Rock Dog Gifts & Wall Art",
+      "seoDescription": "Funny dog gifts for the lead-guitar legend. Rock-and-roll dog art, mugs and gifts for dog lovers whose pup is all swagger and solos.",
+      "ogTitle": "Rock Dogs Guitarist | Rock Dog Gifts & Wall Art",
+      "ogDescription": "Funny dog gifts for the lead-guitar legend. Rock-and-roll dog art, mugs and gifts for dog lovers whose pup is all swagger and solos."
+    },
+    "rock-dogs-bassist": {
+      "name": "Rock Dogs – Bassist",
+      "description": [
+        "No spotlight. No fuss. Just the coolest member of the band.",
+        "Keeps the groove, says little, and quietly holds the whole thing together while everyone else shows off.",
+        "A low-key legend who's heard it all and chews on regardless."
+      ],
+      "seoTitle": "Rock Dogs Bassist | Rock Dog Gifts & Wall Art",
+      "seoDescription": "Funny dog gifts for the coolest dog in the band. Rock-and-roll dog art, mugs and gifts for dog lovers with an unbothered good boy.",
+      "ogTitle": "Rock Dogs Bassist | Rock Dog Gifts & Wall Art",
+      "ogDescription": "Funny dog gifts for the coolest dog in the band. Rock-and-roll dog art, mugs and gifts for dog lovers with an unbothered good boy."
+    },
+    "rock-dogs-drummer": {
+      "name": "Rock Dogs – Drummer",
+      "description": [
+        "Two speeds: full send, and fast asleep.",
+        "Loud, relentless and absolutely covered in energy — hits everything at once and treats 4am like the encore nobody asked for.",
+        "If it can be knocked over, consider it part of the kit."
+      ],
+      "seoTitle": "Rock Dogs Drummer | Rock Dog Gifts & Wall Art",
+      "seoDescription": "Funny dog gifts for the four-legged drummer. Rock-and-roll dog art, mugs and gifts for dog lovers whose pup treats 4am like an encore.",
+      "ogTitle": "Rock Dogs Drummer | Rock Dog Gifts & Wall Art",
+      "ogDescription": "Funny dog gifts for the four-legged drummer. Rock-and-roll dog art, mugs and gifts for dog lovers whose pup treats 4am like an encore."
+    },
+    "rock-dogs-keyboards": {
+      "name": "Rock Dogs – Keyboards",
+      "description": [
+        "Every band has one secret genius. It's the one on keys.",
+        "Quietly brilliant and quietly running the show — brings the magic while the guitarist takes the credit.",
+        "Smart enough to lead, wise enough to let everyone think they're in charge."
+      ],
+      "seoTitle": "Rock Dogs Keyboards | Rock Dog Gifts & Wall Art",
+      "seoDescription": "Funny dog gifts for the secret genius on keys. Rock-and-roll dog art, mugs and gifts for dog lovers with a quietly brilliant pup.",
+      "ogTitle": "Rock Dogs Keyboards | Rock Dog Gifts & Wall Art",
+      "ogDescription": "Funny dog gifts for the secret genius on keys. Rock-and-roll dog art, mugs and gifts for dog lovers with a quietly brilliant pup."
+    },
+    "rock-dogs-singer": {
+      "name": "Rock Dogs – Singer",
+      "description": [
+        "Born for the spotlight. Allergic to sharing it.",
+        "Show-offs, howlers and born performers who treat the back garden like a sold-out arena.",
+        "Told to be quiet once. Chose violence. Take a bow."
+      ],
+      "seoTitle": "Rock Dogs Singer | Rock Dog Gifts & Wall Art",
+      "seoDescription": "Funny dog gifts for the howling frontman. Rock-and-roll dog art, mugs and gifts for dog lovers whose pup was born for the spotlight.",
+      "ogTitle": "Rock Dogs Singer | Rock Dog Gifts & Wall Art",
+      "ogDescription": "Funny dog gifts for the howling frontman. Rock-and-roll dog art, mugs and gifts for dog lovers whose pup was born for the spotlight."
+    },
+    "hippie-dude": {
+      "name": "Hippie Dude",
+      "description": [
+        "Peace, love and belly rubs, man.",
+        "Tie-dye hound, free spirit, professional relaxer — never rushed anywhere in his life and not about to start now.",
+        "His whole personality is 'it's all good,' and honestly? It is."
+      ],
+      "seoTitle": "Hippie Dude | Retro Dog Gifts & Dog Wall Art",
+      "seoDescription": "Funny dog gifts for the mellowest good boy going. Retro hippie dog art, mugs and gifts for dog lovers with all the good vibes.",
+      "ogTitle": "Hippie Dude | Retro Dog Gifts & Dog Wall Art",
+      "ogDescription": "Funny dog gifts for the mellowest good boy going. Retro hippie dog art, mugs and gifts for dog lovers with all the good vibes."
+    },
+    "hippie-chick": {
+      "name": "Hippie Chick",
+      "description": [
+        "Flowers in her fur, not a care in the world.",
+        "Festival soul, daisy-chain wearer, free spirit — follows the sun and her own sweet rhythm, barefoot the whole way.",
+        "All flower crowns and good vibes, and absolutely zero rules."
+      ],
+      "seoTitle": "Hippie Chick | Boho Dog Gifts & Dog Wall Art",
+      "seoDescription": "Funny dog gifts for the free-spirited flower-power girl. Boho dog art, mugs and gifts for dog lovers whose pup runs on good vibes.",
+      "ogTitle": "Hippie Chick | Boho Dog Gifts & Dog Wall Art",
+      "ogDescription": "Funny dog gifts for the free-spirited flower-power girl. Boho dog art, mugs and gifts for dog lovers whose pup runs on good vibes."
+    },
+    "plumber": {
+      "name": "Plumber",
+      "description": [
+        "No job too small. No puddle left uninvestigated.",
+        "Tape-measure energy, a knowing sniff at the pipes, and a cheeky 'that'll cost ya' look that says the callout started the moment you opened the door.",
+        "A hard-grafting good egg who's seen worse — and charges accordingly."
+      ],
+      "seoTitle": "Plumber Dog | Funny Tradesman Dog Gifts & Art",
+      "seoDescription": "Funny dog gifts for the hard-grafting tradesman pup. Tradesman dog art, mugs and gifts for dog lovers — no callout too small.",
+      "ogTitle": "Plumber Dog | Funny Tradesman Dog Gifts & Art",
+      "ogDescription": "Funny dog gifts for the hard-grafting tradesman pup. Tradesman dog art, mugs and gifts for dog lovers — no callout too small."
+    },
+    "truck-driver": {
+      "name": "Truck Driver",
+      "description": [
+        "King of the road. Master of the motorway. Absolute ruler of the services car park.",
+        "Long-haul legend and big-rig royalty — lives for the horizon, the drive-thru, and a good sniff at every lay-by from here to Aberdeen.",
+        "Born to ride shotgun. Never once asked 'are we there yet.'"
+      ],
+      "seoTitle": "Truck Driver Dog | Trucker Dog Gifts & Wall Art",
+      "seoDescription": "Funny dog gifts for the big-rig good boy. Trucker dog art, mugs and gifts for dog lovers whose pup lives for the open road.",
+      "ogTitle": "Truck Driver Dog | Trucker Dog Gifts & Wall Art",
+      "ogDescription": "Funny dog gifts for the big-rig good boy. Trucker dog art, mugs and gifts for dog lovers whose pup lives for the open road."
+    }
+  }
+}

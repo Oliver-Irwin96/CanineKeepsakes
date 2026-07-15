@@ -20,7 +20,7 @@ const SB = supabaseEnv();
    Empty for now (Gelato's API doesn't expose blanks); fill to enable photoreal per product. */
 const BLANKS = {};
 const PLACE = {
-  'white-mug': { cx: 0.50, cy: 0.50, w: 0.30 }, 'summer-tee': { cx: 0.50, cy: 0.44, w: 0.34 },
+  'white-mug': { cx: 0.50, cy: 0.50, w: 0.30 }, 'summer-tee': { cx: 0.50, cy: 0.47, w: 0.32 },
   'tote-bag': { cx: 0.50, cy: 0.54, w: 0.40 }, 'phone-case': { cx: 0.50, cy: 0.50, w: 0.55 }
 };
 const DEFAULT_PLACE = { cx: 0.5, cy: 0.5, w: 0.4 };
@@ -56,9 +56,34 @@ async function storageUpload(path, buf) {
   return `${SB.url}/storage/v1/object/public/mockups/${path}`;
 }
 
-/* Premium framed art-print mockup — self-contained, no external blank needed. */
+const SITE = process.env.SITE_BASE || 'https://caninekeepsakes.co.uk';
+/* Auto-detect a real blank photo for this product: BLANKS override, then /blanks/<slug>.png|jpg. */
+async function tryBlank(product) {
+  const cands = [];
+  if (BLANKS[product]) cands.push(BLANKS[product]);
+  cands.push(`${SITE}/blanks/${product}.png`, `${SITE}/blanks/${product}.jpg`);
+  for (const u of cands) {
+    try { const r = await fetch(u); if (r.ok && (r.headers.get('content-type') || '').startsWith('image')) return Buffer.from(await r.arrayBuffer()); } catch (_) {}
+  }
+  return null;
+}
+/* Safety net (mirrors pipeline/process_batch.js + DESIGN_PROCESSING_RULES.md):
+   strip a flattened white background to transparent so no design ever shows a white box,
+   even if it skipped the batch. Keeps whites INSIDE the artwork. No-op if already transparent. */
+function cutWhiteBg(img) {
+  const { data, width: W, height: H } = img.bitmap;
+  const isW = i => data[i] >= 232 && data[i + 1] >= 232 && data[i + 2] >= 232;
+  const a = (x, y) => data[(y * W + x) * 4 + 3];
+  if ([a(1, 1), a(W - 2, 1), a(1, H - 2), a(W - 2, H - 2)].filter(v => v < 12).length >= 3) return img;
+  const seen = new Uint8Array(W * H), st = [];
+  for (let x = 0; x < W; x++) { st.push(x, x + (H - 1) * W); }
+  for (let y = 0; y < H; y++) { st.push(y * W, y * W + W - 1); }
+  while (st.length) { const s = st.pop(); if (seen[s]) continue; const i = s * 4; if (!isW(i)) continue; seen[s] = 1; data[i + 3] = 0; const x = s % W, y = (s / W) | 0; if (x + 1 < W) st.push(s + 1); if (x > 0) st.push(s - 1); if (y + 1 < H) st.push(s + W); if (y > 0) st.push(s - W); }
+  return img;
+}
+/* Premium framed art-print mockup — self-contained fallback until a blank photo exists. */
 async function framedMockup(designBuf) {
-  const design = await Jimp.read(designBuf);
+  const design = cutWhiteBg(await Jimp.read(designBuf));
   const W = 1100, H = 1100;
   const bg = new Jimp(W, H, 0xefe9dfff);           // warm gallery wall
   // soft top-down light: lighten upper area a touch
@@ -83,7 +108,7 @@ async function framedMockup(designBuf) {
 /* Composite onto a real product photo (used only when BLANKS[product] is set). */
 async function photoMockup(blankBuf, designBuf, place) {
   const blank = await Jimp.read(blankBuf);
-  const design = await Jimp.read(designBuf);
+  const design = cutWhiteBg(await Jimp.read(designBuf));
   const bw = blank.bitmap.width, bh = blank.bitmap.height;
   const targetW = Math.max(16, Math.round((place.w || 0.4) * bw));
   design.resize(targetW, Jimp.AUTO);
@@ -111,13 +136,10 @@ exports.handler = async (event) => {
     if (cached && cached.status === 'completed' && cached.mockup_url) return json(200, { status: 'completed', url: cached.mockup_url });
 
     const designBuf = await fetchBuf(printFileUrl);
-    let outBuf;
-    if (BLANKS[product]) {
-      const blankBuf = await fetchBuf(BLANKS[product]);
-      outBuf = await photoMockup(blankBuf, designBuf, PLACE[product] || DEFAULT_PLACE);
-    } else {
-      outBuf = await framedMockup(designBuf);
-    }
+    const blankBuf = await tryBlank(product);           // real product photo if one exists in /blanks/
+    const outBuf = blankBuf
+      ? await photoMockup(blankBuf, designBuf, PLACE[product] || DEFAULT_PLACE)
+      : await framedMockup(designBuf);                  // fallback until a blank is provided
     const path = `v1/${product}/${designId}.png`;
     const url = await storageUpload(path, outBuf);
     await cacheUpsert(key, { catalog_product_id: product, colour: 'default', design_id: designId, image_url: printFileUrl, task_key: null, status: 'completed', mockup_url: url });
